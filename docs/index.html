@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Índice de Presentaciones</title>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body style="background-color: #002b36">
+    <header>
+      <h1 style="color: whitesmoke">Presentaciones del Curso</h1>
+    </header>
+    <main>
+      <section>
+        <div style="padding-bottom: 20px; padding-top: 20px;"> 
+          <input
+            type="text"
+            id="search-bar"
+            placeholder="Buscar presentaciones..."
+            style="
+              width: 100%;
+              height: 36px;
+              max-width: 1200px;
+              justify-self: center;
+              display: flex;
+              border-radius: 5px;
+            "
+          />
+        </div>
+        <div class="container">
+          <div class="presentations-grid"></div>
+        </div>
+      </section>
+    </main>
+    <footer>
+      <p style="color: whitesmoke; text-align: center">
+        Desarrollado por
+        <a href="http://github.com/locano">Ludwing Cano</a>
+      </p>
+    </footer>
+  </body>
+  <script type="module" src="index.js"></script>
+</html>
