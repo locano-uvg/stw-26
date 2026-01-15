@@ -11,7 +11,7 @@ export const presentations = [
         description: "Telnet, Ips, Ports y más",
         path: "temas/internet/index.html",
         image: "temas/internet/images/internet.png",
-        active: false
+        active: true
     },
     {
         title: "Comandos básicos de Linux",
