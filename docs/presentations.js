@@ -18,7 +18,7 @@ export const presentations = [
         description: "Comandos para trabajar en la terminal",
         path: "temas/cli/index.html",
         image: "temas/cli/images/cli.png",
-        active: false
+        active: true
     },
     {
         title: "Introducción a GIT",
