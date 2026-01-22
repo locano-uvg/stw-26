@@ -25,6 +25,20 @@ export const presentations = [
         description: "Control de versiones",
         path: "temas/github/index.html",
         image: "temas/github/images/git.jpg",
+        active: true
+    },
+    {
+        title: "SCP",
+        description: "Copiar archivos de forma segura",
+        path: "temas/scp/index.html",
+        image: "temas/scp/images/rsync-scp.jpeg",
+        active: true
+    },
+    {
+        title: "IA Generativa",
+        description: "Creación de código con IA",
+        path: "temas/ia_code/index.html",
+        image: "temas/ia_code/images/ia_code.jpeg",
         active: false
     },
     {
@@ -60,20 +74,6 @@ export const presentations = [
         description: "JavaScript avanzado",
         path: "temas/js/js_functions/index.html",
         image: "temas/js/images/js_avanzado.png",
-        active: false
-    },
-    {
-        title: "SCP",
-        description: "Copiar archivos de forma segura",
-        path: "temas/scp/index.html",
-        image: "temas/scp/images/rsync-scp.jpeg",
-        active: false
-    },
-    {
-        title: "IA Generativa",
-        description: "Creación de código con IA",
-        path: "temas/ia_code/index.html",
-        image: "temas/ia_code/images/ia_code.jpeg",
         active: false
     },
     {

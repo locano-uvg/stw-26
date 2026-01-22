@@ -4,40 +4,83 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Índice de Presentaciones</title>
+    <meta name="color-scheme" content="dark light" />
+    <meta name="theme-color" content="#071c1a" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Epilogue:wght@400;500;600;700;900&family=Lora:ital,wght@0,400;0,500;0,600;1,400&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="index.css" />
   </head>
-  <body style="background-color: #002b36">
-    <header>
-      <h1 style="color: whitesmoke">Presentaciones del Curso</h1>
-    </header>
-    <main>
-      <section>
-        <div style="padding-bottom: 20px; padding-top: 20px; max-width: 1200px; margin: 0 auto;"> 
-          <input
-            type="text"
-            id="search-bar"
-            placeholder="Buscar presentaciones..."
-            style="
-              width: 100%;
-              height: 36px;
-              max-width: 1200px;
-              justify-self: center;
-              display: flex;
-              border-radius: 5px;
-            "
-          />
+  <body data-theme="oxide" class="is-loading">
+    <a class="skip-link" href="#contenido">Saltar al contenido</a>
+
+    <header class="top">
+      <div class="container top__inner">
+        <div class="brand" aria-label="Sistemas y Tecnologías Web">
+          <div class="brand__mark" aria-hidden="true">STW</div>
+          <div class="brand__text">
+            <p class="brand__kicker">Sistemas y Tecnologías Web</p>
+            <h1 class="brand__title">Presentaciones del curso</h1>
+            <p class="brand__sub">
+              Un índice vivo para encontrar, abrir y estudiar — sin perder tiempo.
+            </p>
+          </div>
         </div>
+
+        <div class="top__actions">
+          <button class="theme-toggle" type="button" id="theme-toggle">
+            Tema: Claro
+          </button>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="search">
+          <label class="search__label" for="search-bar">Buscar</label>
+          <div class="search__field">
+            <input
+              type="text"
+              id="search-bar"
+              placeholder="Escribe para filtrar… (título o descripción)"
+              autocomplete="off"
+              spellcheck="false"
+              inputmode="search"
+            />
+            <div class="search__meta">
+              <span class="pill" id="active-count" aria-live="polite"></span>
+              <span class="pill pill--quiet" id="search-hint"></span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <main id="contenido" class="main">
+      <section class="stage">
         <div class="container">
-          <div class="presentations-grid"></div>
+          <div class="presentations-grid" aria-live="polite"></div>
+          <div class="empty" id="empty-state" hidden>
+            <h2 class="empty__title">Nada coincide (todavía).</h2>
+            <p class="empty__text">
+              Prueba con otra palabra, o borra el filtro para ver todo.
+            </p>
+          </div>
         </div>
       </section>
     </main>
-    <footer>
-      <p style="color: whitesmoke; text-align: center">
-        Desarrollado por
-        <a href="http://github.com/locano">Ludwing Cano</a>
-      </p>
+
+    <footer class="footer">
+      <div class="container footer__inner">
+        <p class="footer__text">
+          Desarrollado por
+          <a class="footer__link" href="http://github.com/locano">Ludwing Cano</a>
+        </p>
+      </div>
     </footer>
+
+    <script type="module" src="index.js"></script>
   </body>
-  <script type="module" src="index.js"></script>
 </html>
