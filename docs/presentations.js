@@ -46,7 +46,7 @@ export const presentations = [
         description: "Manejo de servidores web",
         path: "temas/web_servers/index.html",
         image: "temas/web_servers/images/web_server.jpg",
-        active: false
+        active: true
     },
     {
         title: "HTML",
