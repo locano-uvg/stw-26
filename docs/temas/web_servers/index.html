@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Introducción a las Servidores de Web</title>
+    <title>Introducción a los Servidores Web</title>
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css"
@@ -12,152 +12,270 @@
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/moon.min.css"
     />
+    <style>
+      .reveal .slides section {
+        text-align: left;
+      }
+      .reveal .slides section.center {
+        text-align: center;
+      }
+      .reveal pre code {
+        max-height: 600px;
+        font-size: 0.7em;
+      }
+      .note {
+        background: #1e3a5f;
+        padding: 15px;
+        border-left: 4px solid #4dabf7;
+        margin: 20px 0;
+        font-size: 0.9em;
+      }
+      .comparison-table {
+        font-size: 0.6em;
+        width: 100%;
+      }
+      .comparison-table th, .comparison-table td {
+        border: 1px solid #fff;
+        padding: 10px;
+        text-align: center;
+      }
+      .step-box {
+        background: rgba(255,255,255,0.1);
+        padding: 15px;
+        margin: 10px 0;
+        border-radius: 8px;
+        border-left: 5px solid #4dabf7;
+      }
+    </style>
   </head>
   <body>
     <div class="reveal">
       <div class="slides">
-        <section>
-          <h1>Introducción a los Servidores de Web</h1>
-        </section>
-        <section>
-          <section>
-            <h2>Objetivo principal</h2>
-            <p>
-              Explicar lo que son y cómo funcionan los servidores de web, así
-              como tipos y funciones principales.
-            </p>
-          </section>
-        </section>
-
-        <section>
-          <h2>Introducción</h2>
+        <!-- Slide 1: Título -->
+        <section class="center">
+          <h2>Introducción a los Servidores Web</h2>
+          <h4>De Local a la Nube: Fundamentos y Arquitectura</h4>
           <p>
-            Un servidor web es una herramienta que permite publicar página web y
-            la creación de entornos interactivos.
+            <small>Sistemas y Tecnologías Web - Universidad del Valle de Guatemala</small>
           </p>
         </section>
 
+        <!-- Slide 2: Definiciones Básicas -->
         <section>
-          <h2>Tipos de Servidores de Web</h2>
+          <h2>¿Qué es un Servidor Web?</h2>
+          <div class="step-box">
+            <h3>Hardware vs Software</h3>
+            <ul>
+              <li><strong>Hardware:</strong> La máquina física donde se guardan los datos.</li>
+              <li><strong>Software:</strong> El programa (Nginx, Apache) que "sirve" los archivos al navegador.</li>
+            </ul>
+          </div>
+          <p><em>En este curso nos enfocamos en el Software.</em></p>
+        </section>
+
+        <!-- Slide 3: El Flujo del Request -->
+        <section>
+          <h2>El Ciclo de Vida de un Request</h2>
+          <p>¿Qué pasa cuando entras a <code>google.com</code>?</p>
+          <ol style="font-size: 0.8em;">
+            <li><strong>DNS Lookup:</strong> El navegador busca la IP del dominio.</li>
+            <li><strong>TCP Handshake:</strong> Se establece conexión.</li>
+            <li><strong>TLS Handshake:</strong> Se negocia la encriptación (HTTPS).</li>
+            <li><strong>HTTP Request:</strong> "Dame el index.html".</li>
+            <li><strong>Processing:</strong> El servidor busca el archivo o ejecuta código.</li>
+            <li><strong>HTTP Response:</strong> El servidor envía el archivo.</li>
+          </ol>
+        </section>
+
+
+        <!-- Slide 4: Arquitectura Moderna -->
+        <section>
+          <h2>Arquitectura Moderna</h2>
+          <div class="mermaid">
+            graph LR
+            A[Cliente / Navegador] -- HTTPS --> B[Reverse Proxy / Nginx]
+            B -- HTTP --> C[App Server / Node.js]
+            B -- HTTP --> D[App Server / Python]
+            C --> E[(Base de Datos)]
+            D --> E
+          </div>
+          <div class="note">
+            El <strong>Reverse Proxy</strong> es el portero: maneja seguridad, SSL y balanceo de carga.
+          </div>
+        </section>
+
+
+        <section>
+          <h2>El Protocolo HTTP</h2>
+          <p>
+            La web funciona gracias al protocolo <strong>HTTP</strong> (Hypertext Transfer Protocol). Es una conversación simple:
+          </p>
+          <ol>
+            <li><strong>Cliente (Navegador):</strong> Envía una <em>Petición (Request)</em>. <br> <small>"¡Hola! Quiero ver la página index.html"</small></li>
+            <li><strong>Servidor:</strong> Envía una <em>Respuesta (Response)</em>. <br> <small>"Aquí tienes el archivo index.html" (o "No lo encuentro - Error 404")</small></li>
+          </ol>
+        </section>
+        
+        <section>
+          <h2>HTTP Headers (Encabezados)</h2>
+          <p>
+            Son como la "etiqueta del envío" en un paquete postal. No son el contenido en sí, sino información <em>sobre</em> el contenido.
+          </p>
           <ul>
-            <li>Apache</li>
-            <li>Microsoft Internet Server (MIS)</li>
-            <li>Nginx</li>
-            <li>Elasticache</li>
-            <li>Firewal 2</li>
+            <li><strong>Headers del Cliente:</strong> Qué navegador usa, qué idiomas acepta, cookies.</li>
+            <li><strong>Headers del Servidor:</strong> Qué tipo de archivo envía (HTML, imagen), cuánto pesa, cuándo expira.</li>
+          </ul>
+          <pre><code class="http">
+Content-Type: text/html; charset=UTF-8
+Server: nginx/1.18.0
+Date: Mon, 27 Sep 2025 12:00:00 GMT
+          </code></pre>
+        </section>
+
+
+        <!-- Slide 5: Seguridad (TLS/SSL) -->
+        <section>
+          <h2>Seguridad Web: HTTPS</h2>
+          <ul>
+            <li><strong>HTTP:</strong> Texto plano. Cualquiera en la red puede leer tus passwords.</li>
+            <li><strong>HTTPS (TLS/SSL):</strong> Encriptado. Solo el cliente y el servidor pueden leerlo.</li>
+            <li><strong>Certificados:</strong> Validan tu identidad. Hoy son gratis gracias a <strong>Let's Encrypt</strong>.</li>
           </ul>
         </section>
 
         <section>
-          <section>
-            <h2>Factores importantes</h2>
-          </section>
-          <section>
-            <p>
-              Algunos factores a considerar al elegir un servidor web incluyen
-              la capacidad, el coste, la escalabilidad, la disponibilidad, y la
-              compatibilidad con otros servicios.
-            </p>
-          </section>
+          <h2>Antes de Instalar un Servidor</h2>
+          <p>Para administrar un servidor web exitosamente, es necesario dominar:</p>
+          <ul>
+            <li><strong>La Terminal:</strong> Moverse entre carpetas, editar archivos de texto (nano/vim), permisos.</li>
+            <li><strong>Redes Básicas:</strong> Entender qué es una Dirección IP y un Puerto (ej. puerto 80 para web).</li>
+            <li><strong>DNS:</strong> Cómo un nombre de dominio (google.com) se convierte en una IP.</li>
+          </ul>
         </section>
+
+        <!-- Slide 6: El Camino: De Local a Nube -->
+        <section>
+          <h2>El Camino: De Local a Producción</h2>
+          <div class="step-box">
+            <strong>Paso 1: Localhost (Tu Máquina)</strong><br>
+            <small>Desarrollas en <code>localhost:3000</code>. Solo tú lo ves.</small>
+          </div>
+          <div class="step-box">
+            <strong>Paso 2: Tunneling (Demo Rápida)</strong><br>
+            <small>Usas <code>ngrok</code> para mostrarlo a tu equipo o cliente temporalmente.</small>
+          </div>
+          <div class="step-box">
+            <strong>Paso 3: Cloud Server (Producción)</strong><br>
+            <small>Contratas un VPS (AWS/DigitalOcean), instalas Nginx, configuras dominio y SSL real.</small>
+          </div>
+        </section>
+
 
         <section>
-          <section>
-            <h2>Web Servers en la Nube</h2>
-          </section>
-          <section>
-            <p>
-              La nube ofrece una serie de beneficios para los hosted de servidor
-              web, incluyendo accesibilidad, escalabilidad, seguridad avanzada y
-              un entorno más eficiente para el mantenimiento.
-            </p>
-          </section>
+          <h2>Servidores Web Existentes</h2>
+          <p>Existen muchas opciones en el mercado:</p>
+          <ul>
+            <li><strong>Apache:</strong> El veterano, muy flexible y usado históricamente.</li>
+            <li><strong>Nginx:</strong> Conocido por su alto rendimiento y velocidad. Muy popular hoy en día.</li>
+            <li><strong>Caddy:</strong> Moderno, fácil de usar y con HTTPS automático por defecto.</li>
+            <li><strong>IIS (Internet Information Services):</strong> La solución de Microsoft para Windows Server.</li>
+          </ul>
         </section>
-
+        
+        <!-- Slide 9: Tipos de Servidores -->
         <section>
-          <section>
-            <h2>Configuración de un Servidor Web (AWS)</h2>
-          </section>
-          <section>
-            <ol>
-              <li>Access Account in AWS.</li>
-              <li>Create a new Instance in EC2.</li>
-              <li>Add the necessary Security Groups.</li>
-            </ol>
-          </section>
-          <section>
-            <h2>Conectandonos al servidor web</h2>
-          </section>
-          <section>
-            <ol>
-              <li>Create access keys for the instance.</li>
-              <li>Connect to the instance using SSH.</li>
-              <li>Install the necessary software.</li>
-            </ol>
-          </section>
+          <h2>Herramientas Populares</h2>
+          <table class="comparison-table">
+            <thead>
+              <tr>
+                <th>Servidor</th>
+                <th>Tipo</th>
+                <th>Mejor Para...</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><strong>Nginx</strong></td>
+                <td>Web Server / Proxy</td>
+                <td>Producción, Alto Rendimiento, Static Files</td>
+              </tr>
+              <tr>
+                <td><strong>Apache</strong></td>
+                <td>Web Server</td>
+                <td>Hosting Compartido (.htaccess), Legacy</td>
+              </tr>
+              <tr>
+                <td><strong>Caddy</strong></td>
+                <td>Web Server Moderno</td>
+                <td>HTTPS Automático, Facilidad de uso</td>
+              </tr>
+              <tr>
+                <td><strong>Node.js</strong></td>
+                <td>App Server</td>
+                <td>Lógica de Negocio, APIs (No archivos estáticos)</td>
+              </tr>
+            </tbody>
+          </table>
         </section>
 
+
+        <!-- Slide 7: Ejemplo Práctico - Paso 1 y 2 -->
         <section>
-          <section><h2>Que es Nginx?</h2></section>
-          <section>
-            <p>
-              Nginx es un servidor web de código abierto que se utiliza para
-              servir contenido web y aplicaciones.
-            </p>
-          </section>
+          <h2>Ejemplo Práctico: Local & Tunnel</h2>
+          <pre><code class="bash">
+# 1. Crear un servidor simple en tu compu
+# Crea un archivo index.html con "Hola Mundo"
+echo "<h1>Hola Mundo desde mi Local</h1>" > index.html
 
-          <section>
-            <h2>Instalación de Nginx Linux</h2>
-          </section>
-          <section>
-            <pre>
-                <code> 
-                sudo apt update 
-                sudo apt install nginx 
-                </code>
-            </pre>
-          </section>
-          <section>
-            <h2>Iniciar Nginx</h2>
-          </section>
-          <section>
-            <pre>
-                <code> 
-                sudo service nginx start 
-                sudo service nginx status 
-                </code>
-            </pre>
-          </section>
-          <section>
-            <h2>Configuración de Nginx</h2>
-          </section>
-          <section>
-            <p>Al instalar tendremos disponible una nueva ruta llamada:</p>
-            <pre>
-                <code> 
-                /etc/nginx/nginx.conf
-                </code>
-            </pre>
-            <p>
-              Para configurar Nginx, se debe editar el archivo de configuración
-              principal, que se encuentra en:
-            </p>
-            <pre>
-                <code> 
-                /etc/nginx/nginx.conf
-                </code>
-            </pre>
-          </section>
-          <section>
-            
-            <h2><a href="./manuales/index.html">Manuales</a></h2>
-          </section>
+# 2. Levantar servidor (Python viene en Mac/Linux)
+python3 -m http.server 8080
+
+# 3. Exponerlo a internet con Ngrok
+ngrok http 8080
+          </code></pre>
+          <div class="note">
+            ¡Inténtalo! Ngrok te dará una URL pública (ej. <code>https://xyz.ngrok.io</code>) que funciona en cualquier parte del mundo.
+          </div>
         </section>
+
+        <!-- Slide 8: Ejemplo Práctico - Paso 3 (Nube) -->
+        <section>
+          <h2>Ejemplo Práctico: La Nube (Preview)</h2>
+          <p>En un servidor real (Linux), haríamos esto:</p>
+          <pre><code class="bash">
+# 1. Instalar Nginx
+sudo apt update && sudo apt install nginx
+
+# 2. Configurar Firewall (UFW)
+sudo ufw allow 'Nginx Full'
+
+# 3. Obtener Certificado SSL (HTTPS)
+sudo apt install certbot python3-certbot-nginx
+sudo certbot --nginx -d midominio.com
+          </code></pre>
+        </section>
+        
+        <!-- Slide 10: Cierre -->
+        <section class="center">
+          <h2>Próximos Pasos</h2>
+          <p>Hoy vimos la teoría y una demo local.</p>
+          <h3>En la próxima clase:</h3>
+          <p>¡Configuraremos nuestro primer servidor Nginx en la nube!</p>
+        </section>
+
       </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <!-- Mermaid JS -->
+    <script src="https://cdn.jsdelivr.net/npm/mermaid/dist/mermaid.min.js"></script>
     <script>
-      Reveal.initialize();
+      Reveal.initialize({
+        hash: true,
+        transition: "slide",
+        plugins: [ RevealHighlight ]
+      });
+      mermaid.initialize({ startOnLoad: true, theme: 'dark' });
     </script>
   </body>
 </html>
