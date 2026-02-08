@@ -53,7 +53,7 @@ export const presentations = [
         description: "Creación de páginas web",
         path: "temas/html/index.html",
         image: "temas/html/images/html.jpeg",
-        active: false
+        active: true
     },
     {
         title: "CSS",
