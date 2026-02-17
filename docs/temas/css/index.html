@@ -1,0 +1,1211 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Introducción a CSS</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/theme/moon.min.css"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <!-- Introducción a CSS -->
+        <section>
+          <h1>Introducción a CSS</h1>
+          <p>Hoja de Estilos en Cascada</p>
+        </section>
+        <!-- QUE ES -->
+        <section>
+          <section>
+            <h2>¿Qué es CSS y por qué es importante?</h2>
+          </section>
+          <section>
+            <p>CSS define la apariencia de una página web.</p>
+            <p>Permite separar el contenido del diseño.</p>
+            <p>Facilita la reutilización y mantenimiento del código.</p>
+          </section>
+        </section>
+        <!-- TIPOS DE CSS -->
+        <section>
+          <section>
+            <h2>Tipos de CSS</h2>
+          </section>
+          <section>
+            <img src="./images/inline.webp" alt="inline" height="400" />
+            <ul>
+              <li>
+                <strong>Inline:</strong> Se aplica directamente en la etiqueta
+                con <code>style</code>.
+              </li>
+            </ul>
+            <pre><code>&lt;p style="color: red;"&gt;Texto&lt;/p&gt;</code></pre>
+          </section>
+          <section>
+            <img src="./images/style.png" alt="style" height="400" />
+            <ul>
+              <li>
+                <strong>Interno:</strong> Se define dentro de
+                <code>&lt;style&gt;</code> en el <code>head</code>.
+              </li>
+            </ul>
+            <pre><code>&lt;style&gt; p { color: red; } &lt;/style&gt;</code></pre>
+          </section>
+          <section>
+            <img src="./images/link.png" alt="link" height="400" />
+            <ul>
+              <li>
+                <strong>Externo:</strong> Se usa un archivo
+                <code>.css</code> enlazado con <code>&lt;link&gt;</code>.
+              </li>
+            </ul>
+            <pre><code>&lt;link rel="stylesheet" href="styles.css"&gt;</code></pre>
+          </section>
+          <section>
+            <img src="./images/styles.png" alt="styles" />
+          </section>
+        </section>
+        <!-- CLASES & ID -->
+        <section>
+          <section>
+            <h2>Clases e ID en CSS</h2>
+          </section>
+          <section>
+            <p>Se usan para aplicar estilos a elementos específicos.</p>
+          </section>
+          <section>
+            <table>
+              <tr>
+                <th>Clase</th>
+                <th>ID</th>
+              </tr>
+              <tr>
+                <td>Se aplica a varios elementos.</td>
+                <td>Se aplica a un solo elemento.</td>
+              </tr>
+              <tr>
+                <td>Se define con <code>.</code>.</td>
+                <td>Se define con <code>#</code>.</td>
+              </tr>
+              <tr>
+                <td>Se puede reutilizar.</td>
+                <td>Se usa una sola vez.</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <img src="./images/clase_id.png" alt="classes" height="400" />
+
+            <h3>Ejemplos</h3>
+            <pre><code>.button { background-color: blue; }</code></pre>
+            <pre><code>#header { font-size: 24px; }</code></pre>
+          </section>
+        </section>
+        <!-- Pseudo Clases -->
+        <section>
+          <section>
+            <h2>Pseudo Clases</h2>
+            <p>Selectores que definen estados especiales de un elemento</p>
+          </section>
+          <section>
+            <h3>Pseudo-clases de Interacción</h3>
+            <img src="./images/pseudo_classes.png" alt="pseudo" height="300" />
+            <ul>
+              <li><strong>:hover:</strong> Al pasar el cursor sobre el elemento</li>
+              <li><strong>:active:</strong> Al hacer clic en el elemento</li>
+              <li><strong>:focus:</strong> Cuando el elemento tiene foco</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Pseudo-clases Estructurales</h3>
+            <table>
+              <tr>
+                <th>Pseudo-clase</th>
+                <th>Descripción</th>
+              </tr>
+              <tr>
+                <td>:first-child</td>
+                <td>Primer hijo de su padre</td>
+              </tr>
+              <tr>
+                <td>:last-child</td>
+                <td>Último hijo de su padre</td>
+              </tr>
+              <tr>
+                <td>:nth-child(n)</td>
+                <td>n-ésimo hijo de su padre</td>
+              </tr>
+              <tr>
+                <td>:not(selector)</td>
+                <td>Elementos que no coinciden</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Ejemplos Prácticos</h3>
+            <pre><code>/* Interacción */
+.button:hover { background-color: red; }
+input:focus { border: 2px solid blue; }
+
+/* Estructurales */
+li:first-child { font-weight: bold; }
+li:nth-child(odd) { background: #f0f0f0; }
+p:not(.special) { color: gray; }</code></pre>
+          </section>
+        </section>
+        <!-- COMBINADORES -->
+        <section>
+          <section>
+            <h2>Combinadores</h2>
+          </section>
+
+          <section>
+            <img
+              src="./images/combinadores.jpg"
+              alt="combinadores"
+            />
+          </section>
+
+          <section>
+            <table>
+              <tr>
+                <th>Combinador</th>
+                <th>Descripción</th>
+                <th>Ejemplo</th>
+              </tr>
+              <tr>
+                <td>Descendente</td>
+                <td>Selecciona elementos descendientes.</td>
+                <td>div p { color: red; }</td>
+              </tr>
+              <tr>
+                <td>Hijo</td>
+                <td>Selecciona elementos hijos.</td>
+                <td>div > p { color: blue; }</td>
+              </tr>
+              <tr>
+                <td>Adyacente</td>
+                <td>Selecciona elementos adyacentes.</td>
+                <td>h1 + p { font-size: 16px; }</td>
+              </tr>
+              <tr>
+                <td>General</td>
+                <td>Selecciona elementos generales.</td>
+                <td>h1 ~ p { font-size: 16px; }</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h3>Ejemplos</h3>
+            <pre><code>div p { color: red; }</code></pre>
+            <pre><code>div > p { color: blue; }</code></pre>
+            <pre><code>h1 + p { font-size: 16px; }</code></pre>
+            <pre><code>h1 ~ p { font-size: 16px; }</code></pre>
+          </section>
+        </section>
+
+        <!-- Modelo de Caja y Diseño -->
+        <section>
+          <section>
+            <h2>Box Model</h2>
+          </section>
+          <section>
+            <p>Todos los elementos en CSS son cajas.</p>
+          </section>
+          <section>
+            <img src="./images/box_model.png" alt="inline" height="200" />
+            <table>
+              <tr>
+                <th>Propiedad</th>
+                <th>Descripción</th>
+              </tr>
+              <tr>
+                <td>Margin</td>
+                <td>Espacio fuera del borde.</td>
+              </tr>
+              <tr>
+                <td>Border</td>
+                <td>Borde de la caja.</td>
+              </tr>
+              <tr>
+                <td>Padding</td>
+                <td>Espacio entre el contenido y el borde.</td>
+              </tr>
+              <tr>
+                <td>Content</td>
+                <td>Contenido del elemento.</td>
+              </tr>
+            </table>
+          </section>
+        </section>
+        <!-- Display -->
+        <section>
+          <section>
+            <h2>Propiedad Display</h2>
+            <p>Controla el tipo de caja de renderizado de un elemento</p>
+          </section>
+          <section>
+            <h3>Valores Básicos</h3>
+            <img
+              src="./images/display_block_inline.webp"
+              alt="inline"
+              height="200"
+            />
+            <table>
+              <tr>
+                <th>Valor</th>
+                <th>Comportamiento</th>
+              </tr>
+              <tr>
+                <td>block</td>
+                <td>Ocupa todo el ancho, nueva línea</td>
+              </tr>
+              <tr>
+                <td>inline</td>
+                <td>Ancho del contenido, misma línea</td>
+              </tr>
+              <tr>
+                <td>inline-block</td>
+                <td>Inline con propiedades block</td>
+              </tr>
+              <tr>
+                <td>none</td>
+                <td>Elemento no visible ni ocupa espacio</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Valores de Layout Modernos</h3>
+            <table>
+              <tr>
+                <th>Valor</th>
+                <th>Uso</th>
+              </tr>
+              <tr>
+                <td>flex</td>
+                <td>Contenedor flexible unidimensional</td>
+              </tr>
+              <tr>
+                <td>inline-flex</td>
+                <td>Flex en contexto inline</td>
+              </tr>
+              <tr>
+                <td>grid</td>
+                <td>Contenedor grid bidimensional</td>
+              </tr>
+              <tr>
+                <td>inline-grid</td>
+                <td>Grid en contexto inline</td>
+              </tr>
+            </table>
+          </section>
+        </section>
+        <!-- Position -->
+        <section>
+          <section>
+            <h2>
+              <a
+                href="https://dev.to/akindeleemmanuel/css-positioning-simplified-for-beginners-8mi"
+              >
+                Tipos de posición
+              </a>
+            </h2>
+          </section>
+
+          <section>
+            <img
+              src="./images/css-position-all.png"
+              alt="position"
+              height="250"
+            />
+            <ul>
+              <li><strong>static:</strong> Posición por defecto.</li>
+              <li>
+                <strong>relative:</strong> Se mueve respecto a su posición
+                original.
+              </li>
+            </ul>
+          </section>
+          <section>
+            <img
+              src="./images/css-position-all.png"
+              alt="position"
+              height="250"
+            />
+            <ul>
+              <li>
+                <strong>absolute:</strong> Se posiciona en relación a su
+                ancestro posicionado.
+              </li>
+              <li><strong>fixed:</strong> Permanece fijo en pantalla.</li>
+              <li>
+                <strong>sticky:</strong> Se comporta como relative hasta que se
+                hace sticky.
+              </li>
+            </ul>
+          </section>
+        </section>
+        <!-- Colores, Unidades y Tipografía -->
+        <section>
+          <section>
+            <h2>Unidades en CSS</h2>
+          </section>
+          <section>
+            <img src="./images/CSS-UNITS.png" alt="units" height="500" />
+          </section>
+          <section>
+            <h3>Absolutas</h3>
+            <ul>
+              <li>px: Píxeles. (1px = 1/96 de pulgada)</li>
+              <li>cm: Centímetros.</li>
+              <li>in: Pulgadas. (1in = 2.54cm)</li>
+              <li>pt: Puntos. (1pt = 1/72in)</li>
+              <li>mm: Milímetros. (1mm = 1/10cm)</li>
+            </ul>
+            <pre
+              class="language-css"
+            ><code>h1 { font-size: 24px; } </code></pre>
+          </section>
+          <section>
+            <h3>Relativas</h3>
+            <ul>
+              <li>%: Porcentaje.</li>
+              <li>em: Tamaño de fuente.</li>
+              <li>rem: Tamaño de fuente del root.</li>
+              <li>vw/vh: Viewport width/height dimensions</li>
+            </ul>
+            <pre class="language-css"><code>h1 { font-size: 2em; }</code></pre>
+          </section>
+        </section>
+        <!-- COLORES -->
+        <section>
+          <section>
+            <h2>Colores y Gradientes</h2>
+          </section>
+          <section>
+            <img src="./images/colors.jpg" alt="colors" height="250" />
+            <ul>
+              <li>Colores en nombres, HEX, RGB y HSL.</li>
+            </ul>
+            <pre>
+                <code>
+color: red;
+color: #ff0000;
+color: rgb(255, 0, 0);
+color: hsl(0, 100%, 50%);
+                </code>
+            </pre>
+          </section>
+          <section>
+            <img src="./images/gradiant.png" alt="colors" height="250" />
+            <ul>
+              <li>Gradientes lineales y radiales.</li>
+              <li>Uso de transparencia con <code>rgba()</code>.</li>
+            </ul>
+            <pre>
+                <code>
+background: linear-gradient(to right, red, blue);
+background: radial-gradient(circle, red, blue);
+background: rgba(0, 0, 0, 0.5);
+                </code>
+            </pre>
+          </section>
+        </section>
+        <!-- CSS VARIABLES -->
+        <section>
+          <section>
+            <h2>CSS Custom Properties</h2>
+            <p>Variables CSS para código reutilizable y mantenible</p>
+          </section>
+          <section>
+            <h3>Definición y Uso</h3>
+            <p>Se definen con el prefijo <code>--</code> y se acceden con <code>var()</code></p>
+            <pre><code>:root {
+  --primary-color: #3498db;
+  --secondary-color: #2ecc71;
+  --spacing-unit: 8px;
+  --border-radius: 4px;
+}
+
+.button {
+  background-color: var(--primary-color);
+  padding: var(--spacing-unit);
+  border-radius: var(--border-radius);
+}</code></pre>
+          </section>
+          <section>
+            <h3>Ventajas de las Variables CSS</h3>
+            <ul>
+              <li>Centralización de valores comunes</li>
+              <li>Facilita el mantenimiento del código</li>
+              <li>Permite crear temas dinámicos</li>
+              <li>Se pueden modificar con JavaScript</li>
+              <li>Soporte para valores por defecto con <code>var(--color, blue)</code></li>
+            </ul>
+          </section>
+          <section>
+            <h3>Ejemplo: Sistema de Temas</h3>
+            <pre><code>:root {
+  --bg-color: #ffffff;
+  --text-color: #333333;
+}
+
+[data-theme="dark"] {
+  --bg-color: #1a1a1a;
+  --text-color: #f0f0f0;
+}
+
+body {
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  transition: all 0.3s ease;
+}</code></pre>
+          </section>
+        </section>
+        <!-- FUENTES -->
+        <section>
+          <section>
+            <h2>Fuentes y Tipografía</h2>
+          </section>
+          <section>
+            <ul>
+              <li>Uso de fuentes seguras.</li>
+              <li>Google Fonts.</li>
+            </ul>
+            <pre><code>&lt;link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet"&gt;</code></pre>
+            <pre><code>font-family: Arial, sans-serif;</code></pre>
+          </section>
+          <section>
+            <table>
+              <tr>
+                <th>Propiedad</th>
+                <th>Descripción</th>
+              </tr>
+              <tr>
+                <td>font-family</td>
+                <td>Familia de fuentes.</td>
+              </tr>
+              <tr>
+                <td>font-size</td>
+                <td>Tamaño de la fuente.</td>
+              </tr>
+              <tr>
+                <td>font-weight</td>
+                <td>Grosor de la fuente.</td>
+              </tr>
+              <tr>
+                <td>font-style</td>
+                <td>Estilo de la fuente.</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <table>
+              <tr>
+                <th>Propiedad</th>
+                <th>Descripción</th>
+              </tr>
+              <tr>
+                <td>text-align</td>
+                <td>Alineación del texto.</td>
+              </tr>
+              <tr>
+                <td>text-decoration</td>
+                <td>Decoración del texto.</td>
+              </tr>
+              <tr>
+                <td>text-transform</td>
+                <td>Transformación del texto.</td>
+              </tr>
+              <tr>
+                <td>line-height</td>
+                <td>Altura de línea.</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Ejemplos</h3>
+            <pre><code>font-family: Arial, sans-serif;</code></pre>
+            <pre><code>font-size: 16px;</code></pre>
+            <pre><code>font-weight: bold;</code></pre>
+            <pre><code>font-style: italic;</code></pre>
+            <pre><code>text-align: center;</code></pre>
+            <pre><code>text-decoration: underline;</code></pre>
+            <pre><code>text-transform: uppercase;</code></pre>
+            <pre><code>line-height: 1.5;</code></pre>
+          </section>
+          <section>
+            <img src="./images/fonts.png" alt="fonts" height="400" />
+          </section>
+        </section>
+        <!-- Flexbox y Grid -->
+        <section>
+          <section>
+            <h2>Flexbox</h2>
+            <p>Modelo de layout unidimensional para distribución de elementos</p>
+          </section>
+          <section>
+            <img src="./images/flex.png" alt="flexbox" height="200" />
+            <h3>Conceptos Fundamentales</h3>
+            <ul>
+              <li>Modelo unidimensional (fila o columna)</li>
+              <li>Eje principal (main axis) y eje transversal (cross axis)</li>
+              <li>Distribución flexible del espacio disponible</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Propiedades del Contenedor</h3>
+            <table>
+              <tr>
+                <th>Propiedad</th>
+                <th>Valores Comunes</th>
+              </tr>
+              <tr>
+                <td>flex-direction</td>
+                <td>row, column, row-reverse, column-reverse</td>
+              </tr>
+              <tr>
+                <td>justify-content</td>
+                <td>flex-start, center, space-between, space-around</td>
+              </tr>
+              <tr>
+                <td>align-items</td>
+                <td>flex-start, center, flex-end, stretch</td>
+              </tr>
+              <tr>
+                <td>flex-wrap</td>
+                <td>nowrap, wrap, wrap-reverse</td>
+              </tr>
+              <tr>
+                <td>gap</td>
+                <td>Espacio entre elementos (ej: 1rem)</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Propiedades de los Items</h3>
+            <table>
+              <tr>
+                <th>Propiedad</th>
+                <th>Descripción</th>
+              </tr>
+              <tr>
+                <td>flex-grow</td>
+                <td>Factor de crecimiento</td>
+              </tr>
+              <tr>
+                <td>flex-shrink</td>
+                <td>Factor de reducción</td>
+              </tr>
+              <tr>
+                <td>flex-basis</td>
+                <td>Tamaño base del elemento</td>
+              </tr>
+              <tr>
+                <td>flex</td>
+                <td>Shorthand: flex-grow flex-shrink flex-basis</td>
+              </tr>
+              <tr>
+                <td>align-self</td>
+                <td>Alineación individual del elemento</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Ejemplo Completo de Flexbox</h3>
+            <pre><code>.container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: wrap;
+}
+
+.item {
+  flex: 1 1 200px; /* grow shrink basis */
+  min-width: 0; /* Evita overflow */
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- CSS GRID -->
+        <section>
+          <section>
+            <h2>CSS Grid</h2>
+            <p>Sistema de layout bidimensional para diseños complejos</p>
+          </section>
+          <section>
+            <img src="./images/grid.png" alt="grid" height="200" />
+            <h3>Conceptos Fundamentales</h3>
+            <ul>
+              <li>Modelo bidimensional (filas y columnas)</li>
+              <li>Control preciso del posicionamiento</li>
+              <li>Ideal para layouts de página completa</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Propiedades del Contenedor</h3>
+            <table>
+              <tr>
+                <th>Propiedad</th>
+                <th>Ejemplo</th>
+              </tr>
+              <tr>
+                <td>grid-template-columns</td>
+                <td>repeat(3, 1fr), 200px auto 1fr</td>
+              </tr>
+              <tr>
+                <td>grid-template-rows</td>
+                <td>100px auto 50px</td>
+              </tr>
+              <tr>
+                <td>gap / grid-gap</td>
+                <td>1rem 2rem (row column)</td>
+              </tr>
+              <tr>
+                <td>grid-template-areas</td>
+                <td>Define áreas nombradas</td>
+              </tr>
+              <tr>
+                <td>grid-auto-flow</td>
+                <td>row, column, dense</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Unidades Grid Específicas</h3>
+            <ul>
+              <li><strong>fr (fraction):</strong> Unidad fraccionaria del espacio disponible</li>
+              <li><strong>repeat():</strong> Función para repetir patrones</li>
+              <li><strong>minmax():</strong> Define rango de tamaño (min, max)</li>
+              <li><strong>auto-fit / auto-fill:</strong> Grids responsivos automáticos</li>
+            </ul>
+            <pre><code>grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));</code></pre>
+          </section>
+          <section>
+            <h3>Ejemplo: Layout con Grid Areas</h3>
+            <pre><code>.container {
+  display: grid;
+  grid-template-columns: 200px 1fr 200px;
+  grid-template-rows: auto 1fr auto;
+  gap: 1rem;
+  grid-template-areas:
+    "header header header"
+    "sidebar content ads"
+    "footer footer footer";
+}
+
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.content { grid-area: content; }
+.ads { grid-area: ads; }
+.footer { grid-area: footer; }</code></pre>
+          </section>
+          <section>
+            <h3>Flexbox vs Grid: Cuándo usar cada uno</h3>
+            <table>
+              <tr>
+                <th>Flexbox</th>
+                <th>Grid</th>
+              </tr>
+              <tr>
+                <td>Layouts unidimensionales</td>
+                <td>Layouts bidimensionales</td>
+              </tr>
+              <tr>
+                <td>Navegación, barras de herramientas</td>
+                <td>Layouts de página completa</td>
+              </tr>
+              <tr>
+                <td>Alineación de contenido</td>
+                <td>Estructuras complejas</td>
+              </tr>
+              <tr>
+                <td>Componentes pequeños</td>
+                <td>Galerías, dashboards</td>
+              </tr>
+            </table>
+          </section>
+        </section>
+
+        <!-- RESPONSIVE DESIGN & MEDIA QUERIES -->
+        <section>
+          <section>
+            <h2>Responsive Design</h2>
+            <p>Media Queries para diseños adaptativos</p>
+          </section>
+          <section>
+            <h3>Concepto de Mobile-First</h3>
+            <ul>
+              <li>Diseño base para dispositivos móviles</li>
+              <li>Mejoras progresivas para pantallas más grandes</li>
+              <li>Mejor rendimiento en dispositivos móviles</li>
+            </ul>
+            <pre><code>/* Base: Mobile */
+.container { padding: 1rem; }
+
+/* Tablet y superior */
+@media (min-width: 768px) {
+  .container { padding: 2rem; }
+}
+
+/* Desktop */
+@media (min-width: 1024px) {
+  .container { padding: 3rem; }
+}</code></pre>
+          </section>
+          <section>
+            <h3>Breakpoints Comunes</h3>
+            <table>
+              <tr>
+                <th>Dispositivo</th>
+                <th>Breakpoint</th>
+              </tr>
+              <tr>
+                <td>Mobile</td>
+                <td>Base / 0px</td>
+              </tr>
+              <tr>
+                <td>Tablet</td>
+                <td>768px</td>
+              </tr>
+              <tr>
+                <td>Desktop</td>
+                <td>1024px</td>
+              </tr>
+              <tr>
+                <td>Large Desktop</td>
+                <td>1440px</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Media Features Avanzados</h3>
+            <pre><code>/* Orientación */
+@media (orientation: landscape) {
+  .gallery { grid-template-columns: repeat(4, 1fr); }
+}
+
+/* Preferencias del sistema */
+@media (prefers-color-scheme: dark) {
+  :root { --bg: #1a1a1a; --text: #fff; }
+}
+
+/* Resolución */
+@media (min-resolution: 2dppx) {
+  .logo { background-image: url('logo@2x.png'); }
+}
+
+/* Combinaciones */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .content { width: 750px; }
+}</code></pre>
+          </section>
+          <section>
+            <h3>Container Queries (Moderno)</h3>
+            <p>Consultas basadas en el contenedor en lugar del viewport</p>
+            <pre><code>.card-container {
+  container-type: inline-size;
+  container-name: card;
+}
+
+@container card (min-width: 400px) {
+  .card {
+    display: grid;
+    grid-template-columns: auto 1fr;
+  }
+}
+
+/* El diseño responde al tamaño del contenedor,
+   no al tamaño de la ventana */</code></pre>
+          </section>
+        </section>
+
+        <!-- FUNCIONES CSS MODERNAS -->
+        <section>
+          <section>
+            <h2>Funciones CSS Modernas</h2>
+            <p>Herramientas para diseños fluidos y responsivos</p>
+          </section>
+          <section>
+            <h3>calc() - Cálculos Dinámicos</h3>
+            <pre><code>/* Ancho dinámico */
+.sidebar {
+  width: calc(100% - 300px);
+}
+
+/* Responsive spacing */
+.container {
+  padding: calc(1rem + 2vw);
+}
+
+/* Combinación de unidades */
+.header {
+  height: calc(100vh - 60px);
+}</code></pre>
+          </section>
+          <section>
+            <h3>clamp() - Valores Acotados</h3>
+            <p>Sintaxis: <code>clamp(mínimo, preferido, máximo)</code></p>
+            <pre><code>/* Tipografía fluida */
+h1 {
+  font-size: clamp(1.5rem, 5vw, 3rem);
+  /* Nunca menor a 1.5rem ni mayor a 3rem */
+}
+
+/* Ancho responsivo */
+.container {
+  width: clamp(300px, 90%, 1200px);
+}
+
+/* Padding adaptativo */
+.card {
+  padding: clamp(1rem, 3vw, 3rem);
+}</code></pre>
+          </section>
+          <section>
+            <h3>min() y max()</h3>
+            <pre><code>/* min() - usa el valor más pequeño */
+.container {
+  width: min(90%, 1200px);
+  /* 90% en pantallas grandes, 1200px máximo */
+}
+
+/* max() - usa el valor más grande */
+.content {
+  width: max(50%, 300px);
+  /* Nunca menor a 300px */
+}
+
+/* Combinaciones */
+.element {
+  margin: max(1rem, 3vw) min(2rem, 5vw);
+}</code></pre>
+          </section>
+          <section>
+            <h3>Otras Propiedades Modernas</h3>
+            <pre><code>/* aspect-ratio */
+.video {
+  aspect-ratio: 16 / 9;
+  width: 100%;
+}
+
+/* object-fit */
+img {
+  object-fit: cover;
+  width: 100%;
+  height: 300px;
+}
+
+/* backdrop-filter */
+.glass-effect {
+  backdrop-filter: blur(10px);
+  background: rgba(255, 255, 255, 0.1);
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- Animaciones y Transiciones -->
+        <section>
+          <section>
+            <h2>Transiciones CSS</h2>
+            <p>Cambios suaves entre estados de propiedades</p>
+          </section>
+          <section>
+            <h3>Sintaxis de Transition</h3>
+            <pre><code>transition: property duration timing-function delay;</code></pre>
+            <table>
+              <tr>
+                <th>Parámetro</th>
+                <th>Ejemplo</th>
+              </tr>
+              <tr>
+                <td>property</td>
+                <td>all, opacity, transform</td>
+              </tr>
+              <tr>
+                <td>duration</td>
+                <td>0.3s, 200ms</td>
+              </tr>
+              <tr>
+                <td>timing-function</td>
+                <td>ease, linear, cubic-bezier()</td>
+              </tr>
+              <tr>
+                <td>delay</td>
+                <td>0s, 100ms</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Ejemplos de Transiciones</h3>
+            <pre><code>/* Transición simple */
+.button {
+  background-color: blue;
+  transition: background-color 0.3s ease;
+}
+.button:hover {
+  background-color: red;
+}
+
+/* Múltiples propiedades */
+.card {
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}</code></pre>
+          </section>
+          <section>
+            <h3>Timing Functions</h3>
+            <table>
+              <tr>
+                <th>Función</th>
+                <th>Comportamiento</th>
+              </tr>
+              <tr>
+                <td>linear</td>
+                <td>Velocidad constante</td>
+              </tr>
+              <tr>
+                <td>ease</td>
+                <td>Inicio lento, rápido, fin lento</td>
+              </tr>
+              <tr>
+                <td>ease-in</td>
+                <td>Inicio lento</td>
+              </tr>
+              <tr>
+                <td>ease-out</td>
+                <td>Fin lento</td>
+              </tr>
+              <tr>
+                <td>ease-in-out</td>
+                <td>Inicio y fin lentos</td>
+              </tr>
+              <tr>
+                <td>cubic-bezier()</td>
+                <td>Curva personalizada</td>
+              </tr>
+            </table>
+          </section>
+        </section>
+
+        <!-- ANIMACIONES -->
+        <section>
+          <section>
+            <h2>Animaciones con @keyframes</h2>
+            <p>Control total sobre animaciones complejas</p>
+          </section>
+          <section>
+            <h3>Definición de Keyframes</h3>
+            <pre><code>@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* Uso */
+.element {
+  animation: fadeIn 0.5s ease-out;
+}</code></pre>
+          </section>
+          <section>
+            <h3>Propiedades de Animation</h3>
+            <table style="font-size: 0.8em;">
+              <tr>
+                <th>Propiedad</th>
+                <th>Ejemplo</th>
+              </tr>
+              <tr>
+                <td>animation-name</td>
+                <td>fadeIn</td>
+              </tr>
+              <tr>
+                <td>animation-duration</td>
+                <td>2s</td>
+              </tr>
+              <tr>
+                <td>animation-timing-function</td>
+                <td>ease-in-out</td>
+              </tr>
+              <tr>
+                <td>animation-delay</td>
+                <td>0.5s</td>
+              </tr>
+              <tr>
+                <td>animation-iteration-count</td>
+                <td>infinite, 3</td>
+              </tr>
+              <tr>
+                <td>animation-direction</td>
+                <td>normal, reverse, alternate</td>
+              </tr>
+              <tr>
+                <td>animation-fill-mode</td>
+                <td>forwards, backwards, both</td>
+              </tr>
+            </table>
+          </section>
+          <section>
+            <h3>Animaciones Complejas</h3>
+            <pre><code>@keyframes pulse {
+  0%, 100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.1);
+    opacity: 0.8;
+  }
+}
+
+.notification {
+  animation: pulse 2s ease-in-out infinite;
+}
+
+/* Shorthand completo */
+.element {
+  animation: slideIn 1s ease-out 0.5s 1 normal forwards;
+}</code></pre>
+          </section>
+          <section>
+            <h3>Optimización de Rendimiento</h3>
+            <ul>
+              <li>Preferir <code>transform</code> y <code>opacity</code></li>
+              <li>Evitar animar <code>width</code>, <code>height</code>, <code>top</code>, <code>left</code></li>
+              <li>Usar <code>will-change</code> con precaución</li>
+              <li>Reducir el número de elementos animados simultáneamente</li>
+            </ul>
+            <pre><code>/* Animación optimizada */
+.card {
+  will-change: transform, opacity;
+  transition: transform 0.3s ease,
+              opacity 0.3s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px) scale(1.02);
+}</code></pre>
+          </section>
+        </section>
+        <!-- Buenas Prácticas -->
+        <section>
+          <section>
+            <h2>Buenas Prácticas en CSS</h2>
+            <p>Código mantenible, escalable y eficiente</p>
+          </section>
+          <section>
+            <h3>Nomenclatura y Organización</h3>
+            <ul>
+              <li>Usar nombres de clases descriptivos y semánticos</li>
+              <li>Seguir metodologías: BEM, SMACSS, OOCSS</li>
+              <li>Agrupar selectores relacionados</li>
+              <li>Comentar secciones complejas</li>
+            </ul>
+            <pre><code>/* BEM: Block Element Modifier */
+.card { }
+.card__title { }
+.card__title--highlighted { }
+
+/* Organización por componentes */
+/* ===== Header ===== */
+.header { }
+.header__nav { }</code></pre>
+          </section>
+          <section>
+            <h3>Especificidad y Selectores</h3>
+            <ul>
+              <li>Evitar selectores demasiado específicos</li>
+              <li>Minimizar el uso de <code>!important</code></li>
+              <li>Preferir clases sobre IDs para estilos</li>
+              <li>Evitar anidar selectores en exceso</li>
+            </ul>
+            <pre><code>/* Mal */
+div#container > ul.list > li.item a { }
+
+/* Bien */
+.nav-link { }
+
+/* Evitar */
+.button { color: red !important; }</code></pre>
+          </section>
+          <section>
+            <h3>Rendimiento</h3>
+            <ul>
+              <li>Minimizar el uso de selectores universales (*)</li>
+              <li>Evitar selectores de atributos complejos</li>
+              <li>Reducir repaints y reflows</li>
+              <li>Usar CSS crítico inline para above-the-fold</li>
+              <li>Minificar y comprimir archivos en producción</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Mantenibilidad</h3>
+            <ul>
+              <li>Usar variables CSS para valores repetidos</li>
+              <li>Aplicar mobile-first approach</li>
+              <li>Separar concerns: layout, theme, components</li>
+              <li>Documentar decisiones arquitectónicas</li>
+              <li>Validar CSS con herramientas como Stylelint</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Accesibilidad</h3>
+            <ul>
+              <li>Mantener contraste adecuado (WCAG 2.1)</li>
+              <li>No eliminar outlines sin alternativa</li>
+              <li>Usar unidades relativas para texto</li>
+              <li>Respetar prefers-reduced-motion</li>
+            </ul>
+            <pre><code>@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- CONCLUSIÓN -->
+        <section>
+          <h2>CSS Moderno en 2025-2026</h2>
+          <ul>
+            <li>CSS Variables para temas dinámicos</li>
+            <li>Container Queries para componentes responsivos</li>
+            <li>Funciones matemáticas: clamp(), min(), max()</li>
+            <li>Flexbox y Grid para layouts robustos</li>
+            <li>Animaciones optimizadas con transform y opacity</li>
+            <li>Mobile-first y diseño adaptativo</li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.1.0/reveal.min.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+        transition: 'slide',
+        backgroundTransition: 'fade'
+      });
+    </script>
+  </body>
+</html>
