@@ -63,6 +63,13 @@ export const presentations = [
     active: true,
   },
   {
+    title: "CSS Examples",
+    description: "Estilos para páginas web",
+    path: "temas/css/examples/index.html",
+    image: "temas/css/images/grid.png",
+    active: true,
+  },
+  {
     title: "JavaScript",
     description: "Interactividad en páginas web",
     path: "temas/js/index.html",
