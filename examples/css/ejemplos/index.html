@@ -1,0 +1,2640 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía Interactiva CSS — STW 2026</title>
+  <style>
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════ */
+    :root {
+      --bg:      #0d1117;
+      --surface: #161b22;
+      --card:    #1c2230;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --accent:  #58a6ff;
+      --green:   #3fb950;
+      --yellow:  #d29922;
+      --red:     #f85149;
+      --purple:  #bc8cff;
+      --orange:  #ffa657;
+      --pink:    #f778ba;
+      --teal:    #39d353;
+      --radius:  10px;
+      --mono:    "Fira Code","Cascadia Code","Consolas",monospace;
+      --nav-h:   56px;
+    }
+
+    /* ═══════════════════════════════════════════
+       RESET
+    ═══════════════════════════════════════════ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    code, pre { font-family: var(--mono); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* ═══════════════════════════════════════════
+       PROGRESS BAR
+    ═══════════════════════════════════════════ */
+    #progress {
+      position: fixed; top: var(--nav-h); left: 0;
+      height: 2px; background: var(--accent);
+      width: 0%; z-index: 400; transition: width 0.1s;
+    }
+
+    /* ═══════════════════════════════════════════
+       NAV
+    ═══════════════════════════════════════════ */
+    nav {
+      position: sticky; top: 0; z-index: 300;
+      background: rgba(13,17,23,0.93);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 1.25rem;
+      height: var(--nav-h); padding: 0 1.5rem;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 0.9rem;
+      white-space: nowrap; color: var(--text);
+      flex-shrink: 0;
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links {
+      display: flex; gap: 0.1rem;
+      list-style: none; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      color: var(--muted); font-size: 0.775rem;
+      white-space: nowrap; padding: 0.3rem 0.5rem;
+      border-radius: 5px; transition: color 0.15s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); text-decoration: none; background: var(--surface); }
+
+    /* ═══════════════════════════════════════════
+       PAGE LAYOUT
+    ═══════════════════════════════════════════ */
+    .page-layout {
+      display: grid;
+      grid-template-columns: 210px 1fr;
+      max-width: 1340px;
+      margin: 0 auto;
+    }
+
+    /* ═══════════════════════════════════════════
+       SIDEBAR
+    ═══════════════════════════════════════════ */
+    .sidebar {
+      position: sticky; top: var(--nav-h);
+      height: calc(100vh - var(--nav-h));
+      overflow-y: auto; padding: 1.5rem 0.75rem;
+      border-right: 1px solid var(--border);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .sidebar-title {
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted); margin-bottom: 0.6rem;
+      padding-left: 0.5rem;
+    }
+    .sidebar-nav { list-style: none; display: flex; flex-direction: column; gap: 1px; }
+    .sidebar-nav a {
+      display: block; padding: 0.35rem 0.65rem;
+      border-radius: 6px; color: var(--muted);
+      font-size: 0.82rem; transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+    .sidebar-nav a:hover { color: var(--text); text-decoration: none; background: var(--surface); }
+    .sidebar-nav a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: rgba(88,166,255,0.07);
+    }
+
+    /* ═══════════════════════════════════════════
+       MAIN
+    ═══════════════════════════════════════════ */
+    main { padding: 0 2rem 5rem; min-width: 0; }
+
+    /* ═══════════════════════════════════════════
+       HERO
+    ═══════════════════════════════════════════ */
+    .hero {
+      padding: 4rem 0 3rem; text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%,
+        rgba(88,166,255,0.1) 0%, transparent 60%);
+    }
+    .hero-label {
+      color: var(--muted); font-size: 0.75rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem,5vw,3rem); font-weight: 800;
+      background: linear-gradient(135deg, #e6edf3 30%, #58a6ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 1rem;
+    }
+    .hero p { color: var(--muted); max-width: 540px; margin: 0 auto 2rem; }
+    .hero-chips { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
+    .chip {
+      padding: 0.25rem 0.75rem; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 600;
+      border: 1px solid var(--border); color: var(--muted);
+      transition: all 0.2s;
+    }
+    .chip:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+    /* ═══════════════════════════════════════════
+       TOPIC SECTIONS
+    ═══════════════════════════════════════════ */
+    .topic { padding: 3rem 0; border-top: 1px solid var(--border); }
+    .topic-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+    .topic-num {
+      width: 34px; height: 34px; border-radius: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; color: var(--accent);
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .topic-title { font-size: 1.45rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .topic-desc { color: var(--muted); font-size: 0.9rem; }
+
+    /* ═══════════════════════════════════════════
+       TABS
+    ═══════════════════════════════════════════ */
+    .tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.25rem; flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 0.45rem 1rem; background: none; border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted); font-size: 0.85rem;
+      cursor: pointer; transition: all 0.15s;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* ═══════════════════════════════════════════
+       DEMO BOX
+    ═══════════════════════════════════════════ */
+    .demo-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      margin-bottom: 1rem; position: relative;
+    }
+    .demo-label {
+      position: absolute; top: -0.55rem; left: 1rem;
+      background: var(--surface); padding: 0 0.4rem;
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .demo-row { display: flex; gap: 0.75rem; flex-wrap: wrap; align-items: flex-start; }
+    .demo-col { flex: 1; min-width: 140px; }
+
+    /* ═══════════════════════════════════════════
+       CODE BLOCKS
+    ═══════════════════════════════════════════ */
+    .code-wrap { position: relative; margin-bottom: 1rem; }
+    .code-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      background: var(--card); border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 0.4rem 0.8rem;
+    }
+    .code-lang {
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .copy-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 5px; color: var(--muted);
+      font-size: 0.72rem; padding: 0.18rem 0.6rem;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.3rem;
+      font-family: inherit;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+    pre.code {
+      background: #0d1117; border: 1px solid var(--border);
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 1rem 1.2rem; overflow-x: auto;
+      font-size: 0.82rem; line-height: 1.65;
+      color: #e6edf3; tab-size: 2;
+    }
+    /* Syntax highlight classes */
+    .k  { color: #ff7b72; }          /* keyword / at-rule */
+    .p  { color: #79c0ff; }          /* property */
+    .v  { color: #a5d6ff; }          /* value */
+    .s  { color: #a5d6ff; }          /* string */
+    .c  { color: #8b949e; font-style: italic; } /* comment */
+    .t  { color: #7ee787; }          /* HTML tag */
+    .a  { color: #ffa657; }          /* attribute */
+    .u  { color: #d2a8ff; }          /* selector / unit special */
+    .n  { color: #ffa657; }          /* number */
+
+    /* ═══════════════════════════════════════════
+       CALLOUTS
+    ═══════════════════════════════════════════ */
+    .callout {
+      border-radius: 8px; padding: 0.85rem 1rem;
+      border-left: 3px solid; margin: 1rem 0;
+      font-size: 0.875rem;
+    }
+    .callout strong { display: block; margin-bottom: 0.2rem; }
+    .ci { background: rgba(88,166,255,0.07);  border-color: var(--accent); }
+    .cw { background: rgba(210,153,34,0.08);  border-color: var(--yellow); }
+    .ct { background: rgba(63,185,80,0.07);   border-color: var(--green); }
+    .cr { background: rgba(248,81,73,0.07);   border-color: var(--red); }
+
+    /* ═══════════════════════════════════════════
+       TABLES
+    ═══════════════════════════════════════════ */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+    .data-table th {
+      background: var(--card); padding: 0.55rem 0.75rem;
+      text-align: left; border-bottom: 1px solid var(--border);
+      color: var(--accent); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;
+    }
+    .data-table td { padding: 0.5rem 0.75rem; border-bottom: 1px solid rgba(48,54,61,0.5); }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--surface); }
+
+    /* ═══════════════════════════════════════════
+       BADGES
+    ═══════════════════════════════════════════ */
+    .badge {
+      display: inline-block; padding: 0.15em 0.6em;
+      border-radius: 20px; font-size: 0.7rem; font-weight: 600;
+    }
+    .bb { background: rgba(88,166,255,0.12);  color: var(--accent);  border: 1px solid rgba(88,166,255,0.3); }
+    .bg { background: rgba(63,185,80,0.12);   color: var(--green);   border: 1px solid rgba(63,185,80,0.3); }
+    .bo { background: rgba(255,166,87,0.12);  color: var(--orange);  border: 1px solid rgba(255,166,87,0.3); }
+    .bp { background: rgba(188,140,255,0.12); color: var(--purple);  border: 1px solid rgba(188,140,255,0.3); }
+    .br { background: rgba(248,81,73,0.12);   color: var(--red);     border: 1px solid rgba(248,81,73,0.3); }
+
+    /* ═══════════════════════════════════════════
+       SECTION FILE LINKS
+    ═══════════════════════════════════════════ */
+    .file-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .flink {
+      display: inline-flex; align-items: center; gap: 0.35rem;
+      padding: 0.3rem 0.75rem; border: 1px solid var(--border);
+      border-radius: 6px; color: var(--muted); font-size: 0.78rem;
+      transition: all 0.2s;
+    }
+    .flink:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+    /* ═══════════════════════════════════════════
+       UTILITY BOX (colored blocks for demos)
+    ═══════════════════════════════════════════ */
+    .ub {
+      border-radius: 6px; padding: 0.45rem 0.7rem;
+      font-size: 0.8rem; font-weight: 600; text-align: center;
+    }
+    .ub-b { background: rgba(88,166,255,0.12);  border: 1px solid rgba(88,166,255,0.3);  color: var(--accent); }
+    .ub-g { background: rgba(63,185,80,0.12);   border: 1px solid rgba(63,185,80,0.3);   color: var(--green); }
+    .ub-o { background: rgba(255,166,87,0.12);  border: 1px solid rgba(255,166,87,0.3);  color: var(--orange); }
+    .ub-p { background: rgba(188,140,255,0.12); border: 1px solid rgba(188,140,255,0.3); color: var(--purple); }
+    .ub-r { background: rgba(248,81,73,0.12);   border: 1px solid rgba(248,81,73,0.3);   color: var(--red); }
+
+    /* ═══════════════════════════════════════════
+       SPECIFIC DEMO STYLES — 01 TIPOS
+    ═══════════════════════════════════════════ */
+    .tipo-inline-el {
+      color: #58a6ff; font-size: 1.05rem;
+      font-family: Arial, sans-serif;
+      background: var(--card); padding: 10px 14px;
+      border-radius: 6px; margin-bottom: 8px;
+    }
+    .tipo-interno-header {
+      background: linear-gradient(135deg,#667eea,#764ba2);
+      color: white; padding: 18px; border-radius: 8px;
+      text-align: center; margin-bottom: 10px;
+    }
+
+    /* ═══════════════════════════════════════════
+       SPECIFIC DEMO STYLES — 02 SELECTORES
+    ═══════════════════════════════════════════ */
+    /* hover demo */
+    .d-hover {
+      display: inline-block;
+      background: var(--accent); color: #0d1117;
+      padding: 10px 20px; border-radius: 7px;
+      font-weight: 600; cursor: pointer;
+      transition: all 0.3s ease; font-size: 0.875rem;
+      border: none;
+    }
+    .d-hover:hover { background: #82b8ff; transform: translateY(-3px); box-shadow: 0 6px 16px rgba(88,166,255,0.35); }
+    .d-active { background: var(--red); color: white; padding: 10px 20px; border-radius: 7px; font-weight: 600; cursor: pointer; transition: transform 0.1s ease; font-size: 0.875rem; border: none; display: inline-block; }
+    .d-active:active { transform: scale(0.93); background: #c93b35; }
+    .d-focus { padding: 10px 14px; border: 2px solid var(--border); border-radius: 6px; font-size: 0.9rem; background: var(--card); color: var(--text); transition: all 0.25s; width: 220px; }
+    .d-focus:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(88,166,255,0.18); }
+    /* structural pseudo demo list */
+    .d-list { list-style: none; background: var(--card); border-radius: 8px; overflow: hidden; }
+    .d-list li { padding: 11px 16px; border-bottom: 1px solid var(--border); font-size: 0.875rem; }
+    .d-list li:last-child { border-bottom: none; }
+    .d-list.first-last li:first-child { background: rgba(63,185,80,0.12); color: var(--green); font-weight: 600; }
+    .d-list.first-last li:last-child  { background: rgba(88,166,255,0.12); color: var(--accent); font-weight: 600; }
+    .d-list.striped li:nth-child(odd)  { background: rgba(88,166,255,0.05); }
+    .d-list.striped li:nth-child(even) { background: transparent; }
+    .d-list.notex li:not(.sp)  { color: var(--muted); }
+    .d-list.notex li.sp { background: linear-gradient(135deg,#f093fb,#f5576c); color: white; font-weight: 600; }
+    /* combinators */
+    .comb-parent > .direct-child  { border-left: 3px solid var(--green); }
+    .comb-sib + .adj-sib { background: rgba(255,166,87,0.12); color: var(--orange); }
+    .comb-gen ~ .gen-sib { font-style: italic; color: var(--purple); }
+
+    /* ═══════════════════════════════════════════
+       RESPONSIVE
+    ═══════════════════════════════════════════ */
+    @media (max-width: 860px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+    }
+    @media (max-width: 640px) {
+      main { padding: 0 1rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- ════════════════════════════════════════════
+     NAV
+════════════════════════════════════════════ -->
+<nav>
+  <div class="nav-brand">CSS<span> · </span>STW 2026</div>
+  <ul class="nav-links" role="list">
+    <li><a href="#tipos">Tipos</a></li>
+    <li><a href="#selectores">Selectores</a></li>
+    <li><a href="#box-model">Box Model</a></li>
+    <li><a href="#display">Display</a></li>
+    <li><a href="#position">Position</a></li>
+    <li><a href="#unidades">Unidades</a></li>
+    <li><a href="#colores">Colores</a></li>
+    <li><a href="#variables">Variables</a></li>
+    <li><a href="#tipografia">Tipografía</a></li>
+    <li><a href="#flexbox">Flexbox</a></li>
+    <li><a href="#grid">Grid</a></li>
+    <li><a href="#responsive">Responsive</a></li>
+    <li><a href="#funciones">Funciones</a></li>
+    <li><a href="#animaciones">Animaciones</a></li>
+  </ul>
+</nav>
+
+<!-- ════════════════════════════════════════════
+     PAGE LAYOUT
+════════════════════════════════════════════ -->
+<div class="page-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Temas CSS</div>
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li><a href="#tipos"       data-s="tipos">01 · Tipos de CSS</a></li>
+      <li><a href="#selectores"  data-s="selectores">02 · Selectores</a></li>
+      <li><a href="#box-model"   data-s="box-model">03 · Box Model</a></li>
+      <li><a href="#display"     data-s="display">04 · Display</a></li>
+      <li><a href="#position"    data-s="position">05 · Position</a></li>
+      <li><a href="#unidades"    data-s="unidades">06 · Unidades</a></li>
+      <li><a href="#colores"     data-s="colores">07 · Colores</a></li>
+      <li><a href="#variables"   data-s="variables">08 · Variables</a></li>
+      <li><a href="#tipografia"  data-s="tipografia">09 · Tipografía</a></li>
+      <li><a href="#flexbox"     data-s="flexbox">10 · Flexbox</a></li>
+      <li><a href="#grid"        data-s="grid">11 · Grid</a></li>
+      <li><a href="#responsive"  data-s="responsive">12 · Responsive</a></li>
+      <li><a href="#funciones"   data-s="funciones">13 · Funciones</a></li>
+      <li><a href="#animaciones" data-s="animaciones">14 · Animaciones</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- ══════════════════════════
+         HERO
+    ══════════════════════════ -->
+    <div class="hero">
+      <div class="hero-label">STW 2026 · Universidad del Valle de Guatemala</div>
+      <h1>Guía Interactiva de CSS</h1>
+      <p>Referencia visual de los 14 temas fundamentales. Demos en vivo, código copiable y acceso directo a cada ejemplo.</p>
+      <div class="hero-chips">
+        <a class="chip" href="#tipos">Tipos</a>
+        <a class="chip" href="#selectores">Selectores</a>
+        <a class="chip" href="#box-model">Box Model</a>
+        <a class="chip" href="#display">Display</a>
+        <a class="chip" href="#position">Position</a>
+        <a class="chip" href="#unidades">Unidades</a>
+        <a class="chip" href="#colores">Colores</a>
+        <a class="chip" href="#variables">Variables</a>
+        <a class="chip" href="#tipografia">Tipografía</a>
+        <a class="chip" href="#flexbox">Flexbox</a>
+        <a class="chip" href="#grid">Grid</a>
+        <a class="chip" href="#responsive">Responsive</a>
+        <a class="chip" href="#funciones">Funciones</a>
+        <a class="chip" href="#animaciones">Animaciones</a>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         01 · TIPOS DE CSS
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="tipos">
+      <div class="topic-header">
+        <div class="topic-num">01</div>
+        <div>
+          <div class="topic-title">Tipos de CSS</div>
+          <div class="topic-desc">CSS puede aplicarse de tres formas: <strong>inline</strong> en el atributo style, <strong>interno</strong> dentro de &lt;style&gt; en el &lt;head&gt;, y <strong>externo</strong> en un archivo .css separado.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'tipos','inline')">Inline</button>
+        <button class="tab-btn" onclick="switchTab(this,'tipos','interno')">Interno</button>
+        <button class="tab-btn" onclick="switchTab(this,'tipos','externo')">Externo</button>
+        <button class="tab-btn" onclick="switchTab(this,'tipos','comparacion')">Comparación</button>
+      </div>
+
+      <!-- TAB: INLINE -->
+      <div class="tab-panel active" data-tab="tipos-inline">
+        <div class="demo-box">
+          <span class="demo-label">Vista previa</span>
+          <div class="tipo-inline-el">
+            Este texto usa <code style="background:#30363d;padding:1px 5px;border-radius:4px;color:#ffa657">style="color:#58a6ff"</code> directamente en el elemento.
+          </div>
+          <h4 style="color:#3fb950;font-size:1rem;background:rgba(63,185,80,0.07);padding:10px 14px;border-radius:6px;border-left:3px solid var(--green);">
+            Título con <code style="background:#30363d;padding:1px 5px;border-radius:4px;color:#ffa657">color:#3fb950</code> inline
+          </h4>
+          <p style="margin-top:10px;color:var(--muted);font-size:0.825rem">↑ Cada elemento lleva su propio atributo <code>style</code></p>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="c">&lt;!-- El atributo style va directamente en cada elemento --&gt;</span>
+<span class="t">&lt;h1</span> <span class="a">style</span>=<span class="s">"color: #2c3e50; text-align: center; font-family: Arial;"</span><span class="t">&gt;</span>
+  CSS Inline
+<span class="t">&lt;/h1&gt;</span>
+
+<span class="t">&lt;p</span> <span class="a">style</span>=<span class="s">"font-size: 16px; color: #34495e; line-height: 1.6;"</span><span class="t">&gt;</span>
+  Párrafo con estilos inline aplicados.
+<span class="t">&lt;/p&gt;</span>
+
+<span class="t">&lt;div</span> <span class="a">style</span>=<span class="s">"background: #ecf0f1; padding: 20px; border-radius: 8px;"</span><span class="t">&gt;</span>
+  Contenedor con fondo y padding inline.
+<span class="t">&lt;/div&gt;</span></pre>
+        </div>
+        <div class="callout cw">
+          <strong>⚠ Úsalo con moderación</strong>
+          Alta especificidad (anula clases y selectores externos), no reutilizable, mezcla contenido con presentación. Solo para casos muy puntuales.
+        </div>
+        <div class="file-links">
+          <a class="flink" href="../01_tipos_css/inline.html" target="_blank">↗ 01_tipos_css/inline.html</a>
+        </div>
+      </div>
+
+      <!-- TAB: INTERNO -->
+      <div class="tab-panel" data-tab="tipos-interno">
+        <div class="demo-box">
+          <span class="demo-label">Vista previa</span>
+          <div class="tipo-interno-header">
+            <h3 style="margin:0 0 5px;font-size:1.1rem">CSS Interno</h3>
+            <p style="margin:0;opacity:0.9;font-size:0.85rem">Estilos definidos en &lt;style&gt; dentro del &lt;head&gt;</p>
+          </div>
+          <div style="display:flex;gap:8px;flex-wrap:wrap">
+            <div style="background:#d4edda;color:#155724;padding:8px 14px;border-radius:5px;font-size:0.82rem;padding-left:28px;position:relative">
+              <span style="position:absolute;left:10px">✓</span> .benefits-list li
+            </div>
+            <div style="background:#f8d7da;color:#721c24;padding:8px 14px;border-radius:5px;font-size:0.82rem;padding-left:28px;position:relative">
+              <span style="position:absolute;left:10px">✗</span> .drawbacks-list li
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">HTML</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="t">&lt;head&gt;</span>
+  <span class="t">&lt;style&gt;</span>
+    <span class="c">/* Los estilos se definen aquí y aplican a todo el documento */</span>
+    <span class="u">.header</span> {
+      <span class="p">background</span>: <span class="v">linear-gradient(135deg, #667eea, #764ba2)</span>;
+      <span class="p">color</span>: <span class="v">white</span>;
+      <span class="p">padding</span>: <span class="v">40px 30px</span>;
+      <span class="p">text-align</span>: <span class="v">center</span>;
+    }
+
+    <span class="u">.card</span> {
+      <span class="p">background</span>: <span class="v">white</span>;
+      <span class="p">border-radius</span>: <span class="v">8px</span>;
+      <span class="p">padding</span>: <span class="v">25px</span>;
+      <span class="p">box-shadow</span>: <span class="v">0 2px 8px rgba(0,0,0,0.1)</span>;
+    }
+  <span class="t">&lt;/style&gt;</span>
+<span class="t">&lt;/head&gt;</span>
+
+<span class="t">&lt;body&gt;</span>
+  <span class="t">&lt;header</span> <span class="a">class</span>=<span class="s">"header"</span><span class="t">&gt;</span>...<span class="t">&lt;/header&gt;</span>
+  <span class="t">&lt;div</span> <span class="a">class</span>=<span class="s">"card"</span><span class="t">&gt;</span>...<span class="t">&lt;/div&gt;</span>
+<span class="t">&lt;/body&gt;</span></pre>
+        </div>
+        <div class="callout ci">
+          <strong>💡 Cuándo usarlo</strong>
+          Ideal para páginas únicas, prototipado rápido o cuando no puedes usar archivos externos.
+        </div>
+        <div class="file-links">
+          <a class="flink" href="../01_tipos_css/interno.html" target="_blank">↗ 01_tipos_css/interno.html</a>
+        </div>
+      </div>
+
+      <!-- TAB: EXTERNO -->
+      <div class="tab-panel" data-tab="tipos-externo">
+        <div class="demo-box">
+          <span class="demo-label">Estructura de archivos</span>
+          <div style="font-family:var(--mono);font-size:0.85rem;line-height:2.2">
+            <div style="color:var(--muted)">proyecto/</div>
+            <div style="padding-left:22px">├── <span style="color:var(--accent)">index.html</span></div>
+            <div style="padding-left:22px">└── <span style="color:var(--orange)">styles.css</span>
+              <span style="color:var(--green);font-size:0.7rem;margin-left:8px">← archivo independiente, cacheable</span>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">index.html</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="t">&lt;head&gt;</span>
+  <span class="c">&lt;!-- Vinculamos el archivo CSS externo --&gt;</span>
+  <span class="t">&lt;link</span> <span class="a">rel</span>=<span class="s">"stylesheet"</span> <span class="a">href</span>=<span class="s">"styles.css"</span><span class="t">&gt;</span>
+<span class="t">&lt;/head&gt;</span></pre>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">styles.css</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="c">/* Este archivo se puede compartir entre múltiples páginas */</span>
+<span class="u">body</span> {
+  <span class="p">font-family</span>: <span class="v">'Segoe UI', sans-serif</span>;
+  <span class="p">background-color</span>: <span class="v">#f5f5f5</span>;
+  <span class="p">margin</span>: <span class="v">0</span>;
+}
+
+<span class="u">.container</span> {
+  <span class="p">max-width</span>: <span class="v">900px</span>;
+  <span class="p">margin</span>: <span class="v">0 auto</span>;
+  <span class="p">padding</span>: <span class="v">20px</span>;
+}</pre>
+        </div>
+        <div class="callout ct">
+          <strong>✅ Mejor práctica profesional</strong>
+          El navegador cachea el archivo CSS, múltiples páginas comparten los mismos estilos, y se separa el contenido de la presentación.
+        </div>
+        <div class="file-links">
+          <a class="flink" href="../01_tipos_css/externo/index.html" target="_blank">↗ 01_tipos_css/externo/index.html</a>
+          <a class="flink" href="../01_tipos_css/externo/styles.css" target="_blank">↗ externo/styles.css</a>
+        </div>
+      </div>
+
+      <!-- TAB: COMPARACIÓN -->
+      <div class="tab-panel" data-tab="tipos-comparacion">
+        <table class="data-table">
+          <thead>
+            <tr>
+              <th>Tipo</th><th>Sintaxis</th><th>Reutilizable</th><th>Cacheable</th><th>Especificidad</th><th>Uso recomendado</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><span class="badge bo">Inline</span></td>
+              <td><code>style="..."</code></td>
+              <td>❌</td><td>❌</td>
+              <td>1,0,0,0 (máxima)</td>
+              <td>Casos muy específicos</td>
+            </tr>
+            <tr>
+              <td><span class="badge bb">Interno</span></td>
+              <td><code>&lt;style&gt;</code></td>
+              <td>Dentro del doc</td><td>❌</td>
+              <td>Depende del selector</td>
+              <td>Páginas únicas / prototipos</td>
+            </tr>
+            <tr>
+              <td><span class="badge bg">Externo</span></td>
+              <td><code>&lt;link rel="stylesheet"&gt;</code></td>
+              <td>✅</td><td>✅</td>
+              <td>Depende del selector</td>
+              <td>✅ Proyectos de producción</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         02 · SELECTORES
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="selectores">
+      <div class="topic-header">
+        <div class="topic-num">02</div>
+        <div>
+          <div class="topic-title">Selectores CSS</div>
+          <div class="topic-desc">Los selectores determinan a qué elementos HTML se aplican las reglas CSS. Existen selectores de elemento, clase, ID, pseudo-clases, pseudo-elementos y combinadores.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'sel','basic')">Elemento / Clase / ID</button>
+        <button class="tab-btn" onclick="switchTab(this,'sel','pseudo')">Pseudo-clases</button>
+        <button class="tab-btn" onclick="switchTab(this,'sel','struct')">Estructurales</button>
+        <button class="tab-btn" onclick="switchTab(this,'sel','comb')">Combinadores</button>
+      </div>
+
+      <!-- TAB: BÁSICOS -->
+      <div class="tab-panel active" data-tab="sel-basic">
+        <div class="demo-box">
+          <span class="demo-label">Vista previa</span>
+          <div class="demo-row">
+            <div class="demo-col">
+              <p style="font-size:0.75rem;color:var(--muted);margin-bottom:6px">Selector de elemento</p>
+              <p style="color:#7ee787;font-weight:700;font-size:0.95rem">p { color: green }</p>
+            </div>
+            <div class="demo-col">
+              <p style="font-size:0.75rem;color:var(--muted);margin-bottom:6px">Selector de clase (.)</p>
+              <div style="display:flex;gap:6px">
+                <div class="ub ub-b">.card</div>
+                <div class="ub ub-b">.card</div>
+                <div class="ub ub-b">.card</div>
+              </div>
+            </div>
+            <div class="demo-col">
+              <p style="font-size:0.75rem;color:var(--muted);margin-bottom:6px">Selector ID (#)</p>
+              <div class="ub ub-p">#header — único</div>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">CSS</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="c">/* ── Selector de elemento: afecta a TODOS los &lt;p&gt; ── */</span>
+<span class="u">p</span> {
+  <span class="p">color</span>: <span class="v">#34495e</span>;
+  <span class="p">line-height</span>: <span class="v">1.6</span>;
+}
+
+<span class="c">/* ── Selector de clase: reutilizable en múltiples elementos ── */</span>
+<span class="u">.card</span> {
+  <span class="p">background</span>: <span class="v">white</span>;
+  <span class="p">border-radius</span>: <span class="v">8px</span>;
+  <span class="p">padding</span>: <span class="v">20px</span>;
+  <span class="p">box-shadow</span>: <span class="v">0 2px 8px rgba(0,0,0,0.1)</span>;
+}
+
+<span class="c">/* ── Selector de ID: solo un elemento por página ── */</span>
+<span class="u">#header</span> {
+  <span class="p">background</span>: <span class="v">linear-gradient(135deg, #667eea, #764ba2)</span>;
+  <span class="p">color</span>: <span class="v">white</span>;
+}
+
+<span class="c">/* ── Múltiples clases en un elemento ── */</span>
+<span class="c">/* HTML: &lt;button class="btn btn-primary"&gt; */</span>
+<span class="u">.btn</span>            { <span class="p">padding</span>: <span class="v">10px 20px</span>; <span class="p">border-radius</span>: <span class="v">5px</span>; }
+<span class="u">.btn-primary</span>    { <span class="p">background</span>: <span class="v">#667eea</span>; <span class="p">color</span>: <span class="v">white</span>; }
+<span class="u">.btn-secondary</span>  { <span class="p">background</span>: <span class="v">#6c757d</span>; <span class="p">color</span>: <span class="v">white</span>; }</pre>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Selector</th><th>Símbolo</th><th>Especificidad</th><th>Reutilizable</th></tr></thead>
+          <tbody>
+            <tr><td>Elemento</td><td><code>p, h1, div</code></td><td>0,0,0,1</td><td>En todos los elementos del tipo</td></tr>
+            <tr><td>Clase</td><td><code>.nombre</code></td><td>0,0,1,0</td><td>✅ En múltiples elementos</td></tr>
+            <tr><td>ID</td><td><code>#nombre</code></td><td>0,1,0,0</td><td>❌ Solo un elemento</td></tr>
+          </tbody>
+        </table>
+        <div class="file-links">
+          <a class="flink" href="../02_selectores/clases_id.html" target="_blank">↗ 02_selectores/clases_id.html</a>
+        </div>
+      </div>
+
+      <!-- TAB: PSEUDO-CLASES INTERACCIÓN -->
+      <div class="tab-panel" data-tab="sel-pseudo">
+        <div class="demo-box">
+          <span class="demo-label">Interactúa con los elementos</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:12px">
+            <button class="d-hover">:hover — pasa el cursor</button>
+            <button class="d-active">:active — haz clic</button>
+          </div>
+          <div>
+            <input class="d-focus" type="text" placeholder=":focus — haz clic aquí">
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">CSS</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="c">/* :hover — al pasar el cursor */</span>
+<span class="u">.btn:hover</span> {
+  <span class="p">background</span>: <span class="v">#82b8ff</span>;
+  <span class="p">transform</span>: <span class="v">translateY(-3px)</span>;
+  <span class="p">box-shadow</span>: <span class="v">0 6px 16px rgba(88,166,255,0.35)</span>;
+}
+
+<span class="c">/* :active — mientras se mantiene presionado */</span>
+<span class="u">.btn:active</span> {
+  <span class="p">transform</span>: <span class="v">scale(0.93)</span>;
+}
+
+<span class="c">/* :focus — cuando el elemento tiene el foco (teclado o clic) */</span>
+<span class="u">input:focus</span> {
+  <span class="p">outline</span>: <span class="v">none</span>;
+  <span class="p">border-color</span>: <span class="v">#58a6ff</span>;
+  <span class="p">box-shadow</span>: <span class="v">0 0 0 3px rgba(88,166,255,0.18)</span>;
+}
+
+<span class="c">/* :visited — enlaces ya visitados */</span>
+<span class="u">a:visited</span> { <span class="p">color</span>: <span class="v">#bc8cff</span>; }
+
+<span class="c">/* :disabled — campos deshabilitados */</span>
+<span class="u">input:disabled</span> { <span class="p">opacity</span>: <span class="v">0.5</span>; <span class="p">cursor</span>: <span class="v">not-allowed</span>; }
+
+<span class="c">/* :checked — checkbox/radio marcado */</span>
+<span class="u">input:checked</span> + <span class="u">label</span> { <span class="p">font-weight</span>: <span class="v">bold</span>; <span class="p">color</span>: <span class="v">#3fb950</span>; }</pre>
+        </div>
+        <div class="file-links">
+          <a class="flink" href="../02_selectores/pseudo_clases.html" target="_blank">↗ 02_selectores/pseudo_clases.html</a>
+        </div>
+      </div>
+
+      <!-- TAB: ESTRUCTURALES -->
+      <div class="tab-panel" data-tab="sel-struct">
+        <div class="demo-box">
+          <span class="demo-label">:first-child / :last-child</span>
+          <ul class="d-list first-last" style="margin-bottom:12px">
+            <li>Primer elemento — :first-child (verde)</li>
+            <li>Elemento normal</li>
+            <li>Elemento normal</li>
+            <li>Último elemento — :last-child (azul)</li>
+          </ul>
+          <p style="font-size:0.75rem;color:var(--muted);margin-bottom:6px">:nth-child(odd) / :nth-child(even) — filas alternadas</p>
+          <ul class="d-list striped">
+            <li>Elemento 1 (impar)</li>
+            <li>Elemento 2 (par)</li>
+            <li>Elemento 3 (impar)</li>
+            <li>Elemento 4 (par)</li>
+            <li>Elemento 5 (impar)</li>
+          </ul>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">CSS</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="c">/* Primer y último hijo */</span>
+<span class="u">li:first-child</span> { <span class="p">background</span>: <span class="v">#d4edda</span>; <span class="p">font-weight</span>: <span class="v">bold</span>; }
+<span class="u">li:last-child</span>  { <span class="p">background</span>: <span class="v">#cce5ff</span>; <span class="p">font-weight</span>: <span class="v">bold</span>; }
+
+<span class="c">/* Filas alternadas (útil para tablas) */</span>
+<span class="u">tr:nth-child(odd)</span>  { <span class="p">background</span>: <span class="v">#f8f9fa</span>; }
+<span class="u">tr:nth-child(even)</span> { <span class="p">background</span>: <span class="v">white</span>; }
+
+<span class="c">/* Cada tercer elemento */</span>
+<span class="u">li:nth-child(3n)</span> { <span class="p">border-left</span>: <span class="v">4px solid #ffc107</span>; }
+
+<span class="c">/* Exactamente el quinto elemento */</span>
+<span class="u">li:nth-child(5)</span> { <span class="p">font-weight</span>: <span class="v">bold</span>; }
+
+<span class="c">/* Negación: todos excepto .especial */</span>
+<span class="u">li:not(.especial)</span> { <span class="p">opacity</span>: <span class="v">0.6</span>; }
+
+<span class="c">/* :is() — agrupar selectores */</span>
+<span class="u">:is(h1, h2, h3)</span> { <span class="p">color</span>: <span class="v">#667eea</span>; }
+
+<span class="c">/* :where() — igual a :is() pero sin especificidad */</span>
+<span class="u">:where(section, article)</span> <span class="u">p</span> { <span class="p">line-height</span>: <span class="v">1.8</span>; }</pre>
+        </div>
+      </div>
+
+      <!-- TAB: COMBINADORES -->
+      <div class="tab-panel" data-tab="sel-comb">
+        <div class="demo-box">
+          <span class="demo-label">Tipos de combinadores</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:rgba(63,185,80,0.08);border:1px solid rgba(63,185,80,0.25);border-radius:7px;padding:10px 14px">
+              <span style="color:var(--green);font-weight:700;font-size:0.8rem">A &gt; B</span>
+              <span style="color:var(--muted);font-size:0.8rem;margin-left:10px">Hijo directo</span>
+              <code style="float:right;font-size:0.75rem;color:var(--green)">.nav > li</code>
+            </div>
+            <div style="background:rgba(255,166,87,0.08);border:1px solid rgba(255,166,87,0.25);border-radius:7px;padding:10px 14px">
+              <span style="color:var(--orange);font-weight:700;font-size:0.8rem">A + B</span>
+              <span style="color:var(--muted);font-size:0.8rem;margin-left:10px">Hermano adyacente</span>
+              <code style="float:right;font-size:0.75rem;color:var(--orange)">h2 + p</code>
+            </div>
+            <div style="background:rgba(188,140,255,0.08);border:1px solid rgba(188,140,255,0.25);border-radius:7px;padding:10px 14px">
+              <span style="color:var(--purple);font-weight:700;font-size:0.8rem">A ~ B</span>
+              <span style="color:var(--muted);font-size:0.8rem;margin-left:10px">Hermanos generales</span>
+              <code style="float:right;font-size:0.75rem;color:var(--purple)">h2 ~ p</code>
+            </div>
+            <div style="background:rgba(88,166,255,0.08);border:1px solid rgba(88,166,255,0.25);border-radius:7px;padding:10px 14px">
+              <span style="color:var(--accent);font-weight:700;font-size:0.8rem">A B</span>
+              <span style="color:var(--muted);font-size:0.8rem;margin-left:10px">Descendiente (cualquier nivel)</span>
+              <code style="float:right;font-size:0.75rem;color:var(--accent)">.card p</code>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">CSS</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="c">/* Espacio: descendiente a cualquier nivel */</span>
+<span class="u">.card p</span> { <span class="p">color</span>: <span class="v">#555</span>; }
+
+<span class="c">/* > : solo hijo DIRECTO */</span>
+<span class="u">nav > ul > li</span> { <span class="p">display</span>: <span class="v">inline-block</span>; }
+
+<span class="c">/* + : hermano INMEDIATAMENTE siguiente */</span>
+<span class="u">h2 + p</span> { <span class="p">font-size</span>: <span class="v">1.1rem</span>; <span class="p">color</span>: <span class="v">#666</span>; }
+
+<span class="c">/* ~ : TODOS los hermanos siguientes */</span>
+<span class="u">h2 ~ p</span> { <span class="p">border-left</span>: <span class="v">3px solid #667eea</span>; <span class="p">padding-left</span>: <span class="v">10px</span>; }
+
+<span class="c">/* Combinación múltiple */</span>
+<span class="u">.section > .card > h3 + p</span> {
+  <span class="p">margin-top</span>: <span class="v">0</span>;
+  <span class="p">color</span>: <span class="v">var(--muted)</span>;
+}</pre>
+        </div>
+        <div class="file-links">
+          <a class="flink" href="../02_selectores/combinadores.html" target="_blank">↗ 02_selectores/combinadores.html</a>
+          <a class="flink" href="../02_selectores/pseudo_clases.html" target="_blank">↗ 02_selectores/pseudo_clases.html</a>
+          <a class="flink" href="../02_selectores/clases_id.html" target="_blank">↗ 02_selectores/clases_id.html</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         03 · BOX MODEL
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="box-model">
+      <div class="topic-header">
+        <div class="topic-num">03</div>
+        <div>
+          <div class="topic-title">Box Model</div>
+          <div class="topic-desc">Cada elemento HTML es una caja rectangular compuesta por <strong>content → padding → border → margin</strong>. La propiedad <code>box-sizing</code> controla cómo se calculan las dimensiones totales.</div>
+        </div>
+      </div>
+
+      <!-- Diagrama visual -->
+      <div class="demo-box" style="text-align:center">
+        <span class="demo-label">Diagrama del Box Model</span>
+        <div style="background:rgba(255,166,87,0.12);border:2px dashed var(--orange);border-radius:8px;padding:16px;display:inline-block;width:100%;max-width:420px">
+          <div style="font-size:0.7rem;color:var(--orange);margin-bottom:8px;text-align:left">margin</div>
+          <div style="background:rgba(248,81,73,0.12);border:8px solid rgba(248,81,73,0.45);border-radius:6px;padding:14px">
+            <div style="font-size:0.7rem;color:var(--red);margin-bottom:8px;text-align:left">border</div>
+            <div style="background:rgba(63,185,80,0.12);border:2px dashed var(--green);border-radius:4px;padding:14px">
+              <div style="font-size:0.7rem;color:var(--green);margin-bottom:6px;text-align:left">padding</div>
+              <div style="background:rgba(88,166,255,0.18);border-radius:4px;padding:16px;font-weight:700;color:var(--accent);font-size:0.9rem">
+                content<br><span style="font-size:0.7rem;font-weight:400;color:var(--muted)">width × height</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:center;gap:16px;margin-top:12px;flex-wrap:wrap">
+          <span style="font-size:0.75rem;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:rgba(88,166,255,0.35);border-radius:3px;display:inline-block"></span>content</span>
+          <span style="font-size:0.75rem;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:rgba(63,185,80,0.35);border:1px dashed var(--green);border-radius:3px;display:inline-block"></span>padding</span>
+          <span style="font-size:0.75rem;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:rgba(248,81,73,0.35);border-radius:3px;display:inline-block"></span>border</span>
+          <span style="font-size:0.75rem;display:flex;align-items:center;gap:5px"><span style="width:12px;height:12px;background:rgba(255,166,87,0.25);border:1px dashed var(--orange);border-radius:3px;display:inline-block"></span>margin</span>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'bm','props')">Propiedades</button>
+        <button class="tab-btn" onclick="switchTab(this,'bm','sizing')">box-sizing</button>
+      </div>
+
+      <div class="tab-panel active" data-tab="bm-props">
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">CSS</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="u">.caja</span> {
+  <span class="c">/* Dimensiones del contenido */</span>
+  <span class="p">width</span>:  <span class="v">300px</span>;
+  <span class="p">height</span>: <span class="v">150px</span>;
+
+  <span class="c">/* Padding: espacio INTERNO (entre content y border) */</span>
+  <span class="p">padding</span>: <span class="v">20px</span>;            <span class="c">/* todos los lados */</span>
+  <span class="p">padding</span>: <span class="v">10px 20px</span>;       <span class="c">/* vertical | horizontal */</span>
+  <span class="p">padding</span>: <span class="v">5px 10px 15px 20px</span>; <span class="c">/* top right bottom left */</span>
+  <span class="p">padding-top</span>: <span class="v">10px</span>;        <span class="c">/* lado individual */</span>
+
+  <span class="c">/* Border: borde visible */</span>
+  <span class="p">border</span>: <span class="v">2px solid #3498db</span>;
+  <span class="p">border-radius</span>: <span class="v">8px</span>;        <span class="c">/* esquinas redondeadas */</span>
+
+  <span class="c">/* Margin: espacio EXTERNO (entre elementos) */</span>
+  <span class="p">margin</span>: <span class="v">20px</span>;
+  <span class="p">margin</span>: <span class="v">0 auto</span>;            <span class="c">/* centrar horizontalmente */</span>
+
+  <span class="c">/* outline: no afecta el layout (útil para debug) */</span>
+  <span class="p">outline</span>: <span class="v">2px dashed red</span>;
+}</pre>
+        </div>
+        <div class="callout ci">
+          <strong>💡 Truco de debug</strong>
+          Agrega <code>* &#123; outline: 1px solid red; &#125;</code> temporalmente para visualizar todas las cajas del layout.
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab="bm-sizing">
+        <div class="demo-box">
+          <span class="demo-label">content-box vs border-box</span>
+          <div class="demo-row">
+            <div class="demo-col">
+              <p style="font-size:0.72rem;color:var(--muted);margin-bottom:6px"><strong>content-box</strong> (por defecto)</p>
+              <div style="width:180px;background:rgba(248,81,73,0.12);border:8px solid rgba(248,81,73,0.5);padding:16px;border-radius:4px;font-size:0.75rem;color:var(--red)">
+                width=180px solo es el contenido.<br>Total = 180 + 32(padding) + 16(border) = <strong>228px</strong>
+              </div>
+            </div>
+            <div class="demo-col">
+              <p style="font-size:0.72rem;color:var(--muted);margin-bottom:6px"><strong>border-box</strong> ✅ recomendado</p>
+              <div style="width:180px;box-sizing:border-box;background:rgba(63,185,80,0.12);border:8px solid rgba(63,185,80,0.5);padding:16px;border-radius:4px;font-size:0.75rem;color:var(--green)">
+                width=180px ya incluye padding + border.<br>Total = <strong>180px</strong>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">CSS</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="c">/* Reset universal recomendado */</span>
+<span class="u">*</span>,
+<span class="u">*::before</span>,
+<span class="u">*::after</span> {
+  <span class="p">box-sizing</span>: <span class="v">border-box</span>; <span class="c">/* width incluye padding + border */</span>
+}
+
+<span class="c">/* content-box (default): width = SOLO contenido */</span>
+<span class="u">.content-box</span> {
+  <span class="p">box-sizing</span>: <span class="v">content-box</span>;
+  <span class="p">width</span>: <span class="v">200px</span>;
+  <span class="p">padding</span>: <span class="v">20px</span>;
+  <span class="p">border</span>: <span class="v">5px solid</span>;
+  <span class="c">/* Ancho real = 200 + 40(padding) + 10(border) = 250px */</span>
+}
+
+<span class="c">/* border-box: width = contenido + padding + border */</span>
+<span class="u">.border-box</span> {
+  <span class="p">box-sizing</span>: <span class="v">border-box</span>;
+  <span class="p">width</span>: <span class="v">200px</span>;
+  <span class="p">padding</span>: <span class="v">20px</span>;
+  <span class="p">border</span>: <span class="v">5px solid</span>;
+  <span class="c">/* Ancho real = 200px (siempre) */</span>
+}</pre>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../03_box_model/box_model.html" target="_blank">↗ 03_box_model/box_model.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         04 · DISPLAY
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="display">
+      <div class="topic-header">
+        <div class="topic-num">04</div>
+        <div>
+          <div class="topic-title">Propiedad Display</div>
+          <div class="topic-desc">La propiedad <code>display</code> define cómo se renderiza un elemento y cómo interactúa con los demás en el flujo del documento.</div>
+        </div>
+      </div>
+
+      <!-- Visual demo de display values -->
+      <div class="demo-box">
+        <span class="demo-label">Comportamiento según display</span>
+
+        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:6px"><code>display: block</code> — ocupa todo el ancho disponible</p>
+        <div style="background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.3);border-radius:5px;padding:8px 12px;font-size:0.82rem;color:var(--accent);margin-bottom:10px;width:100%">div.block (100% ancho)</div>
+
+        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:6px"><code>display: inline</code> — solo ocupa lo necesario, fluye con el texto</p>
+        <p style="font-size:0.85rem;margin-bottom:10px">
+          Texto normal
+          <span style="background:rgba(63,185,80,0.2);border:1px solid rgba(63,185,80,0.4);border-radius:3px;padding:2px 8px;color:var(--green)">span inline</span>
+          continúa el texto
+          <span style="background:rgba(63,185,80,0.2);border:1px solid rgba(63,185,80,0.4);border-radius:3px;padding:2px 8px;color:var(--green)">otro inline</span>
+          en la misma línea.
+        </p>
+
+        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:6px"><code>display: inline-block</code> — fluye inline pero acepta width/height</p>
+        <div style="margin-bottom:10px">
+          <span style="display:inline-block;background:rgba(255,166,87,0.15);border:1px solid rgba(255,166,87,0.4);border-radius:5px;padding:8px 14px;color:var(--orange);font-size:0.82rem;width:100px;text-align:center">100px</span>
+          <span style="display:inline-block;background:rgba(255,166,87,0.15);border:1px solid rgba(255,166,87,0.4);border-radius:5px;padding:8px 14px;color:var(--orange);font-size:0.82rem;width:140px;text-align:center">140px</span>
+          <span style="display:inline-block;background:rgba(255,166,87,0.15);border:1px solid rgba(255,166,87,0.4);border-radius:5px;padding:8px 14px;color:var(--orange);font-size:0.82rem;width:80px;text-align:center">80px</span>
+        </div>
+
+        <p style="font-size:0.72rem;color:var(--muted);margin-bottom:6px"><code>display: none</code> — elimina el elemento del flujo (invisible + sin espacio)</p>
+        <span style="display:none">Este elemento no se ve</span>
+        <span style="background:rgba(248,81,73,0.1);border:1px solid rgba(248,81,73,0.3);border-radius:5px;padding:6px 12px;font-size:0.8rem;color:var(--red)">⟵ El elemento oculto no ocupa espacio aquí</span>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header">
+          <span class="code-lang">CSS</span>
+          <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+        </div>
+        <pre class="code"><span class="c">/* block: nueva línea, 100% ancho por defecto */</span>
+<span class="u">div</span>, <span class="u">p</span>, <span class="u">h1</span>, <span class="u">section</span> { <span class="p">display</span>: <span class="v">block</span>; }
+
+<span class="c">/* inline: fluye con el texto, NO acepta width/height */</span>
+<span class="u">span</span>, <span class="u">a</span>, <span class="u">strong</span> { <span class="p">display</span>: <span class="v">inline</span>; }
+
+<span class="c">/* inline-block: fluye inline pero SÍ acepta width/height */</span>
+<span class="u">.badge</span> {
+  <span class="p">display</span>: <span class="v">inline-block</span>;
+  <span class="p">width</span>: <span class="v">80px</span>;
+  <span class="p">padding</span>: <span class="v">6px 12px</span>;
+  <span class="p">text-align</span>: <span class="v">center</span>;
+}
+
+<span class="c">/* none: oculta y saca del flujo del documento */</span>
+<span class="u">.hidden</span> { <span class="p">display</span>: <span class="v">none</span>; }
+
+<span class="c">/* visibility: hidden — oculta pero mantiene el espacio */</span>
+<span class="u">.invisible</span> { <span class="p">visibility</span>: <span class="v">hidden</span>; }
+
+<span class="c">/* flex y grid — ver secciones 10 y 11 */</span>
+<span class="u">.flex-container</span> { <span class="p">display</span>: <span class="v">flex</span>; }
+<span class="u">.grid-container</span> { <span class="p">display</span>: <span class="v">grid</span>; }</pre>
+      </div>
+
+      <table class="data-table">
+        <thead><tr><th>Valor</th><th>Nueva línea</th><th>Acepta width/height</th><th>Ocupa espacio</th></tr></thead>
+        <tbody>
+          <tr><td><code>block</code></td><td>✅</td><td>✅</td><td>✅</td></tr>
+          <tr><td><code>inline</code></td><td>❌</td><td>❌</td><td>✅</td></tr>
+          <tr><td><code>inline-block</code></td><td>❌</td><td>✅</td><td>✅</td></tr>
+          <tr><td><code>none</code></td><td>—</td><td>—</td><td>❌</td></tr>
+          <tr><td><code>flex</code></td><td>✅ (container)</td><td>✅</td><td>✅</td></tr>
+          <tr><td><code>grid</code></td><td>✅ (container)</td><td>✅</td><td>✅</td></tr>
+        </tbody>
+      </table>
+
+      <div class="file-links">
+        <a class="flink" href="../04_display/display.html" target="_blank">↗ 04_display/display.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         05 · POSITION
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="position">
+      <div class="topic-header">
+        <div class="topic-num">05</div>
+        <div>
+          <div class="topic-title">Posicionamiento</div>
+          <div class="topic-desc">La propiedad <code>position</code> controla cómo se ubica un elemento en la página. Las propiedades <code>top</code>, <code>right</code>, <code>bottom</code> y <code>left</code> definen el desplazamiento según el contexto de posicionamiento.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'pos','static')">static / relative</button>
+        <button class="tab-btn" onclick="switchTab(this,'pos','absolute')">absolute / fixed</button>
+        <button class="tab-btn" onclick="switchTab(this,'pos','sticky')">sticky</button>
+      </div>
+
+      <!-- TAB: STATIC / RELATIVE -->
+      <div class="tab-panel active" data-tab="pos-static">
+        <div class="demo-box">
+          <span class="demo-label">static vs relative</span>
+          <div style="display:flex;gap:12px;flex-wrap:wrap">
+            <div style="flex:1;min-width:180px">
+              <p style="font-size:0.72rem;color:var(--muted);margin-bottom:8px"><code>position: static</code> (por defecto)</p>
+              <div style="background:var(--card);border-radius:7px;padding:10px;height:90px;position:relative;border:1px solid var(--border)">
+                <div style="background:rgba(88,166,255,0.18);border:1px solid rgba(88,166,255,0.4);border-radius:5px;padding:6px 10px;font-size:0.78rem;color:var(--accent)">Caja A</div>
+                <div style="background:rgba(63,185,80,0.18);border:1px solid rgba(63,185,80,0.4);border-radius:5px;padding:6px 10px;font-size:0.78rem;color:var(--green);margin-top:6px">Caja B (flujo normal)</div>
+              </div>
+            </div>
+            <div style="flex:1;min-width:180px">
+              <p style="font-size:0.72rem;color:var(--muted);margin-bottom:8px"><code>position: relative</code> — desplaza desde su posición original</p>
+              <div style="background:var(--card);border-radius:7px;padding:10px;height:90px;position:relative;border:1px solid var(--border)">
+                <div style="background:rgba(88,166,255,0.18);border:1px solid rgba(88,166,255,0.4);border-radius:5px;padding:6px 10px;font-size:0.78rem;color:var(--accent)">Caja A</div>
+                <div style="background:rgba(255,166,87,0.18);border:1px solid rgba(255,166,87,0.4);border-radius:5px;padding:6px 10px;font-size:0.78rem;color:var(--orange);position:relative;top:-6px;left:16px">Caja B (top:-6 left:16)</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* static: posición normal en el flujo (valor por defecto) */</span>
+<span class="u">.caja</span> { <span class="p">position</span>: <span class="v">static</span>; } <span class="c">/* top/left/etc NO tienen efecto */</span>
+
+<span class="c">/* relative: se desplaza DESDE su posición original */</span>
+<span class="u">.desplazada</span> {
+  <span class="p">position</span>: <span class="v">relative</span>;
+  <span class="p">top</span>:  <span class="v">-10px</span>;  <span class="c">/* sube 10px */</span>
+  <span class="p">left</span>: <span class="v">20px</span>;   <span class="c">/* mueve 20px a la derecha */</span>
+  <span class="c">/* Su espacio original en el flujo se PRESERVA */</span>
+}
+
+<span class="c">/* relative como contenedor para hijos absolute */</span>
+<span class="u">.card</span> {
+  <span class="p">position</span>: <span class="v">relative</span>; <span class="c">/* crea el contexto de posicionamiento */</span>
+}</pre>
+        </div>
+      </div>
+
+      <!-- TAB: ABSOLUTE / FIXED -->
+      <div class="tab-panel" data-tab="pos-absolute">
+        <div class="demo-box">
+          <span class="demo-label">position: absolute</span>
+          <div style="position:relative;background:var(--card);border:1px solid var(--border);border-radius:8px;height:110px;overflow:hidden">
+            <span style="position:absolute;top:8px;right:8px;background:rgba(248,81,73,0.85);color:white;font-size:0.7rem;padding:3px 8px;border-radius:10px;font-weight:700">NUEVO</span>
+            <span style="position:absolute;bottom:8px;left:8px;background:rgba(63,185,80,0.85);color:white;font-size:0.7rem;padding:3px 8px;border-radius:10px;font-weight:700">-30%</span>
+            <div style="padding:14px;font-size:0.85rem;color:var(--muted)">
+              Contenedor con <code>position: relative</code><br>
+              Los badges usan <code>position: absolute</code>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* absolute: sale del flujo, se posiciona respecto */</span>
+<span class="c">/* al ancestro más cercano con position != static */</span>
+<span class="u">.tarjeta</span> {
+  <span class="p">position</span>: <span class="v">relative</span>;   <span class="c">/* contenedor de referencia */</span>
+}
+
+<span class="u">.badge-esquina</span> {
+  <span class="p">position</span>: <span class="v">absolute</span>;
+  <span class="p">top</span>:   <span class="v">8px</span>;
+  <span class="p">right</span>: <span class="v">8px</span>;
+  <span class="c">/* No ocupa espacio en el flujo */</span>
+}
+
+<span class="c">/* fixed: como absolute pero respecto al VIEWPORT */</span>
+<span class="u">.nav-fijo</span> {
+  <span class="p">position</span>: <span class="v">fixed</span>;
+  <span class="p">top</span>:   <span class="v">0</span>;
+  <span class="p">left</span>:  <span class="v">0</span>;
+  <span class="p">right</span>: <span class="v">0</span>;
+  <span class="p">z-index</span>: <span class="v">100</span>;  <span class="c">/* encima del contenido */</span>
+}
+
+<span class="c">/* Centrar absolutamente */</span>
+<span class="u">.centrado</span> {
+  <span class="p">position</span>: <span class="v">absolute</span>;
+  <span class="p">top</span>:       <span class="v">50%</span>;
+  <span class="p">left</span>:      <span class="v">50%</span>;
+  <span class="p">transform</span>: <span class="v">translate(-50%, -50%)</span>;
+}</pre>
+        </div>
+      </div>
+
+      <!-- TAB: STICKY -->
+      <div class="tab-panel" data-tab="pos-sticky">
+        <div class="callout ci">
+          <strong>💡 sticky: lo mejor de relative + fixed</strong>
+          El elemento se comporta como <code>relative</code> hasta que el scroll lo alcanza — entonces se "pega" como <code>fixed</code>. La barra de navegación de esta guía usa <code>position: sticky</code>.
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* sticky: combina relative y fixed según el scroll */</span>
+<span class="u">nav</span> {
+  <span class="p">position</span>: <span class="v">sticky</span>;
+  <span class="p">top</span>: <span class="v">0</span>;        <span class="c">/* se pega cuando llega a y=0 */</span>
+  <span class="p">z-index</span>: <span class="v">100</span>;
+}
+
+<span class="c">/* Encabezado de tabla sticky */</span>
+<span class="u">thead tr th</span> {
+  <span class="p">position</span>: <span class="v">sticky</span>;
+  <span class="p">top</span>: <span class="v">0</span>;
+  <span class="p">background</span>: <span class="v">white</span>;
+}
+
+<span class="c">/* Sidebar sticky */</span>
+<span class="u">.sidebar</span> {
+  <span class="p">position</span>: <span class="v">sticky</span>;
+  <span class="p">top</span>: <span class="v">80px</span>;  <span class="c">/* debajo del nav */</span>
+  <span class="p">height</span>: <span class="v">fit-content</span>;
+}</pre>
+        </div>
+        <table class="data-table">
+          <thead><tr><th>Valor</th><th>Flujo</th><th>Referencia</th><th>Scroll</th></tr></thead>
+          <tbody>
+            <tr><td><code>static</code></td><td>Normal</td><td>—</td><td>Se mueve</td></tr>
+            <tr><td><code>relative</code></td><td>Normal (preserva espacio)</td><td>Sí mismo</td><td>Se mueve</td></tr>
+            <tr><td><code>absolute</code></td><td>Sale del flujo</td><td>Ancestro posicionado</td><td>Se mueve</td></tr>
+            <tr><td><code>fixed</code></td><td>Sale del flujo</td><td>Viewport</td><td>Fijo</td></tr>
+            <tr><td><code>sticky</code></td><td>Normal → fijo</td><td>Viewport (al pegarse)</td><td>Híbrido</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../05_position/position.html" target="_blank">↗ 05_position/position.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         06 · UNIDADES
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="unidades">
+      <div class="topic-header">
+        <div class="topic-num">06</div>
+        <div>
+          <div class="topic-title">Unidades CSS</div>
+          <div class="topic-desc">CSS ofrece unidades <strong>absolutas</strong> (valor fijo) y <strong>relativas</strong> (proporcionales al contexto). Las relativas son clave para el diseño responsive y accesible.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'un','abs')">Absolutas</button>
+        <button class="tab-btn" onclick="switchTab(this,'un','rel')">Relativas</button>
+        <button class="tab-btn" onclick="switchTab(this,'un','viewport')">Viewport</button>
+      </div>
+
+      <div class="tab-panel active" data-tab="un-abs">
+        <div class="demo-box">
+          <span class="demo-label">Tamaños absolutos (no cambian)</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div><div style="width:96px;background:rgba(248,81,73,0.2);border:1px solid rgba(248,81,73,0.4);border-radius:4px;padding:4px 8px;font-size:0.75rem;color:var(--red)">96px</div></div>
+            <div><div style="width:2.54cm;background:rgba(255,166,87,0.2);border:1px solid rgba(255,166,87,0.4);border-radius:4px;padding:4px 8px;font-size:0.75rem;color:var(--orange)">1cm</div></div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* Unidades absolutas — valor fijo independiente del contexto */</span>
+<span class="u">.elemento</span> {
+  <span class="p">width</span>:  <span class="v">200px</span>;   <span class="c">/* píxeles — la más usada en pantalla */</span>
+  <span class="p">width</span>:  <span class="v">5cm</span>;    <span class="c">/* centímetros */</span>
+  <span class="p">width</span>:  <span class="v">2in</span>;    <span class="c">/* pulgadas */</span>
+  <span class="p">width</span>:  <span class="v">20mm</span>;   <span class="c">/* milímetros */</span>
+  <span class="p">width</span>:  <span class="v">12pt</span>;   <span class="c">/* puntos (1pt = 1/72 in) — tipografía print */</span>
+  <span class="p">width</span>:  <span class="v">1pc</span>;    <span class="c">/* picas (1pc = 12pt) */</span>
+}</pre>
+        </div>
+        <div class="callout cw"><strong>⚠ Nota</strong> El pixel CSS (px) no es un pixel de pantalla físico. En pantallas Retina, 1px CSS = 2 píxeles físicos.</div>
+      </div>
+
+      <div class="tab-panel" data-tab="un-rel">
+        <div class="demo-box">
+          <span class="demo-label">em vs rem</span>
+          <div style="font-size:20px">
+            <span style="font-size:0.7rem;color:var(--muted)">Padre: 20px → </span>
+            <span style="font-size:1.5em;background:rgba(88,166,255,0.15);border-radius:4px;padding:2px 8px;color:var(--accent)">1.5em = 30px</span>
+            <span style="font-size:0.7rem;color:var(--muted);margin-left:10px">rem siempre = relativo al root (16px por defecto)</span>
+            <span style="font-size:1.5rem;background:rgba(63,185,80,0.15);border-radius:4px;padding:2px 8px;color:var(--green);margin-left:6px">1.5rem = 24px</span>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* em: relativo al font-size del PADRE */</span>
+<span class="u">.padre</span>   { <span class="p">font-size</span>: <span class="v">20px</span>; }
+<span class="u">.hijo</span>    { <span class="p">font-size</span>: <span class="v">1.5em</span>; }  <span class="c">/* = 30px */</span>
+<span class="u">.nieto</span>   { <span class="p">font-size</span>: <span class="v">1.5em</span>; }  <span class="c">/* = 45px — se acumula! */</span>
+
+<span class="c">/* rem: siempre relativo al font-size del &lt;html&gt; (root) */</span>
+<span class="u">html</span>      { <span class="p">font-size</span>: <span class="v">16px</span>; }   <span class="c">/* base */</span>
+<span class="u">.cualquier</span> { <span class="p">font-size</span>: <span class="v">1.5rem</span>; } <span class="c">/* = 24px siempre */</span>
+
+<span class="c">/* % : relativo al padre */</span>
+<span class="u">.hijo</span> { <span class="p">width</span>: <span class="v">50%</span>; }   <span class="c">/* 50% del ancho del padre */</span>
+
+<span class="c">/* ch: ancho del carácter "0" — útil para límites de texto */</span>
+<span class="u">p</span> { <span class="p">max-width</span>: <span class="v">65ch</span>; }
+
+<span class="c">/* ex: altura de la letra "x" */</span>
+<span class="u">.icono</span> { <span class="p">height</span>: <span class="v">2ex</span>; }</pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab="un-viewport">
+        <div class="demo-box">
+          <span class="demo-label">Unidades relativas al viewport</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="width:100%;background:rgba(88,166,255,0.1);border:1px solid rgba(88,166,255,0.3);border-radius:5px;padding:7px 12px;font-size:0.8rem;color:var(--accent)">100vw = 100% del ancho del viewport</div>
+            <div style="width:50%;background:rgba(63,185,80,0.1);border:1px solid rgba(63,185,80,0.3);border-radius:5px;padding:7px 12px;font-size:0.8rem;color:var(--green)">50vw = 50% del ancho del viewport</div>
+            <div style="background:rgba(188,140,255,0.1);border:1px solid rgba(188,140,255,0.3);border-radius:5px;padding:7px 12px;font-size:0.8rem;color:var(--purple)">svh / dvh / lvh — viewport altura en mobile</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* vw / vh — porcentaje del viewport */</span>
+<span class="u">.hero</span> {
+  <span class="p">width</span>:      <span class="v">100vw</span>;  <span class="c">/* 100% ancho del viewport */</span>
+  <span class="p">min-height</span>: <span class="v">100vh</span>;  <span class="c">/* 100% altura del viewport */</span>
+}
+
+<span class="c">/* svh/dvh/lvh — alturas dinámicas para mobile */</span>
+<span class="u">.pantalla-movil</span> {
+  <span class="p">min-height</span>: <span class="v">100dvh</span>;  <span class="c">/* dynamic viewport height */</span>
+}
+
+<span class="c">/* vmin / vmax */</span>
+<span class="u">.cuadrado-adaptable</span> {
+  <span class="p">width</span>:  <span class="v">50vmin</span>;  <span class="c">/* 50% del lado más pequeño */</span>
+  <span class="p">height</span>: <span class="v">50vmin</span>;
+}
+
+<span class="c">/* cqi / cqb — container query units (CSS moderno) */</span>
+<span class="u">.componente</span> {
+  <span class="p">font-size</span>: <span class="v">4cqi</span>;  <span class="c">/* 4% del ancho del container */</span>
+}</pre>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../06_unidades/unidades.html" target="_blank">↗ 06_unidades/unidades.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         07 · COLORES
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="colores">
+      <div class="topic-header">
+        <div class="topic-num">07</div>
+        <div>
+          <div class="topic-title">Colores en CSS</div>
+          <div class="topic-desc">CSS soporta múltiples formatos de color: nombres de color, hexadecimal, RGB, HSL y sus variantes con canal alfa para transparencia.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'col','formatos')">Formatos</button>
+        <button class="tab-btn" onclick="switchTab(this,'col','gradients')">Gradientes</button>
+      </div>
+
+      <div class="tab-panel active" data-tab="col-formatos">
+        <div class="demo-box">
+          <span class="demo-label">Misma paleta — distintos formatos</span>
+          <div style="display:flex;flex-direction:column;gap:8px;font-family:var(--mono);font-size:0.82rem">
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:6px;background:#3498db;flex-shrink:0"></div>
+              <span style="color:var(--muted)">nombre:</span>
+              <span style="color:var(--accent)">color: dodgerblue</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:6px;background:#3498db;flex-shrink:0"></div>
+              <span style="color:var(--muted)">hex:</span>
+              <span style="color:var(--orange)">color: #3498db</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:6px;background:rgb(52,152,219);flex-shrink:0"></div>
+              <span style="color:var(--muted)">rgb:</span>
+              <span style="color:var(--green)">color: rgb(52, 152, 219)</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:6px;background:rgba(52,152,219,0.5);flex-shrink:0;border:1px solid rgba(255,255,255,0.1)"></div>
+              <span style="color:var(--muted)">rgba:</span>
+              <span style="color:var(--green)">color: rgba(52, 152, 219, 0.5)</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:6px;background:hsl(204,70%,53%);flex-shrink:0"></div>
+              <span style="color:var(--muted)">hsl:</span>
+              <span style="color:var(--purple)">color: hsl(204, 70%, 53%)</span>
+            </div>
+            <div style="display:flex;align-items:center;gap:10px">
+              <div style="width:36px;height:36px;border-radius:6px;background:hsl(204 70% 53% / 0.5);flex-shrink:0;border:1px solid rgba(255,255,255,0.1)"></div>
+              <span style="color:var(--muted)">hsl+alfa:</span>
+              <span style="color:var(--purple)">color: hsl(204 70% 53% / 0.5)</span>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="u">.colores</span> {
+  <span class="c">/* Nombre CSS (140 nombres predefinidos) */</span>
+  <span class="p">color</span>: <span class="v">dodgerblue</span>;
+  <span class="p">color</span>: <span class="v">tomato</span>;
+  <span class="p">color</span>: <span class="v">mediumseagreen</span>;
+
+  <span class="c">/* Hexadecimal: #RRGGBB o #RGB (shorthand) */</span>
+  <span class="p">color</span>: <span class="v">#3498db</span>;
+  <span class="p">color</span>: <span class="v">#3df</span>;         <span class="c">/* = #33ddff */</span>
+  <span class="p">color</span>: <span class="v">#3498dbcc</span>;   <span class="c">/* con alfa (80% opacidad) */</span>
+
+  <span class="c">/* RGB / RGBA */</span>
+  <span class="p">color</span>: <span class="v">rgb(52, 152, 219)</span>;
+  <span class="p">color</span>: <span class="v">rgba(52, 152, 219, 0.6)</span>; <span class="c">/* alfa: 0=transparente, 1=sólido */</span>
+  <span class="p">color</span>: <span class="v">rgb(52 152 219 / 60%)</span>;   <span class="c">/* sintaxis moderna */</span>
+
+  <span class="c">/* HSL: Hue Saturation Lightness */</span>
+  <span class="p">color</span>: <span class="v">hsl(204, 70%, 53%)</span>;       <span class="c">/* matiz 204°, sat 70%, luz 53% */</span>
+  <span class="p">color</span>: <span class="v">hsl(204 70% 53% / 0.5)</span>;  <span class="c">/* con transparencia */</span>
+
+  <span class="c">/* oklch — espacio perceptual moderno (CSS Color 4) */</span>
+  <span class="p">color</span>: <span class="v">oklch(65% 0.2 250)</span>;
+}</pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab="col-gradients">
+        <div class="demo-box">
+          <span class="demo-label">Tipos de gradientes</span>
+          <div style="display:flex;flex-direction:column;gap:8px">
+            <div style="background:linear-gradient(135deg,#667eea,#764ba2);height:44px;border-radius:7px;display:flex;align-items:center;padding:0 12px;font-size:0.8rem;color:rgba(255,255,255,0.9)">linear-gradient(135deg, #667eea, #764ba2)</div>
+            <div style="background:radial-gradient(circle,#f093fb,#f5576c);height:44px;border-radius:7px;display:flex;align-items:center;padding:0 12px;font-size:0.8rem;color:rgba(255,255,255,0.9)">radial-gradient(circle, #f093fb, #f5576c)</div>
+            <div style="background:conic-gradient(#58a6ff,#3fb950,#ffa657,#f85149,#bc8cff,#58a6ff);height:44px;border-radius:7px;display:flex;align-items:center;padding:0 12px;font-size:0.8rem;color:rgba(255,255,255,0.9)">conic-gradient(...)</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* Gradiente lineal */</span>
+<span class="u">.hero</span> {
+  <span class="p">background</span>: <span class="v">linear-gradient(135deg, #667eea 0%, #764ba2 100%)</span>;
+}
+
+<span class="c">/* Radial (desde el centro) */</span>
+<span class="u">.circulo</span> {
+  <span class="p">background</span>: <span class="v">radial-gradient(circle at center, #f093fb, #f5576c)</span>;
+}
+
+<span class="c">/* Cónico (tipo torta) */</span>
+<span class="u">.grafico</span> {
+  <span class="p">background</span>: <span class="v">conic-gradient(#58a6ff 0% 30%, #3fb950 30% 70%, #ffa657 70% 100%)</span>;
+}
+
+<span class="c">/* Texto con gradiente */</span>
+<span class="u">.titulo-gradiente</span> {
+  <span class="p">background</span>: <span class="v">linear-gradient(135deg, #e6edf3, #58a6ff)</span>;
+  <span class="p">-webkit-background-clip</span>: <span class="v">text</span>;
+  <span class="p">-webkit-text-fill-color</span>: <span class="v">transparent</span>;
+  <span class="p">background-clip</span>: <span class="v">text</span>;
+}</pre>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../07_colores/colores.html" target="_blank">↗ 07_colores/colores.html</a>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         08 · VARIABLES CSS (Custom Properties)
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="variables">
+      <div class="topic-header">
+        <div class="topic-num">08</div>
+        <div>
+          <div class="topic-title">Variables CSS</div>
+          <div class="topic-desc">Las <strong>custom properties</strong> (<code>--nombre</code>) permiten definir valores reutilizables que se acceden con <code>var()</code>. Son la base del theming moderno y el design system.</div>
+        </div>
+      </div>
+
+      <!-- Demo: cambio de tema en vivo -->
+      <div class="demo-box">
+        <span class="demo-label">Demo: tema dinámico con variables</span>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <button onclick="setTheme('blue')"  style="padding:6px 14px;border-radius:6px;border:none;background:#58a6ff;color:#0d1117;cursor:pointer;font-weight:700;font-size:0.8rem">Azul</button>
+          <button onclick="setTheme('green')" style="padding:6px 14px;border-radius:6px;border:none;background:#3fb950;color:#0d1117;cursor:pointer;font-weight:700;font-size:0.8rem">Verde</button>
+          <button onclick="setTheme('purple')"style="padding:6px 14px;border-radius:6px;border:none;background:#bc8cff;color:#0d1117;cursor:pointer;font-weight:700;font-size:0.8rem">Morado</button>
+          <button onclick="setTheme('red')"   style="padding:6px 14px;border-radius:6px;border:none;background:#f85149;color:#0d1117;cursor:pointer;font-weight:700;font-size:0.8rem">Rojo</button>
+        </div>
+        <div id="var-demo" style="--demo-color:#58a6ff;--demo-bg:rgba(88,166,255,0.1);--demo-border:rgba(88,166,255,0.35);background:var(--demo-bg);border:2px solid var(--demo-border);border-radius:8px;padding:16px;transition:all 0.3s">
+          <h4 style="color:var(--demo-color);margin-bottom:6px">Título con --demo-color</h4>
+          <p style="font-size:0.85rem;color:var(--muted)">El color cambia dinámicamente actualizando la variable CSS.</p>
+          <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap">
+            <div style="padding:6px 12px;border-radius:6px;background:var(--demo-color);color:#0d1117;font-size:0.8rem;font-weight:700">Botón primario</div>
+            <div style="padding:6px 12px;border-radius:6px;border:2px solid var(--demo-color);color:var(--demo-color);font-size:0.8rem;font-weight:700">Botón outline</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'var','def')">Definición y uso</button>
+        <button class="tab-btn" onclick="switchTab(this,'var','scope')">Scope y herencia</button>
+        <button class="tab-btn" onclick="switchTab(this,'var','tema')">Design Tokens</button>
+      </div>
+
+      <div class="tab-panel active" data-tab="var-def">
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* Definición: --nombre-de-variable: valor */</span>
+<span class="u">:root</span> {
+  <span class="p">--color-primario</span>: <span class="v">#3498db</span>;
+  <span class="p">--color-texto</span>:    <span class="v">#2c3e50</span>;
+  <span class="p">--espacio-md</span>:     <span class="v">1rem</span>;
+  <span class="p">--radio</span>:          <span class="v">8px</span>;
+  <span class="p">--sombra</span>:         <span class="v">0 4px 12px rgba(0,0,0,0.15)</span>;
+}
+
+<span class="c">/* Uso: var(--nombre, valor-fallback) */</span>
+<span class="u">.boton</span> {
+  <span class="p">background</span>:    <span class="v">var(--color-primario)</span>;
+  <span class="p">padding</span>:       <span class="v">var(--espacio-md)</span>;
+  <span class="p">border-radius</span>: <span class="v">var(--radio)</span>;
+  <span class="p">box-shadow</span>:    <span class="v">var(--sombra)</span>;
+}
+
+<span class="c">/* Con valor de fallback */</span>
+<span class="u">.elemento</span> {
+  <span class="p">color</span>: <span class="v">var(--color-acento, #e74c3c)</span>; <span class="c">/* fallback si no existe */</span>
+}</pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab="var-scope">
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* Global: disponible en todo el documento */</span>
+<span class="u">:root</span> {
+  <span class="p">--primario</span>: <span class="v">#3498db</span>;
+}
+
+<span class="c">/* Local: solo disponible en .card y sus descendientes */</span>
+<span class="u">.card</span> {
+  <span class="p">--primario</span>: <span class="v">#e74c3c</span>;  <span class="c">/* sobreescribe dentro del scope */</span>
+  <span class="p">color</span>: <span class="v">var(--primario)</span>;  <span class="c">/* usa #e74c3c */</span>
+}
+
+<span class="c">/* Modificar con JavaScript */</span>
+<span class="c">/* document.documentElement.style
+     .setProperty('--primario', '#9b59b6') */</span>
+
+<span class="c">/* Themes con clases */</span>
+<span class="u">[data-theme="dark"]</span> {
+  <span class="p">--bg</span>:   <span class="v">#0d1117</span>;
+  <span class="p">--text</span>: <span class="v">#e6edf3</span>;
+}
+<span class="u">[data-theme="light"]</span> {
+  <span class="p">--bg</span>:   <span class="v">#ffffff</span>;
+  <span class="p">--text</span>: <span class="v">#1c1c1e</span>;
+}</pre>
+        </div>
+      </div>
+
+      <div class="tab-panel" data-tab="var-tema">
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS — Design Tokens completos</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="u">:root</span> {
+  <span class="c">/* Colores */</span>
+  <span class="p">--color-primary-500</span>: <span class="v">#3b82f6</span>;
+  <span class="p">--color-primary-600</span>: <span class="v">#2563eb</span>;
+  <span class="p">--color-success</span>:     <span class="v">#22c55e</span>;
+  <span class="p">--color-warning</span>:     <span class="v">#f59e0b</span>;
+  <span class="p">--color-danger</span>:      <span class="v">#ef4444</span>;
+
+  <span class="c">/* Tipografía */</span>
+  <span class="p">--font-body</span>:    <span class="v">'Inter', sans-serif</span>;
+  <span class="p">--font-mono</span>:    <span class="v">'Fira Code', monospace</span>;
+  <span class="p">--text-xs</span>:      <span class="v">0.75rem</span>;
+  <span class="p">--text-sm</span>:      <span class="v">0.875rem</span>;
+  <span class="p">--text-base</span>:    <span class="v">1rem</span>;
+  <span class="p">--text-lg</span>:      <span class="v">1.125rem</span>;
+  <span class="p">--text-xl</span>:      <span class="v">1.25rem</span>;
+
+  <span class="c">/* Espaciado (escala 4px) */</span>
+  <span class="p">--space-1</span>:  <span class="v">0.25rem</span>;   <span class="c">/* 4px  */</span>
+  <span class="p">--space-2</span>:  <span class="v">0.5rem</span>;    <span class="c">/* 8px  */</span>
+  <span class="p">--space-4</span>:  <span class="v">1rem</span>;      <span class="c">/* 16px */</span>
+  <span class="p">--space-8</span>:  <span class="v">2rem</span>;      <span class="c">/* 32px */</span>
+
+  <span class="c">/* Bordes */</span>
+  <span class="p">--radius-sm</span>: <span class="v">4px</span>;
+  <span class="p">--radius-md</span>: <span class="v">8px</span>;
+  <span class="p">--radius-lg</span>: <span class="v">16px</span>;
+  <span class="p">--radius-full</span>: <span class="v">9999px</span>;
+
+  <span class="c">/* Sombras */</span>
+  <span class="p">--shadow-sm</span>: <span class="v">0 1px 3px rgba(0,0,0,0.12)</span>;
+  <span class="p">--shadow-md</span>: <span class="v">0 4px 12px rgba(0,0,0,0.15)</span>;
+  <span class="p">--shadow-lg</span>: <span class="v">0 20px 40px rgba(0,0,0,0.2)</span>;
+
+  <span class="c">/* Transiciones */</span>
+  <span class="p">--transition</span>: <span class="v">0.25s ease</span>;
+}</pre>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../08_variables/basico.html" target="_blank">↗ 08_variables/basico.html</a>
+        <a class="flink" href="../08_variables/temas.html" target="_blank">↗ 08_variables/temas.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         09 · TIPOGRAFÍA
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="tipografia">
+      <div class="topic-header">
+        <div class="topic-num">09</div>
+        <div>
+          <div class="topic-title">Tipografía</div>
+          <div class="topic-desc">CSS controla todos los aspectos del texto: familia tipográfica, tamaño, peso, interlineado, espaciado, alineación y mucho más.</div>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <span class="demo-label">Propiedades tipográficas en acción</span>
+        <div style="display:flex;flex-direction:column;gap:10px">
+          <div style="font-size:2rem;font-weight:800;line-height:1;letter-spacing:-0.03em">font-weight: 800</div>
+          <div style="font-size:1.1rem;font-weight:400;font-style:italic;color:var(--muted)">font-style: italic, weight: 400</div>
+          <div style="font-size:0.9rem;letter-spacing:0.15em;text-transform:uppercase;color:var(--accent)">letter-spacing: 0.15em — text-transform: uppercase</div>
+          <div style="font-size:1rem;line-height:2;background:rgba(88,166,255,0.05);padding:8px;border-radius:5px">line-height: 2 — Este párrafo tiene un interlineado de 2, lo que significa que hay mucho espacio vertical entre líneas, mejorando la legibilidad en bloques de texto largos.</div>
+          <div style="font-size:1rem;text-decoration:underline;text-underline-offset:4px;color:var(--purple)">text-decoration: underline — text-underline-offset: 4px</div>
+        </div>
+      </div>
+
+      <div class="code-wrap">
+        <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+        <pre class="code"><span class="u">body</span> {
+  <span class="c">/* Stack de fuentes: de preferida a genérica */</span>
+  <span class="p">font-family</span>: <span class="v">'Inter', 'Segoe UI', Helvetica, Arial, sans-serif</span>;
+  <span class="p">font-size</span>:   <span class="v">16px</span>;       <span class="c">/* base */</span>
+  <span class="p">line-height</span>: <span class="v">1.6</span>;        <span class="c">/* sin unidad: relativo al font-size */</span>
+  <span class="p">color</span>:       <span class="v">#1c1c1e</span>;
+}
+
+<span class="u">h1</span> {
+  <span class="p">font-size</span>:      <span class="v">clamp(1.8rem, 4vw, 3rem)</span>; <span class="c">/* fluido */</span>
+  <span class="p">font-weight</span>:    <span class="v">800</span>;
+  <span class="p">line-height</span>:    <span class="v">1.2</span>;
+  <span class="p">letter-spacing</span>: <span class="v">-0.03em</span>; <span class="c">/* kerning negativo en títulos */</span>
+}
+
+<span class="u">p</span> {
+  <span class="p">max-width</span>:   <span class="v">65ch</span>;       <span class="c">/* límite legible */</span>
+  <span class="p">text-align</span>:  <span class="v">left</span>;       <span class="c">/* left | center | right | justify */</span>
+  <span class="p">hyphens</span>:     <span class="v">auto</span>;       <span class="c">/* separación silábica */</span>
+}
+
+<span class="u">.codigo</span> {
+  <span class="p">font-family</span>:  <span class="v">'Fira Code', 'Consolas', monospace</span>;
+  <span class="p">font-size</span>:    <span class="v">0.875em</span>;
+}
+
+<span class="c">/* Carga de fuentes de Google Fonts */</span>
+<span class="k">@import</span> <span class="v">url('https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&display=swap')</span>;
+
+<span class="c">/* Fuente local con @font-face */</span>
+<span class="k">@font-face</span> {
+  <span class="p">font-family</span>: <span class="v">'MiFuente'</span>;
+  <span class="p">src</span>: <span class="v">url('fuentes/mifuente.woff2') format('woff2')</span>;
+  <span class="p">font-weight</span>: <span class="v">400 700</span>;   <span class="c">/* rango de pesos */</span>
+  <span class="p">font-display</span>: <span class="v">swap</span>;     <span class="c">/* evita FOIT */</span>
+}</pre>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../09_tipografia/tipografia.html" target="_blank">↗ 09_tipografia/tipografia.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         10 · FLEXBOX
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="flexbox">
+      <div class="topic-header">
+        <div class="topic-num">10</div>
+        <div>
+          <div class="topic-title">Flexbox</div>
+          <div class="topic-desc">Flexbox es un modelo de layout unidimensional (fila o columna). El <strong>contenedor</strong> (<code>display:flex</code>) controla cómo se distribuyen y alinean los <strong>ítems</strong> hijos.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'flex','container')">Propiedades del contenedor</button>
+        <button class="tab-btn" onclick="switchTab(this,'flex','items')">Propiedades de ítems</button>
+        <button class="tab-btn" onclick="switchTab(this,'flex','playground')">Playground</button>
+      </div>
+
+      <!-- CONTENEDOR -->
+      <div class="tab-panel active" data-tab="flex-container">
+        <div class="demo-box">
+          <span class="demo-label">justify-content — eje principal</span>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <span style="font-size:0.7rem;color:var(--muted);display:block;margin-bottom:4px">flex-start</span>
+              <div style="display:flex;justify-content:flex-start;gap:6px;background:rgba(88,166,255,0.05);border:1px dashed rgba(88,166,255,0.2);border-radius:6px;padding:8px">
+                <div class="ub ub-b" style="width:44px">1</div><div class="ub ub-b" style="width:44px">2</div><div class="ub ub-b" style="width:44px">3</div>
+              </div>
+            </div>
+            <div>
+              <span style="font-size:0.7rem;color:var(--muted);display:block;margin-bottom:4px">center</span>
+              <div style="display:flex;justify-content:center;gap:6px;background:rgba(88,166,255,0.05);border:1px dashed rgba(88,166,255,0.2);border-radius:6px;padding:8px">
+                <div class="ub ub-g" style="width:44px">1</div><div class="ub ub-g" style="width:44px">2</div><div class="ub ub-g" style="width:44px">3</div>
+              </div>
+            </div>
+            <div>
+              <span style="font-size:0.7rem;color:var(--muted);display:block;margin-bottom:4px">space-between</span>
+              <div style="display:flex;justify-content:space-between;gap:6px;background:rgba(88,166,255,0.05);border:1px dashed rgba(88,166,255,0.2);border-radius:6px;padding:8px">
+                <div class="ub ub-o" style="width:44px">1</div><div class="ub ub-o" style="width:44px">2</div><div class="ub ub-o" style="width:44px">3</div>
+              </div>
+            </div>
+            <div>
+              <span style="font-size:0.7rem;color:var(--muted);display:block;margin-bottom:4px">space-around</span>
+              <div style="display:flex;justify-content:space-around;background:rgba(88,166,255,0.05);border:1px dashed rgba(88,166,255,0.2);border-radius:6px;padding:8px">
+                <div class="ub ub-p" style="width:44px">1</div><div class="ub ub-p" style="width:44px">2</div><div class="ub ub-p" style="width:44px">3</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS — Contenedor Flex</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="u">.flex-container</span> {
+  <span class="p">display</span>: <span class="v">flex</span>;
+
+  <span class="c">/* Dirección del eje principal */</span>
+  <span class="p">flex-direction</span>: <span class="v">row</span>;            <span class="c">/* row | row-reverse | column | column-reverse */</span>
+
+  <span class="c">/* Distribución en el eje principal */</span>
+  <span class="p">justify-content</span>: <span class="v">flex-start</span>;   <span class="c">/* flex-start | center | flex-end
+                                       space-between | space-around | space-evenly */</span>
+
+  <span class="c">/* Alineación en el eje secundario */</span>
+  <span class="p">align-items</span>: <span class="v">stretch</span>;          <span class="c">/* stretch | flex-start | center | flex-end | baseline */</span>
+
+  <span class="c">/* Alineación de múltiples líneas */</span>
+  <span class="p">align-content</span>: <span class="v">flex-start</span>;     <span class="c">/* cuando hay flex-wrap */</span>
+
+  <span class="c">/* Permitir que los ítems salten a la siguiente línea */</span>
+  <span class="p">flex-wrap</span>: <span class="v">wrap</span>;               <span class="c">/* nowrap | wrap | wrap-reverse */</span>
+
+  <span class="c">/* Shorthand: direction + wrap */</span>
+  <span class="p">flex-flow</span>: <span class="v">row wrap</span>;
+
+  <span class="c">/* Espacio entre ítems */</span>
+  <span class="p">gap</span>: <span class="v">1rem</span>;                      <span class="c">/* row-gap column-gap */</span>
+}</pre>
+        </div>
+      </div>
+
+      <!-- ÍTEMS -->
+      <div class="tab-panel" data-tab="flex-items">
+        <div class="demo-box">
+          <span class="demo-label">flex-grow — distribución del espacio disponible</span>
+          <div style="display:flex;gap:6px;background:rgba(88,166,255,0.05);border:1px dashed rgba(88,166,255,0.2);border-radius:6px;padding:8px">
+            <div class="ub ub-b" style="flex:1">flex:1</div>
+            <div class="ub ub-g" style="flex:2">flex:2 (doble)</div>
+            <div class="ub ub-b" style="flex:1">flex:1</div>
+          </div>
+          <div style="margin-top:10px">
+            <span style="font-size:0.7rem;color:var(--muted);display:block;margin-bottom:4px">align-self: sobreescribe align-items para un ítem</span>
+            <div style="display:flex;align-items:flex-start;gap:6px;height:80px;background:rgba(88,166,255,0.05);border:1px dashed rgba(88,166,255,0.2);border-radius:6px;padding:8px">
+              <div class="ub ub-b" style="height:100%">stretch</div>
+              <div class="ub ub-o" style="align-self:center">center</div>
+              <div class="ub ub-g" style="align-self:flex-end">end</div>
+              <div class="ub ub-p" style="align-self:flex-start">start</div>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS — Ítems Flex</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="u">.flex-item</span> {
+  <span class="c">/* flex-grow: cuánto crece respecto a otros (0 = no crece) */</span>
+  <span class="p">flex-grow</span>: <span class="v">1</span>;
+
+  <span class="c">/* flex-shrink: cuánto se encoge (0 = no se encoge) */</span>
+  <span class="p">flex-shrink</span>: <span class="v">1</span>;
+
+  <span class="c">/* flex-basis: tamaño base antes de distribuir espacio */</span>
+  <span class="p">flex-basis</span>: <span class="v">200px</span>;
+
+  <span class="c">/* Shorthand: grow shrink basis */</span>
+  <span class="p">flex</span>: <span class="v">1 1 200px</span>;
+  <span class="p">flex</span>: <span class="v">1</span>;          <span class="c">/* = 1 1 0 */</span>
+  <span class="p">flex</span>: <span class="v">auto</span>;       <span class="c">/* = 1 1 auto */</span>
+  <span class="p">flex</span>: <span class="v">none</span>;       <span class="c">/* = 0 0 auto */</span>
+
+  <span class="c">/* align-self: sobreescribe align-items del contenedor */</span>
+  <span class="p">align-self</span>: <span class="v">center</span>; <span class="c">/* auto | flex-start | center | flex-end | stretch */</span>
+
+  <span class="c">/* order: cambia el orden visual (no el del DOM) */</span>
+  <span class="p">order</span>: <span class="v">-1</span>;           <span class="c">/* va al inicio */</span>
+}</pre>
+        </div>
+      </div>
+
+      <!-- PLAYGROUND -->
+      <div class="tab-panel" data-tab="flex-playground">
+        <div class="demo-box">
+          <span class="demo-label">Controla el contenedor</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:12px;font-size:0.8rem">
+            <label>justify-content:
+              <select id="jc-sel" onchange="updateFlex()" style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:3px 6px;margin-left:4px">
+                <option>flex-start</option><option>center</option><option>flex-end</option>
+                <option>space-between</option><option>space-around</option><option>space-evenly</option>
+              </select>
+            </label>
+            <label>align-items:
+              <select id="ai-sel" onchange="updateFlex()" style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:3px 6px;margin-left:4px">
+                <option>stretch</option><option>flex-start</option><option>center</option><option>flex-end</option>
+              </select>
+            </label>
+            <label>flex-direction:
+              <select id="fd-sel" onchange="updateFlex()" style="background:var(--card);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:3px 6px;margin-left:4px">
+                <option>row</option><option>column</option><option>row-reverse</option><option>column-reverse</option>
+              </select>
+            </label>
+          </div>
+          <div id="flex-pg" style="display:flex;justify-content:flex-start;align-items:stretch;flex-direction:row;gap:8px;background:rgba(88,166,255,0.04);border:2px dashed rgba(88,166,255,0.25);border-radius:8px;padding:12px;min-height:100px;transition:all 0.3s">
+            <div class="ub ub-b" style="min-width:44px;min-height:44px">A</div>
+            <div class="ub ub-g" style="min-width:68px;min-height:56px">B</div>
+            <div class="ub ub-o" style="min-width:52px;min-height:36px">C</div>
+            <div class="ub ub-p" style="min-width:44px;min-height:44px">D</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../10_flexbox/flexbox.html" target="_blank">↗ 10_flexbox/flexbox.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         11 · CSS GRID
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="grid">
+      <div class="topic-header">
+        <div class="topic-num">11</div>
+        <div>
+          <div class="topic-title">CSS Grid</div>
+          <div class="topic-desc">CSS Grid es un sistema de layout <strong>bidimensional</strong> (filas y columnas simultáneamente). Ideal para layouts de página completos y componentes complejos.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'grid','basico')">Grid básico</button>
+        <button class="tab-btn" onclick="switchTab(this,'grid','areas')">Grid Areas</button>
+        <button class="tab-btn" onclick="switchTab(this,'grid','auto')">Auto / minmax</button>
+      </div>
+
+      <!-- BÁSICO -->
+      <div class="tab-panel active" data-tab="grid-basico">
+        <div class="demo-box">
+          <span class="demo-label">grid-template-columns</span>
+          <div style="display:flex;flex-direction:column;gap:10px">
+            <div>
+              <span style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;display:block">repeat(3, 1fr) — 3 columnas iguales</span>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+                <div class="ub ub-b">1</div><div class="ub ub-b">2</div><div class="ub ub-b">3</div>
+              </div>
+            </div>
+            <div>
+              <span style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;display:block">200px 1fr 1fr — primera columna fija, las otras fluidas</span>
+              <div style="display:grid;grid-template-columns:200px 1fr 1fr;gap:6px">
+                <div class="ub ub-o">200px</div><div class="ub ub-o">1fr</div><div class="ub ub-o">1fr</div>
+              </div>
+            </div>
+            <div>
+              <span style="font-size:0.7rem;color:var(--muted);margin-bottom:4px;display:block">Spanning: ítem que ocupa 2 columnas</span>
+              <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+                <div class="ub ub-g" style="grid-column:span 2">span 2</div>
+                <div class="ub ub-g">1</div>
+                <div class="ub ub-g">2</div>
+                <div class="ub ub-g" style="grid-column:span 2">span 2</div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="u">.grid-container</span> {
+  <span class="p">display</span>: <span class="v">grid</span>;
+
+  <span class="c">/* Definir columnas */</span>
+  <span class="p">grid-template-columns</span>: <span class="v">repeat(3, 1fr)</span>;      <span class="c">/* 3 columnas iguales */</span>
+  <span class="p">grid-template-columns</span>: <span class="v">200px 1fr 1fr</span>;        <span class="c">/* mixta */</span>
+  <span class="p">grid-template-columns</span>: <span class="v">repeat(4, minmax(200px, 1fr))</span>;
+
+  <span class="c">/* Definir filas */</span>
+  <span class="p">grid-template-rows</span>: <span class="v">auto 1fr auto</span>;          <span class="c">/* header / content / footer */</span>
+
+  <span class="c">/* Separación */</span>
+  <span class="p">gap</span>: <span class="v">1rem</span>;             <span class="c">/* row-gap + column-gap */</span>
+  <span class="p">row-gap</span>: <span class="v">1rem</span>;
+  <span class="p">column-gap</span>: <span class="v">1.5rem</span>;
+}
+
+<span class="c">/* Controlar posición/tamaño de ítems */</span>
+<span class="u">.item-span</span> {
+  <span class="p">grid-column</span>: <span class="v">span 2</span>;    <span class="c">/* ocupa 2 columnas */</span>
+  <span class="p">grid-row</span>:    <span class="v">span 2</span>;    <span class="c">/* ocupa 2 filas */</span>
+}
+
+<span class="u">.item-posicion</span> {
+  <span class="p">grid-column</span>: <span class="v">2 / 4</span>;    <span class="c">/* de línea 2 a línea 4 */</span>
+  <span class="p">grid-row</span>:    <span class="v">1 / 3</span>;
+}</pre>
+        </div>
+      </div>
+
+      <!-- AREAS -->
+      <div class="tab-panel" data-tab="grid-areas">
+        <div class="demo-box">
+          <span class="demo-label">Layout con grid-template-areas</span>
+          <div style="display:grid;grid-template-columns:160px 1fr;grid-template-rows:auto 1fr auto;grid-template-areas:'header header' 'sidebar main' 'footer footer';gap:6px;min-height:200px">
+            <div class="ub ub-b" style="grid-area:header;padding:10px">header</div>
+            <div class="ub ub-g" style="grid-area:sidebar;padding:10px">sidebar</div>
+            <div class="ub ub-o" style="grid-area:main;padding:10px">main content</div>
+            <div class="ub ub-p" style="grid-area:footer;padding:10px">footer</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="u">.layout</span> {
+  <span class="p">display</span>: <span class="v">grid</span>;
+  <span class="p">grid-template-columns</span>: <span class="v">200px 1fr</span>;
+  <span class="p">grid-template-rows</span>:    <span class="v">60px 1fr 50px</span>;
+  <span class="p">grid-template-areas</span>:
+    <span class="s">"header  header"</span>
+    <span class="s">"sidebar main"</span>
+    <span class="s">"footer  footer"</span>;
+  <span class="p">gap</span>: <span class="v">1rem</span>;
+  <span class="p">min-height</span>: <span class="v">100vh</span>;
+}
+
+<span class="c">/* Asignar áreas a los hijos */</span>
+<span class="u">header</span>  { <span class="p">grid-area</span>: <span class="v">header</span>;  }
+<span class="u">.sidebar</span>{ <span class="p">grid-area</span>: <span class="v">sidebar</span>; }
+<span class="u">main</span>    { <span class="p">grid-area</span>: <span class="v">main</span>;    }
+<span class="u">footer</span>  { <span class="p">grid-area</span>: <span class="v">footer</span>;  }
+
+<span class="c">/* Punto (.) = celda vacía */</span>
+<span class="p">grid-template-areas</span>:
+  <span class="s">"header header header"</span>
+  <span class="s">"sidebar main  ."</span>
+  <span class="s">"footer footer footer"</span>;</pre>
+        </div>
+      </div>
+
+      <!-- AUTO / MINMAX -->
+      <div class="tab-panel" data-tab="grid-auto">
+        <div class="demo-box">
+          <span class="demo-label">minmax() + auto-fill — grid responsive automático</span>
+          <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(90px,1fr));gap:6px">
+            <div class="ub ub-b">1</div><div class="ub ub-g">2</div><div class="ub ub-o">3</div>
+            <div class="ub ub-p">4</div><div class="ub ub-r">5</div><div class="ub ub-b">6</div>
+            <div class="ub ub-g">7</div><div class="ub ub-o">8</div>
+          </div>
+          <p style="font-size:0.75rem;color:var(--muted);margin-top:8px">↑ Cambia el ancho de la ventana para ver cómo las columnas se ajustan automáticamente.</p>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* minmax(min, max): columna que varía entre min y max */</span>
+<span class="u">.galeria</span> {
+  <span class="p">display</span>: <span class="v">grid</span>;
+  <span class="p">grid-template-columns</span>: <span class="v">repeat(auto-fill, minmax(250px, 1fr))</span>;
+  <span class="p">gap</span>: <span class="v">1.5rem</span>;
+  <span class="c">/* Sin media queries — responsive automático */</span>
+}
+
+<span class="c">/* auto-fill: llena el espacio con el máximo de columnas */</span>
+<span class="c">/* auto-fit: colapsa columnas vacías (para centrar) */</span>
+
+<span class="c">/* fit-content() — limita el tamaño máximo */</span>
+<span class="u">.tabla</span> {
+  <span class="p">grid-template-columns</span>: <span class="v">fit-content(150px) 1fr 1fr</span>;
+}
+
+<span class="c">/* Filas automáticas con altura mínima */</span>
+<span class="u">.layout</span> {
+  <span class="p">grid-auto-rows</span>: <span class="v">minmax(120px, auto)</span>;
+}</pre>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../11_grid/grid.html" target="_blank">↗ 11_grid/grid.html</a>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         12 · RESPONSIVE DESIGN
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="responsive">
+      <div class="topic-header">
+        <div class="topic-num">12</div>
+        <div>
+          <div class="topic-title">Diseño Responsive</div>
+          <div class="topic-desc">El diseño responsive adapta la interfaz a distintos tamaños de pantalla usando <strong>media queries</strong>, unidades fluidas, imágenes adaptables y el enfoque <strong>mobile-first</strong>.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'resp','mq')">Media Queries</button>
+        <button class="tab-btn" onclick="switchTab(this,'resp','bp')">Breakpoints</button>
+        <button class="tab-btn" onclick="switchTab(this,'resp','tips')">Técnicas responsive</button>
+      </div>
+
+      <!-- MEDIA QUERIES -->
+      <div class="tab-panel active" data-tab="resp-mq">
+        <div class="demo-box">
+          <span class="demo-label">Tu viewport actual</span>
+          <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:center">
+            <div style="font-family:var(--mono);font-size:1.2rem;color:var(--accent)"><span id="vp-w">—</span> × <span id="vp-h">—</span></div>
+            <div id="vp-badge" style="padding:4px 12px;border-radius:20px;font-size:0.75rem;font-weight:700;background:rgba(88,166,255,0.15);color:var(--accent);border:1px solid rgba(88,166,255,0.3)">—</div>
+          </div>
+          <div style="margin-top:12px;display:flex;gap:4px;flex-wrap:nowrap">
+            <div style="flex:1;min-width:0;background:rgba(248,81,73,0.2);border-radius:4px;padding:4px;text-align:center;font-size:0.65rem;color:var(--red)">xs&lt;480</div>
+            <div style="flex:1.5;min-width:0;background:rgba(255,166,87,0.2);border-radius:4px;padding:4px;text-align:center;font-size:0.65rem;color:var(--orange)">sm 480-768</div>
+            <div style="flex:2;min-width:0;background:rgba(63,185,80,0.2);border-radius:4px;padding:4px;text-align:center;font-size:0.65rem;color:var(--green)">md 768-1024</div>
+            <div style="flex:2.5;min-width:0;background:rgba(88,166,255,0.2);border-radius:4px;padding:4px;text-align:center;font-size:0.65rem;color:var(--accent)">lg 1024-1280</div>
+            <div style="flex:2;min-width:0;background:rgba(188,140,255,0.2);border-radius:4px;padding:4px;text-align:center;font-size:0.65rem;color:var(--purple)">xl &gt;1280</div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS — Media Queries</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* ── Sintaxis básica ── */</span>
+<span class="k">@media</span> <span class="u">(max-width: 768px)</span> {
+  <span class="u">.sidebar</span> { <span class="p">display</span>: <span class="v">none</span>; }
+  <span class="u">.columnas</span> { <span class="p">grid-template-columns</span>: <span class="v">1fr</span>; }
+}
+
+<span class="c">/* ── Mobile First (recomendado) ── */</span>
+<span class="c">/* Estilos BASE = mobile */</span>
+<span class="u">.card-grid</span> {
+  <span class="p">display</span>: <span class="v">grid</span>;
+  <span class="p">grid-template-columns</span>: <span class="v">1fr</span>;      <span class="c">/* 1 columna en mobile */</span>
+  <span class="p">gap</span>: <span class="v">1rem</span>;
+}
+
+<span class="c">/* Tablet ≥768px */</span>
+<span class="k">@media</span> <span class="u">(min-width: 768px)</span> {
+  <span class="u">.card-grid</span> { <span class="p">grid-template-columns</span>: <span class="v">repeat(2, 1fr)</span>; }
+}
+
+<span class="c">/* Desktop ≥1024px */</span>
+<span class="k">@media</span> <span class="u">(min-width: 1024px)</span> {
+  <span class="u">.card-grid</span> { <span class="p">grid-template-columns</span>: <span class="v">repeat(3, 1fr)</span>; }
+}
+
+<span class="c">/* ── Condiciones múltiples ── */</span>
+<span class="k">@media</span> <span class="u">(min-width: 768px) and (max-width: 1024px)</span> { <span class="c">/* solo tablet */</span> }
+<span class="k">@media</span> <span class="u">(orientation: landscape)</span> { <span class="c">/* solo landscape */</span> }
+<span class="k">@media</span> <span class="u">(prefers-color-scheme: dark)</span> { <span class="c">/* modo oscuro del OS */</span> }
+<span class="k">@media</span> <span class="u">(prefers-reduced-motion: reduce)</span> { <span class="c">/* sin animaciones */</span>
+  <span class="u">*</span> { <span class="p">animation</span>: <span class="v">none !important</span>; <span class="p">transition</span>: <span class="v">none !important</span>; }
+}</pre>
+        </div>
+      </div>
+
+      <!-- BREAKPOINTS -->
+      <div class="tab-panel" data-tab="resp-bp">
+        <table class="data-table">
+          <thead><tr><th>Nombre</th><th>min-width</th><th>Dispositivo típico</th><th>Columnas grid</th></tr></thead>
+          <tbody>
+            <tr><td><span class="badge br">xs</span></td><td>0px</td><td>Teléfono pequeño</td><td>1</td></tr>
+            <tr><td><span class="badge bo">sm</span></td><td>480px</td><td>Teléfono grande</td><td>1-2</td></tr>
+            <tr><td><span class="badge bg">md</span></td><td>768px</td><td>Tablet</td><td>2</td></tr>
+            <tr><td><span class="badge bb">lg</span></td><td>1024px</td><td>Desktop pequeño</td><td>3</td></tr>
+            <tr><td><span class="badge bp">xl</span></td><td>1280px</td><td>Desktop estándar</td><td>4</td></tr>
+            <tr><td><span class="badge bp">2xl</span></td><td>1536px</td><td>Desktop grande</td><td>4-6</td></tr>
+          </tbody>
+        </table>
+        <div class="callout ci">
+          <strong>💡 Tailwind CSS usa estos breakpoints</strong>
+          sm: 640px | md: 768px | lg: 1024px | xl: 1280px | 2xl: 1536px
+        </div>
+      </div>
+
+      <!-- TÉCNICAS -->
+      <div class="tab-panel" data-tab="resp-tips">
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS — Técnicas modernas</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* ── Meta viewport (OBLIGATORIO en HTML) ── */</span>
+<span class="c">&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</span>
+
+<span class="c">/* ── Imágenes responsive ── */</span>
+<span class="u">img</span> {
+  <span class="p">max-width</span>: <span class="v">100%</span>;    <span class="c">/* nunca más ancho que su contenedor */</span>
+  <span class="p">height</span>: <span class="v">auto</span>;       <span class="c">/* mantiene proporción */</span>
+}
+
+<span class="c">/* ── Grid responsive SIN media queries ── */</span>
+<span class="u">.galeria</span> {
+  <span class="p">display</span>: <span class="v">grid</span>;
+  <span class="p">grid-template-columns</span>: <span class="v">repeat(auto-fit, minmax(280px, 1fr))</span>;
+  <span class="p">gap</span>: <span class="v">1.5rem</span>;
+}
+
+<span class="c">/* ── Tipografía fluida con clamp() ── */</span>
+<span class="u">h1</span> { <span class="p">font-size</span>: <span class="v">clamp(1.5rem, 4vw, 3rem)</span>; }
+<span class="u">p</span>  { <span class="p">font-size</span>: <span class="v">clamp(1rem, 1.5vw, 1.25rem)</span>; }
+
+<span class="c">/* ── Container Queries (CSS moderno) ── */</span>
+<span class="u">.contenedor</span> { <span class="p">container-type</span>: <span class="v">inline-size</span>; }
+
+<span class="k">@container</span> <span class="u">(min-width: 400px)</span> {
+  <span class="u">.tarjeta</span> { <span class="p">display</span>: <span class="v">flex</span>; }  <span class="c">/* Relativo al CONTENEDOR, no al viewport */</span>
+}
+
+<span class="c">/* ── Ocultar/mostrar según viewport ── */</span>
+<span class="u">.solo-mobile</span>  { <span class="p">display</span>: <span class="v">block</span>; }
+<span class="u">.solo-desktop</span> { <span class="p">display</span>: <span class="v">none</span>;  }
+
+<span class="k">@media</span> <span class="u">(min-width: 768px)</span> {
+  <span class="u">.solo-mobile</span>  { <span class="p">display</span>: <span class="v">none</span>;  }
+  <span class="u">.solo-desktop</span> { <span class="p">display</span>: <span class="v">block</span>; }
+}</pre>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../12_responsive/responsive.html" target="_blank">↗ 12_responsive/responsive.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         13 · FUNCIONES MODERNAS
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="funciones">
+      <div class="topic-header">
+        <div class="topic-num">13</div>
+        <div>
+          <div class="topic-title">Funciones Modernas CSS</div>
+          <div class="topic-desc">CSS cuenta con funciones matemáticas (<code>calc</code>, <code>clamp</code>, <code>min</code>, <code>max</code>) y otras utilidades modernas que permiten cálculos dinámicos sin JavaScript.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'fn','calc')">calc()</button>
+        <button class="tab-btn" onclick="switchTab(this,'fn','clamp')">clamp()</button>
+        <button class="tab-btn" onclick="switchTab(this,'fn','minmax')">min() / max()</button>
+        <button class="tab-btn" onclick="switchTab(this,'fn','otros')">Otras</button>
+      </div>
+
+      <!-- calc() -->
+      <div class="tab-panel active" data-tab="fn-calc">
+        <div class="demo-box">
+          <span class="demo-label">calc() — mezcla unidades</span>
+          <div style="background:rgba(88,166,255,0.05);border-radius:7px;padding:10px;overflow:hidden">
+            <div style="width:calc(100% - 64px);background:rgba(88,166,255,0.2);border:1px solid rgba(88,166,255,0.4);border-radius:5px;padding:8px 12px;font-size:0.82rem;color:var(--accent)">
+              width: calc(100% - 64px) — ancho completo menos un margen fijo
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* calc() puede mezclar cualquier unidad CSS */</span>
+<span class="u">.sidebar-layout</span> {
+  <span class="p">width</span>: <span class="v">calc(100% - 280px)</span>;       <span class="c">/* % - px */</span>
+}
+
+<span class="u">.full-bleed</span> {
+  <span class="p">margin-left</span>:  <span class="v">calc(-1 * var(--padding))</span>;
+  <span class="p">margin-right</span>: <span class="v">calc(-1 * var(--padding))</span>;
+}
+
+<span class="u">.nav-content</span> {
+  <span class="p">min-height</span>: <span class="v">calc(100vh - 60px)</span>;  <span class="c">/* pantalla - nav */</span>
+}
+
+<span class="c">/* Operaciones permitidas: + - * / */</span>
+<span class="u">.grid-gap</span> {
+  <span class="c">/* IMPORTANTE: dejar espacios alrededor de + y - */</span>
+  <span class="p">width</span>: <span class="v">calc(33.333% - 1rem)</span>;
+  <span class="p">width</span>: <span class="v">calc(2rem * 4)</span>;
+  <span class="p">width</span>: <span class="v">calc(100% / 3)</span>;
+}</pre>
+        </div>
+      </div>
+
+      <!-- clamp() -->
+      <div class="tab-panel" data-tab="fn-clamp">
+        <div class="demo-box">
+          <span class="demo-label">clamp(mínimo, ideal, máximo) — valor fluido</span>
+          <div style="font-size:clamp(1rem,4vw,2.5rem);font-weight:700;color:var(--accent);line-height:1.2">
+            clamp(1rem, 4vw, 2.5rem)
+          </div>
+          <p style="font-size:0.8rem;color:var(--muted);margin-top:8px">↑ Este texto escala fluidamente entre 1rem y 2.5rem según el ancho del viewport.</p>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* clamp(MIN, IDEAL, MAX) */</span>
+<span class="c">/* = max(MIN, min(IDEAL, MAX)) */</span>
+
+<span class="c">/* Tipografía fluida — escala con el viewport */</span>
+<span class="u">h1</span> { <span class="p">font-size</span>:  <span class="v">clamp(1.75rem, 5vw, 3.5rem)</span>; }
+<span class="u">h2</span> { <span class="p">font-size</span>:  <span class="v">clamp(1.25rem, 3vw, 2rem)</span>; }
+<span class="u">p</span>  { <span class="p">font-size</span>:  <span class="v">clamp(1rem, 1.5vw, 1.2rem)</span>; }
+
+<span class="c">/* Ancho fluido con límites */</span>
+<span class="u">.container</span> {
+  <span class="p">width</span>: <span class="v">clamp(320px, 90%, 1200px)</span>;
+  <span class="c">/* mínimo 320px, máximo 1200px, ideal 90% */</span>
+}
+
+<span class="c">/* Padding fluido */</span>
+<span class="u">.section</span> {
+  <span class="p">padding</span>: <span class="v">clamp(2rem, 5vw, 5rem)</span>;
+}</pre>
+        </div>
+      </div>
+
+      <!-- min() / max() -->
+      <div class="tab-panel" data-tab="fn-minmax">
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* min(A, B) — elige el valor más pequeño */</span>
+<span class="u">.container</span> {
+  <span class="p">width</span>: <span class="v">min(90%, 1200px)</span>;  <span class="c">/* = max-width: 1200px de forma elegante */</span>
+}
+
+<span class="u">.imagen</span> {
+  <span class="p">width</span>: <span class="v">min(400px, 100%)</span>;   <span class="c">/* nunca mayor a 400px ni al contenedor */</span>
+}
+
+<span class="c">/* max(A, B) — elige el valor más grande */</span>
+<span class="u">.boton</span> {
+  <span class="p">padding</span>: <span class="v">max(0.5rem, 2vw)</span>; <span class="c">/* padding mínimo de 0.5rem */</span>
+}
+
+<span class="u">.texto</span> {
+  <span class="p">font-size</span>: <span class="v">max(1rem, 2vw)</span>; <span class="c">/* nunca menor a 1rem */</span>
+}
+
+<span class="c">/* Combinando con calc() */</span>
+<span class="u">.layout</span> {
+  <span class="p">padding</span>: <span class="v">max(1rem, calc(50% - 600px))</span>;
+}</pre>
+        </div>
+      </div>
+
+      <!-- OTRAS -->
+      <div class="tab-panel" data-tab="fn-otros">
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* ── env() — variables de entorno del OS/browser ── */</span>
+<span class="u">.safe-area</span> {
+  <span class="p">padding-bottom</span>: <span class="v">env(safe-area-inset-bottom)</span>; <span class="c">/* notch en iPhone */</span>
+  <span class="p">padding-top</span>:    <span class="v">env(safe-area-inset-top)</span>;
+}
+
+<span class="c">/* ── attr() — usa un atributo HTML como valor ── */</span>
+<span class="u">[data-tooltip]::after</span> {
+  <span class="p">content</span>: <span class="v">attr(data-tooltip)</span>; <span class="c">/* muestra el atributo como texto */</span>
+}
+
+<span class="c">/* ── counter() — contadores automáticos ── */</span>
+<span class="u">ol</span> { <span class="p">counter-reset</span>: <span class="v">paso</span>; }
+<span class="u">li</span> {
+  <span class="p">counter-increment</span>: <span class="v">paso</span>;
+}
+<span class="u">li::before</span> {
+  <span class="p">content</span>: <span class="v">counter(paso, decimal-leading-zero)</span>;
+}
+
+<span class="c">/* ── color-mix() — mezcla colores (CSS Color 5) ── */</span>
+<span class="u">.mezcla</span> {
+  <span class="p">background</span>: <span class="v">color-mix(in srgb, #3498db 40%, white)</span>;
+}
+
+<span class="c">/* ── round() / abs() / rem() — matemáticas avanzadas ── */</span>
+<span class="u">.snap</span> {
+  <span class="p">width</span>: <span class="v">round(down, 67.5px, 8px)</span>; <span class="c">/* = 64px (múltiplo de 8) */</span>
+}</pre>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../13_funciones_modernas/funciones.html" target="_blank">↗ 13_funciones_modernas/funciones.html</a>
+      </div>
+    </section>
+
+
+    <!-- ══════════════════════════════════════════════════
+         14 · ANIMACIONES Y TRANSICIONES
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="animaciones">
+      <div class="topic-header">
+        <div class="topic-num">14</div>
+        <div>
+          <div class="topic-title">Animaciones y Transiciones</div>
+          <div class="topic-desc">CSS permite animar propiedades con <code>transition</code> (de A → B al cambiar de estado) y con <code>@keyframes</code> (secuencias completas de animación).</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'anim','transition')">transition</button>
+        <button class="tab-btn" onclick="switchTab(this,'anim','keyframes')">@keyframes</button>
+        <button class="tab-btn" onclick="switchTab(this,'anim','ejemplos')">Demos en vivo</button>
+      </div>
+
+      <!-- TRANSITION -->
+      <div class="tab-panel active" data-tab="anim-transition">
+        <div class="demo-box">
+          <span class="demo-label">Interactúa — hover sobre las tarjetas</span>
+          <div style="display:flex;gap:10px;flex-wrap:wrap">
+            <div style="width:100px;height:80px;background:rgba(88,166,255,0.15);border:1px solid rgba(88,166,255,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--accent);cursor:pointer;transition:all 0.3s ease;font-weight:600"
+              onmouseenter="this.style.transform='translateY(-8px) scale(1.05)';this.style.background='rgba(88,166,255,0.35)';this.style.boxShadow='0 12px 24px rgba(88,166,255,0.3)'"
+              onmouseleave="this.style.transform='';this.style.background='rgba(88,166,255,0.15)';this.style.boxShadow=''">
+              lift
+            </div>
+            <div style="width:100px;height:80px;background:rgba(63,185,80,0.15);border:1px solid rgba(63,185,80,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--green);cursor:pointer;transition:background 0.4s ease, border-radius 0.4s ease;font-weight:600"
+              onmouseenter="this.style.background='rgba(63,185,80,0.35)';this.style.borderRadius='50%'"
+              onmouseleave="this.style.background='rgba(63,185,80,0.15)';this.style.borderRadius='8px'">
+              morph
+            </div>
+            <div style="width:100px;height:80px;background:rgba(188,140,255,0.15);border:2px solid rgba(188,140,255,0.3);border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;color:var(--purple);cursor:pointer;transition:all 0.25s cubic-bezier(0.34,1.56,0.64,1);font-weight:600"
+              onmouseenter="this.style.transform='scale(1.2) rotate(5deg)'"
+              onmouseleave="this.style.transform=''">
+              spring
+            </div>
+          </div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="u">.boton</span> {
+  <span class="p">background</span>: <span class="v">#3498db</span>;
+  <span class="p">transform</span>: <span class="v">translateY(0)</span>;
+
+  <span class="c">/* transition: propiedad duración timing-function delay */</span>
+  <span class="p">transition</span>: <span class="v">all 0.3s ease</span>;
+
+  <span class="c">/* Múltiples propiedades con distintos tiempos */</span>
+  <span class="p">transition</span>:
+    <span class="v">background 0.2s ease</span>,
+    <span class="v">transform  0.3s cubic-bezier(0.34, 1.56, 0.64, 1)</span>,
+    <span class="v">box-shadow 0.3s ease</span>;
+}
+
+<span class="u">.boton:hover</span> {
+  <span class="p">background</span>: <span class="v">#2980b9</span>;
+  <span class="p">transform</span>: <span class="v">translateY(-4px)</span>;
+  <span class="p">box-shadow</span>: <span class="v">0 8px 20px rgba(52, 152, 219, 0.4)</span>;
+}
+
+<span class="c">/* Funciones de timing */</span>
+<span class="c">/* ease | linear | ease-in | ease-out | ease-in-out */</span>
+<span class="c">/* steps(n) — animación por pasos (sprite animation) */</span>
+<span class="c">/* cubic-bezier(x1,y1,x2,y2) — curva personalizada */</span></pre>
+        </div>
+      </div>
+
+      <!-- KEYFRAMES -->
+      <div class="tab-panel" data-tab="anim-keyframes">
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">CSS</span><button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button></div>
+          <pre class="code"><span class="c">/* 1. Definir la animación con @keyframes */</span>
+<span class="k">@keyframes</span> <span class="u">pulso</span> {
+  <span class="n">0%</span>   { <span class="p">transform</span>: <span class="v">scale(1)</span>;    <span class="p">opacity</span>: <span class="v">1</span>; }
+  <span class="n">50%</span>  { <span class="p">transform</span>: <span class="v">scale(1.15)</span>; <span class="p">opacity</span>: <span class="v">0.7</span>; }
+  <span class="n">100%</span> { <span class="p">transform</span>: <span class="v">scale(1)</span>;    <span class="p">opacity</span>: <span class="v">1</span>; }
+}
+
+<span class="k">@keyframes</span> <span class="u">entrar-derecha</span> {
+  <span class="k">from</span> { <span class="p">transform</span>: <span class="v">translateX(-30px)</span>; <span class="p">opacity</span>: <span class="v">0</span>; }
+  <span class="k">to</span>   { <span class="p">transform</span>: <span class="v">translateX(0)</span>;     <span class="p">opacity</span>: <span class="v">1</span>; }
+}
+
+<span class="k">@keyframes</span> <span class="u">girar</span> {
+  <span class="k">from</span> { <span class="p">transform</span>: <span class="v">rotate(0deg)</span>; }
+  <span class="k">to</span>   { <span class="p">transform</span>: <span class="v">rotate(360deg)</span>; }
+}
+
+<span class="c">/* 2. Aplicar con animation */</span>
+<span class="u">.elemento-animado</span> {
+  <span class="c">/* animation: nombre duración timing delay iter dir fill-mode */</span>
+  <span class="p">animation</span>: <span class="v">pulso 2s ease-in-out infinite</span>;
+}
+
+<span class="u">.cargando</span> {
+  <span class="p">animation</span>: <span class="v">girar 1s linear infinite</span>;
+}
+
+<span class="u">.aparece</span> {
+  <span class="p">animation</span>: <span class="v">entrar-derecha 0.5s ease-out both</span>;
+  <span class="c">/* both = mantiene el estado final */</span>
+}
+
+<span class="c">/* Múltiples animaciones */</span>
+<span class="u">.combo</span> {
+  <span class="p">animation</span>:
+    <span class="v">entrar-derecha 0.5s ease-out both</span>,
+    <span class="v">pulso 2s 0.5s ease-in-out infinite</span>;
+}</pre>
+        </div>
+      </div>
+
+      <!-- DEMOS EN VIVO -->
+      <div class="tab-panel" data-tab="anim-ejemplos">
+        <style>
+          @keyframes spin-d  { to { transform: rotate(360deg); } }
+          @keyframes pulse-d { 0%,100%{transform:scale(1);opacity:1} 50%{transform:scale(1.2);opacity:0.6} }
+          @keyframes bounce-d{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(-24px)} }
+          @keyframes wave-d  { 0%,100%{transform:translateX(0)} 50%{transform:translateX(20px)} }
+          @keyframes fade-in-d{ from{opacity:0;transform:translateY(16px)} to{opacity:1;transform:translateY(0)} }
+          @keyframes gradient-d{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+        </style>
+        <div class="demo-box">
+          <span class="demo-label">Animaciones en vivo</span>
+          <div style="display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:space-around;padding:12px 0">
+            <div style="text-align:center">
+              <div style="width:54px;height:54px;border-radius:10px;background:rgba(88,166,255,0.25);border:2px solid rgba(88,166,255,0.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;animation:spin-d 2s linear infinite;margin:0 auto 6px">⚙️</div>
+              <span style="font-size:0.7rem;color:var(--muted)">rotate</span>
+            </div>
+            <div style="text-align:center">
+              <div style="width:54px;height:54px;border-radius:50%;background:rgba(63,185,80,0.25);border:2px solid rgba(63,185,80,0.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;animation:pulse-d 1.5s ease-in-out infinite;margin:0 auto 6px">❤️</div>
+              <span style="font-size:0.7rem;color:var(--muted)">pulse</span>
+            </div>
+            <div style="text-align:center">
+              <div style="width:54px;height:54px;border-radius:10px;background:rgba(255,166,87,0.25);border:2px solid rgba(255,166,87,0.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;animation:bounce-d 1s ease-in-out infinite;margin:0 auto 6px">🏀</div>
+              <span style="font-size:0.7rem;color:var(--muted)">bounce</span>
+            </div>
+            <div style="text-align:center">
+              <div style="width:54px;height:54px;border-radius:10px;background:rgba(188,140,255,0.25);border:2px solid rgba(188,140,255,0.5);display:flex;align-items:center;justify-content:center;font-size:1.4rem;animation:wave-d 1.2s ease-in-out infinite;margin:0 auto 6px">👋</div>
+              <span style="font-size:0.7rem;color:var(--muted)">wave</span>
+            </div>
+            <div style="text-align:center">
+              <div style="width:120px;height:54px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-size:0.8rem;font-weight:700;color:white;background:linear-gradient(270deg,#58a6ff,#3fb950,#ffa657,#f85149,#bc8cff,#58a6ff);background-size:400% 400%;animation:gradient-d 3s ease infinite;margin:0 auto 6px">gradient</div>
+              <span style="font-size:0.7rem;color:var(--muted)">gradient</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-box">
+          <span class="demo-label">Botón con estado de carga</span>
+          <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
+            <button id="load-btn" onclick="simulateLoad(this)" style="padding:10px 22px;background:var(--accent);color:#0d1117;border:none;border-radius:7px;font-weight:700;font-size:0.875rem;cursor:pointer;display:flex;align-items:center;gap:8px;transition:all 0.2s">
+              <span id="load-icon">✨</span>
+              <span id="load-text">Cargar datos</span>
+            </button>
+            <span style="font-size:0.8rem;color:var(--muted)">← haz clic para ver la transición</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="file-links">
+        <a class="flink" href="../14_animaciones/animaciones.html" target="_blank">↗ 14_animaciones/animaciones.html</a>
+      </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer style="border-top:1px solid var(--border);margin-top:2rem;padding:2rem 0;text-align:center;color:var(--muted);font-size:0.82rem">
+      <div style="margin-bottom:0.4rem">Guía Interactiva CSS — STW 2026 · Universidad del Valle de Guatemala</div>
+      <div>14 temas · demos en vivo · código copiable · responsive</div>
+    </footer>
+
+  </main>
+</div><!-- /page-layout -->
+
+<!-- ════════════════════════════════════════════
+     JAVASCRIPT
+════════════════════════════════════════════ -->
+<script>
+  /* ── Tab switching ── */
+  function switchTab(btn, group, name) {
+    document.querySelectorAll(`[data-tab^="${group}-"]`)
+      .forEach(p => p.classList.remove('active'));
+    btn.closest('.tabs').querySelectorAll('.tab-btn')
+      .forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = document.querySelector(`[data-tab="${group}-${name}"]`);
+    if (panel) panel.classList.add('active');
+  }
+
+  /* ── Copy to clipboard ── */
+  async function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre.code');
+    try {
+      await navigator.clipboard.writeText(pre.innerText);
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 2000);
+    } catch(e) { console.warn('Clipboard error', e); }
+  }
+
+  /* ── Scroll spy (sidebar + nav) ── */
+  const topics = document.querySelectorAll('.topic');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id = e.target.id;
+      document.querySelectorAll('.sidebar-nav a').forEach(a =>
+        a.classList.toggle('active', a.dataset.s === id));
+      document.querySelectorAll('.nav-links a').forEach(a =>
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    });
+  }, { rootMargin: '-20% 0% -70% 0%' });
+  topics.forEach(s => io.observe(s));
+
+  /* ── Progress bar ── */
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY /
+      (document.documentElement.scrollHeight - window.innerHeight);
+    document.getElementById('progress').style.width = (pct * 100) + '%';
+  });
+
+  /* ── Variables demo: theme switcher ── */
+  const themeMap = {
+    blue:   { color:'#58a6ff', bg:'rgba(88,166,255,0.1)',  border:'rgba(88,166,255,0.35)' },
+    green:  { color:'#3fb950', bg:'rgba(63,185,80,0.1)',   border:'rgba(63,185,80,0.35)' },
+    purple: { color:'#bc8cff', bg:'rgba(188,140,255,0.1)', border:'rgba(188,140,255,0.35)' },
+    red:    { color:'#f85149', bg:'rgba(248,81,73,0.1)',   border:'rgba(248,81,73,0.35)' },
+  };
+  function setTheme(name) {
+    const el = document.getElementById('var-demo');
+    if (!el) return;
+    const t = themeMap[name];
+    el.style.setProperty('--demo-color', t.color);
+    el.style.setProperty('--demo-bg',    t.bg);
+    el.style.setProperty('--demo-border',t.border);
+  }
+
+  /* ── Flexbox playground ── */
+  function updateFlex() {
+    const pg = document.getElementById('flex-pg');
+    if (!pg) return;
+    pg.style.justifyContent = document.getElementById('jc-sel').value;
+    pg.style.alignItems     = document.getElementById('ai-sel').value;
+    pg.style.flexDirection  = document.getElementById('fd-sel').value;
+  }
+
+  /* ── Viewport size indicator ── */
+  function updateVP() {
+    const w = window.innerWidth, h = window.innerHeight;
+    const wEl = document.getElementById('vp-w');
+    const hEl = document.getElementById('vp-h');
+    const bEl = document.getElementById('vp-badge');
+    if (!wEl) return;
+    wEl.textContent = w + 'px';
+    hEl.textContent = h + 'px';
+    let label = 'xs', color = '#f85149';
+    if (w >= 480)  { label='sm'; color='#ffa657'; }
+    if (w >= 768)  { label='md'; color='#3fb950'; }
+    if (w >= 1024) { label='lg'; color='#58a6ff'; }
+    if (w >= 1280) { label='xl'; color='#bc8cff'; }
+    bEl.textContent = label;
+    bEl.style.color  = color;
+    bEl.style.background  = color.replace(')', ',0.12)').replace('rgb', 'rgba');
+    bEl.style.borderColor = color.replace(')', ',0.3)').replace('rgb', 'rgba');
+  }
+  window.addEventListener('resize', updateVP);
+  updateVP();
+
+  /* ── Load button demo ── */
+  function simulateLoad(btn) {
+    const icon = document.getElementById('load-icon');
+    const text = document.getElementById('load-text');
+    btn.disabled = true;
+    btn.style.opacity = '0.7';
+    icon.style.animation = 'spin-d 0.8s linear infinite';
+    icon.textContent = '⏳';
+    text.textContent = 'Cargando...';
+    setTimeout(() => {
+      icon.style.animation = '';
+      icon.textContent = '✅';
+      text.textContent = '¡Listo!';
+      btn.style.background = '#3fb950';
+      setTimeout(() => {
+        icon.textContent = '✨';
+        text.textContent = 'Cargar datos';
+        btn.style.background = '';
+        btn.style.opacity = '';
+        btn.disabled = false;
+      }, 1500);
+    }, 2000);
+  }
+</script>
+</body>
+</html>
