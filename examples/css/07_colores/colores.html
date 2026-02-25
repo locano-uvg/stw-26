@@ -1,0 +1,776 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Colores en CSS</title>
+    <style>
+        /* ================================================
+           VARIABLES CSS
+           ================================================ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+
+        /* Code examples */
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        /* ================================================
+           ESTILOS ESPECÍFICOS PARA COLORES
+           ================================================ */
+
+        .color-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .color-box {
+            height: 100px;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+        }
+
+        .color-box:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .color-sample {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .color-display {
+            height: 80px;
+            border-radius: var(--border-radius-sm);
+            margin-bottom: var(--spacing-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+
+        .gradient-box {
+            height: 150px;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            margin: var(--spacing-md) 0;
+            box-shadow: var(--shadow-md);
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .card-title {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        /* Ejemplos de paletas */
+        .palette {
+            display: flex;
+            height: 60px;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            box-shadow: var(--shadow-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .palette-color {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* Demostración de transparencia */
+        .transparency-demo {
+            position: relative;
+            height: 200px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20"><rect width="10" height="10" fill="%23ccc"/><rect x="10" width="10" height="10" fill="%23fff"/><rect y="10" width="10" height="10" fill="%23fff"/><rect x="10" y="10" width="10" height="10" fill="%23ccc"/></svg>');
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        .transparency-layer {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Colores en CSS</h1>
+            <p>Formatos, gradientes y mejores prácticas</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>Formatos de Color en CSS</h2>
+                <p>
+                    CSS ofrece múltiples formas de especificar colores. Cada formato tiene sus ventajas
+                    y casos de uso específicos.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Formato</th>
+                            <th>Sintaxis</th>
+                            <th>Ejemplo</th>
+                            <th>Transparencia</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Nombres</strong></td>
+                            <td>nombre-color</td>
+                            <td>red, blue, tomato</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hexadecimal</strong></td>
+                            <td>#RRGGBB o #RGB</td>
+                            <td>#3498db, #fff</td>
+                            <td>No (#RRGGBBAA sí)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RGB</strong></td>
+                            <td>rgb(R, G, B)</td>
+                            <td>rgb(52, 152, 219)</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td><strong>RGBA</strong></td>
+                            <td>rgba(R, G, B, A)</td>
+                            <td>rgba(52, 152, 219, 0.5)</td>
+                            <td>Sí (0-1)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HSL</strong></td>
+                            <td>hsl(H, S%, L%)</td>
+                            <td>hsl(204, 70%, 53%)</td>
+                            <td>No</td>
+                        </tr>
+                        <tr>
+                            <td><strong>HSLA</strong></td>
+                            <td>hsla(H, S%, L%, A)</td>
+                            <td>hsla(204, 70%, 53%, 0.5)</td>
+                            <td>Sí (0-1)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>1. Colores con Nombres</h2>
+                <p>
+                    CSS incluye 147 nombres de colores predefinidos. Son fáciles de recordar pero limitados.
+                </p>
+
+                <div class="color-grid">
+                    <div class="color-box" style="background-color: red;">red</div>
+                    <div class="color-box" style="background-color: blue;">blue</div>
+                    <div class="color-box" style="background-color: green;">green</div>
+                    <div class="color-box" style="background-color: orange;">orange</div>
+                    <div class="color-box" style="background-color: purple;">purple</div>
+                    <div class="color-box" style="background-color: tomato;">tomato</div>
+                    <div class="color-box" style="background-color: coral;">coral</div>
+                    <div class="color-box" style="background-color: teal;">teal</div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Colores con nombres */</span>
+.elemento {
+    color: red;
+    background-color: lightblue;
+    border-color: navy;
+}
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Limitación:</strong> Los nombres de colores son convenientes pero no permiten
+                    ajustes finos y no soportan transparencia.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>2. Colores Hexadecimales</h2>
+                <p>
+                    El formato hexadecimal es el más común en diseño web. Usa valores del 00 al FF
+                    para rojo, verde y azul.
+                </p>
+
+                <div class="examples-grid">
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: #3498db;">#3498db</div>
+                        <code>#3498db</code> - Azul principal
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: #2ecc71;">#2ecc71</div>
+                        <code>#2ecc71</code> - Verde éxito
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: #e74c3c;">#e74c3c</div>
+                        <code>#e74c3c</code> - Rojo peligro
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: #f39c12;">#f39c12</div>
+                        <code>#f39c12</code> - Naranja advertencia
+                    </div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Formato completo: #RRGGBB */</span>
+.elemento {
+    color: #3498db;              <span class="code-comment">/* Azul */</span>
+    background-color: #ffffff;   <span class="code-comment">/* Blanco */</span>
+}
+
+<span class="code-comment">/* Formato corto: #RGB (cuando los pares son iguales) */</span>
+.otro {
+    color: #fff;                 <span class="code-comment">/* Equivale a #ffffff */</span>
+    background-color: #000;      <span class="code-comment">/* Equivale a #000000 */</span>
+}
+
+<span class="code-comment">/* Con transparencia: #RRGGBBAA */</span>
+.transparente {
+    background-color: #3498db80; <span class="code-comment">/* Azul con 50% opacidad */</span>
+}
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Ventaja:</strong> Formato compacto y universal, soportado por todas las
+                    herramientas de diseño.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>3. RGB y RGBA</h2>
+                <p>
+                    RGB especifica colores usando valores de 0-255 para Rojo, Verde y Azul.
+                    RGBA añade un canal de transparencia (alpha) de 0 a 1.
+                </p>
+
+                <div class="examples-grid">
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: rgb(52, 152, 219);">RGB</div>
+                        <code>rgb(52, 152, 219)</code>
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: rgba(52, 152, 219, 0.8);">RGBA 0.8</div>
+                        <code>rgba(52, 152, 219, 0.8)</code>
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: rgba(52, 152, 219, 0.5);">RGBA 0.5</div>
+                        <code>rgba(52, 152, 219, 0.5)</code>
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: rgba(52, 152, 219, 0.2);">RGBA 0.2</div>
+                        <code>rgba(52, 152, 219, 0.2)</code>
+                    </div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* RGB básico */</span>
+.elemento {
+    color: rgb(52, 152, 219);           <span class="code-comment">/* Azul */</span>
+    background-color: rgb(255, 255, 255); <span class="code-comment">/* Blanco */</span>
+}
+
+<span class="code-comment">/* RGBA con transparencia */</span>
+.overlay {
+    background-color: rgba(0, 0, 0, 0.7); <span class="code-comment">/* Negro 70% opaco */</span>
+}
+
+.transparente {
+    background-color: rgba(52, 152, 219, 0.3); <span class="code-comment">/* Azul 30% opaco */</span>
+}
+                </div>
+
+                <h3>Demostración de Transparencia</h3>
+                <div class="transparency-demo">
+                    <div class="transparency-layer" style="background-color: rgba(231, 76, 60, 0.3); width: 50%; left: 0;">
+                        rgba(231, 76, 60, 0.3)
+                    </div>
+                    <div class="transparency-layer" style="background-color: rgba(52, 152, 219, 0.5); width: 50%; right: 0;">
+                        rgba(52, 152, 219, 0.5)
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>4. HSL y HSLA</h2>
+                <p>
+                    HSL define colores usando Matiz (Hue: 0-360°), Saturación (0-100%) y Luminosidad (0-100%).
+                    Es más intuitivo para crear variaciones de color.
+                </p>
+
+                <div class="examples-grid">
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: hsl(204, 70%, 53%);">Base</div>
+                        <code>hsl(204, 70%, 53%)</code><br>
+                        Luminosidad: 53%
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: hsl(204, 70%, 70%);">Más claro</div>
+                        <code>hsl(204, 70%, 70%)</code><br>
+                        Luminosidad: 70%
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: hsl(204, 70%, 35%);">Más oscuro</div>
+                        <code>hsl(204, 70%, 35%)</code><br>
+                        Luminosidad: 35%
+                    </div>
+                    <div class="color-sample">
+                        <div class="color-display" style="background-color: hsl(204, 30%, 53%);">Menos saturado</div>
+                        <code>hsl(204, 30%, 53%)</code><br>
+                        Saturación: 30%
+                    </div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* HSL - Hue (matiz), Saturation (saturación), Lightness (luminosidad) */</span>
+.elemento {
+    color: hsl(204, 70%, 53%);       <span class="code-comment">/* Azul base */</span>
+    background-color: hsl(204, 70%, 90%); <span class="code-comment">/* Azul muy claro */</span>
+}
+
+<span class="code-comment">/* HSLA con transparencia */</span>
+.overlay {
+    background-color: hsla(204, 70%, 53%, 0.5); <span class="code-comment">/* Azul semi-transparente */</span>
+}
+
+<span class="code-comment">/* Ventaja: Fácil crear variaciones */</span>
+.color-base { color: hsl(120, 60%, 50%); }      <span class="code-comment">/* Verde */</span>
+.color-claro { color: hsl(120, 60%, 70%); }     <span class="code-comment">/* Verde claro */</span>
+.color-oscuro { color: hsl(120, 60%, 30%); }    <span class="code-comment">/* Verde oscuro */</span>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Ventaja de HSL:</strong> Facilita crear esquemas de color armónicos y variaciones
+                    consistentes ajustando solo la saturación o luminosidad.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>5. Gradientes Lineales</h2>
+                <p>
+                    Los gradientes crean transiciones suaves entre múltiples colores.
+                </p>
+
+                <div class="gradient-box" style="background: linear-gradient(to right, #3498db, #2ecc71);">
+                    linear-gradient(to right, #3498db, #2ecc71)
+                </div>
+
+                <div class="gradient-box" style="background: linear-gradient(135deg, #667eea, #764ba2);">
+                    linear-gradient(135deg, #667eea, #764ba2)
+                </div>
+
+                <div class="gradient-box" style="background: linear-gradient(to bottom, #f093fb, #f5576c);">
+                    linear-gradient(to bottom, #f093fb, #f5576c)
+                </div>
+
+                <div class="gradient-box" style="background: linear-gradient(90deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%);">
+                    linear-gradient(90deg, #ff6b6b 0%, #feca57 50%, #48dbfb 100%)
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Gradiente básico (de arriba a abajo) */</span>
+.elemento {
+    background: linear-gradient(#3498db, #2ecc71);
+}
+
+<span class="code-comment">/* Con dirección */</span>
+.horizontal {
+    background: linear-gradient(to right, #3498db, #2ecc71);
+}
+
+<span class="code-comment">/* Con ángulo */</span>
+.diagonal {
+    background: linear-gradient(135deg, #667eea, #764ba2);
+}
+
+<span class="code-comment">/* Múltiples colores con posiciones */</span>
+.multicolor {
+    background: linear-gradient(
+        90deg,
+        #ff6b6b 0%,
+        #feca57 50%,
+        #48dbfb 100%
+    );
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>6. Gradientes Radiales</h2>
+                <p>
+                    Los gradientes radiales crean transiciones circulares o elípticas desde un punto central.
+                </p>
+
+                <div class="gradient-box" style="background: radial-gradient(circle, #3498db, #2c3e50);">
+                    radial-gradient(circle, #3498db, #2c3e50)
+                </div>
+
+                <div class="gradient-box" style="background: radial-gradient(ellipse at top left, #f093fb, #f5576c);">
+                    radial-gradient(ellipse at top left, #f093fb, #f5576c)
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Gradiente radial circular */</span>
+.elemento {
+    background: radial-gradient(circle, #3498db, #2c3e50);
+}
+
+<span class="code-comment">/* Elipse con posición */</span>
+.elemento {
+    background: radial-gradient(ellipse at top left, #f093fb, #f5576c);
+}
+
+<span class="code-comment">/* Con tamaño específico */</span>
+.elemento {
+    background: radial-gradient(circle at center, #fff 0%, #3498db 50%, #2c3e50 100%);
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>7. Paletas de Color Profesionales</h2>
+
+                <h3>Paleta Moderna</h3>
+                <div class="palette">
+                    <div class="palette-color" style="background-color: #667eea;">#667eea</div>
+                    <div class="palette-color" style="background-color: #764ba2;">#764ba2</div>
+                    <div class="palette-color" style="background-color: #f093fb;">#f093fb</div>
+                    <div class="palette-color" style="background-color: #4facfe;">#4facfe</div>
+                    <div class="palette-color" style="background-color: #00f2fe;">#00f2fe</div>
+                </div>
+
+                <h3>Paleta Cálida</h3>
+                <div class="palette">
+                    <div class="palette-color" style="background-color: #ff6b6b;">#ff6b6b</div>
+                    <div class="palette-color" style="background-color: #feca57;">#feca57</div>
+                    <div class="palette-color" style="background-color: #ff9ff3;">#ff9ff3</div>
+                    <div class="palette-color" style="background-color: #f368e0;">#f368e0</div>
+                    <div class="palette-color" style="background-color: #ee5a6f;">#ee5a6f</div>
+                </div>
+
+                <h3>Paleta Fría</h3>
+                <div class="palette">
+                    <div class="palette-color" style="background-color: #48dbfb;">#48dbfb</div>
+                    <div class="palette-color" style="background-color: #0abde3;">#0abde3</div>
+                    <div class="palette-color" style="background-color: #5f27cd;">#5f27cd</div>
+                    <div class="palette-color" style="background-color: #341f97;">#341f97</div>
+                    <div class="palette-color" style="background-color: #2e86de;">#2e86de</div>
+                </div>
+
+                <h3>Paleta Natural</h3>
+                <div class="palette">
+                    <div class="palette-color" style="background-color: #2ecc71;">#2ecc71</div>
+                    <div class="palette-color" style="background-color: #27ae60;">#27ae60</div>
+                    <div class="palette-color" style="background-color: #6ab04c;">#6ab04c</div>
+                    <div class="palette-color" style="background-color: #badc58;">#badc58</div>
+                    <div class="palette-color" style="background-color: #f6e58d;">#f6e58d</div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Palabra Clave: currentColor</h2>
+                <p>
+                    <code>currentColor</code> toma el valor del color de texto actual del elemento.
+                    Útil para crear componentes consistentes.
+                </p>
+
+                <div class="code-box">
+<span class="code-comment">/* currentColor usa el color heredado */</span>
+.icono {
+    color: #3498db;
+    border: 2px solid currentColor;  <span class="code-comment">/* Borde del mismo color */</span>
+}
+
+.boton {
+    color: #e74c3c;
+    border: 2px solid currentColor;
+    background-color: transparent;
+}
+
+.boton:hover {
+    background-color: currentColor;  <span class="code-comment">/* Fondo del color del texto */</span>
+    color: white;
+}
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Mejores Prácticas</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Usa variables CSS para colores reutilizables</li>
+                    <li>✓ Mantén una paleta consistente (5-7 colores principales)</li>
+                    <li>✓ Verifica contraste para accesibilidad (mínimo 4.5:1 para texto)</li>
+                    <li>✓ Usa HSL para crear variaciones de color fácilmente</li>
+                    <li>✓ RGBA/HSLA para transparencias en overlays y sombras</li>
+                    <li>✓ Hexadecimal para colores sólidos (más compacto)</li>
+                    <li>✓ Prueba colores en diferentes pantallas y modos (claro/oscuro)</li>
+                </ul>
+            </div>
+
+            <section class="section">
+                <h2>Accesibilidad del Color</h2>
+                <p>
+                    El contraste entre texto y fondo debe cumplir con las pautas WCAG para asegurar legibilidad.
+                </p>
+
+                <div class="examples-grid">
+                    <div class="card">
+                        <h4 class="card-title">Contraste Bueno ✓</h4>
+                        <div style="background-color: #3498db; color: white; padding: 15px; border-radius: 4px; text-align: center;">
+                            <strong>Texto blanco sobre azul</strong><br>
+                            Ratio: 4.64:1
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4 class="card-title">Contraste Excelente ✓✓</h4>
+                        <div style="background-color: #2c3e50; color: white; padding: 15px; border-radius: 4px; text-align: center;">
+                            <strong>Texto blanco sobre oscuro</strong><br>
+                            Ratio: 12.63:1
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <h4 class="card-title">Contraste Insuficiente ✗</h4>
+                        <div style="background-color: #ecf0f1; color: #bdc3c7; padding: 15px; border-radius: 4px; text-align: center;">
+                            <strong>Texto gris claro sobre blanco</strong><br>
+                            Ratio: 1.75:1 (Evitar)
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Herramienta recomendada:</strong> Usa herramientas como WebAIM Contrast Checker
+                    para verificar que tus combinaciones de colores cumplan con WCAG AA (4.5:1) o AAA (7:1).
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de Colores en CSS - STW 2026
+    </footer>
+</body>
+</html>

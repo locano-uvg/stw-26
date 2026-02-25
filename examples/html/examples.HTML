@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Ejemplos Tags HTML</title>
+
+    <link rel="stylesheet" href="estilos.css" />
+    <style>
+      .titulos {
+        font-weight: bold;
+        color: purple;
+        text-decoration: underline;
+      }
+
+      #titulo_1 {
+        font-weight: bold;
+        color: green;
+        text-decoration: underline;
+        width: 300px;
+        height: 300px;
+        background-color: brown;
+      }
+
+      #titulo_1:hover {
+        background-color: blue;
+        color: white;
+      }
+
+      .listado_custom li:nth-child(odd) {
+        color: slateblue;
+      }
+    </style>
+  </head>
+  <body>
+    <img
+      src="https://media.istockphoto.com/id/942526180/es/foto/ilustración-3d-de-rojo-genérico-deportivo-coupe-en-blanco.jpg?s=612x612&w=0&k=20&c=4-pL0J17M2cqKLdvRL1f5RMc0hVUKsYLU5MiAnkGdoM="
+      alt="Ejemplo de imagen carro"
+      class="image-carro"
+    />
+    <a href="http://facebook.com">Ir a facebook</a>
+    <ul>
+      <li class="listado">Ejemplo de item 1</li>
+      <li class="listado">Ejemplo de item 1</li>
+      <li class="listado">Ejemplo de item 1</li>
+      <li class="listado">Ejemplo de item 1</li>
+    </ul>
+
+    <ul class="listado_custom">
+      <li class="listado">Ejemplo de item 2</li>
+      <li class="listado">Ejemplo de item 2</li>
+      <li class="listado">Ejemplo de item 2</li>
+      <li class="listado">Ejemplo de item 2</li>
+    </ul>
+
+    <ul class="listado_custom">
+      <li class="listado">Ejemplo de item 3</li>
+      <li class="listado">Ejemplo de item 3</li>
+      <li class="listado">Ejemplo de item 3</li>
+      <li class="listado">Ejemplo de item 3</li>
+    </ul>
+    <ol></ol>
+    <!-- INLINE -->
+    <h1 id="titulo_1">Ejemplo de titulo h1</h1>
+    <h2>Ejemplo de titulo h2</h2>
+    <h3 class="titulos">Ejemplo de titulo h3</h3>
+    <h4 class="titulos">Ejemplo de titulo h4</h4>
+    <h5 class="titulos">Ejemplo de titulo h5</h5>
+    <h6 class="titulos">Ejemplo de titulo h6</h6>
+    <p>Ejemplo de parrafo</p>
+
+    <table border="1">
+      <tr>
+        <th>Ejemplo de tabla</th>
+        <th>Ejemplo de tabla</th>
+      </tr>
+      <tr>
+        <td>Ejemplo de tabla</td>
+        <td>Ejemplo de tabla</td>
+      </tr>
+    </table>
+
+    <br />
+
+    <form>
+      <label for="nombre">Nombre:</label>
+      <input type="text" id="nombre" name="nombre" /><br /><br />
+      <input type="submit" value="Enviar" />
+    </form>
+    <ul>
+      <li>Contenido de clase</li>
+
+      <ul>
+        <li>Contenido de clase 1</li>
+        <li>Contenido de clase 2</li>
+      </ul>
+    </ul>
+  </body>
+</html>

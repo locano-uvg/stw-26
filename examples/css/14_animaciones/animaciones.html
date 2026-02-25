@@ -1,0 +1,1064 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animaciones y Transiciones CSS</title>
+    <style>
+        /* ================================================
+           VARIABLES CSS
+           ================================================ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+
+        /* Code examples */
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        /* ================================================
+           EJEMPLOS DE TRANSICIONES
+           ================================================ */
+
+        .demo-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) 0;
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Transiciones básicas */
+        .transition-color {
+            background-color: var(--primary-color);
+            transition: background-color 0.3s ease;
+        }
+
+        .transition-color:hover {
+            background-color: var(--secondary-color);
+        }
+
+        .transition-transform {
+            background-color: var(--warning-color);
+            transition: transform 0.3s ease;
+        }
+
+        .transition-transform:hover {
+            transform: scale(1.05);
+        }
+
+        .transition-all {
+            background-color: var(--danger-color);
+            transition: all 0.3s ease;
+        }
+
+        .transition-all:hover {
+            background-color: var(--dark-color);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Timing functions */
+        .timing-demo {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-sm);
+        }
+
+        .timing-box {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+            font-size: 0.875rem;
+            cursor: pointer;
+        }
+
+        .ease { transition: transform 0.5s ease; }
+        .linear { transition: transform 0.5s linear; }
+        .ease-in { transition: transform 0.5s ease-in; }
+        .ease-out { transition: transform 0.5s ease-out; }
+        .ease-in-out { transition: transform 0.5s ease-in-out; }
+        .cubic { transition: transform 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55); }
+
+        .timing-box:hover {
+            transform: translateX(20px);
+        }
+
+        /* ================================================
+           EJEMPLOS DE ANIMACIONES
+           ================================================ */
+
+        /* Spinner loader */
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--light-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: var(--spacing-md) auto;
+        }
+
+        /* Pulse animation */
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 1; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        .pulse-box {
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        /* Slide in animation */
+        @keyframes slideIn {
+            from {
+                transform: translateX(-100%);
+                opacity: 0;
+            }
+            to {
+                transform: translateX(0);
+                opacity: 1;
+            }
+        }
+
+        .slide-in {
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            animation: slideIn 0.5s ease-out;
+        }
+
+        /* Fade in animation */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .fade-in {
+            background-color: var(--secondary-color);
+            animation: fadeIn 1s ease-in;
+        }
+
+        /* Bounce animation */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .bounce-box {
+            background: linear-gradient(135deg, #fa709a, #fee140);
+            animation: bounce 1s ease-in-out infinite;
+        }
+
+        /* Shake animation */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+            20%, 40%, 60%, 80% { transform: translateX(10px); }
+        }
+
+        .shake-box {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            cursor: pointer;
+        }
+
+        .shake-box:hover {
+            animation: shake 0.5s ease;
+        }
+
+        /* Glow animation */
+        @keyframes glow {
+            0%, 100% { box-shadow: 0 0 5px var(--primary-color); }
+            50% { box-shadow: 0 0 20px var(--primary-color), 0 0 30px var(--primary-color); }
+        }
+
+        .glow-box {
+            background-color: white;
+            color: var(--primary-color);
+            border: 2px solid var(--primary-color);
+            animation: glow 2s ease-in-out infinite;
+        }
+
+        /* Progress bar animation */
+        @keyframes progress {
+            from { width: 0%; }
+            to { width: 100%; }
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 30px;
+            background-color: var(--light-color);
+            border-radius: 15px;
+            overflow: hidden;
+            margin: var(--spacing-md) 0;
+        }
+
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 15px;
+            animation: progress 3s ease-out;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Typing animation */
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+
+        @keyframes blink {
+            50% { border-color: transparent; }
+        }
+
+        .typing-demo {
+            width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            border-right: 3px solid var(--primary-color);
+            animation: typing 4s steps(40) 1s both, blink 0.75s step-end infinite;
+            font-family: monospace;
+            font-size: 1.2rem;
+        }
+
+        /* Flip card */
+        .flip-card {
+            perspective: 1000px;
+            width: 300px;
+            height: 200px;
+            margin: var(--spacing-md) auto;
+        }
+
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+        }
+
+        .flip-card-front {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+        }
+
+        .flip-card-back {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            transform: rotateY(180deg);
+        }
+
+        /* Button animations */
+        .animated-button {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow-sm);
+            margin: var(--spacing-sm);
+        }
+
+        .animated-button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .animated-button:active {
+            transform: translateY(0);
+            box-shadow: var(--shadow-sm);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Animaciones y Transiciones CSS</h1>
+            <p>Movimiento y vida en tus diseños</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>Diferencia entre Transitions y Animations</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspecto</th>
+                            <th>Transitions</th>
+                            <th>Animations (@keyframes)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Activación</strong></td>
+                            <td>Requiere trigger (hover, focus, etc.)</td>
+                            <td>Se ejecuta automáticamente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Control</strong></td>
+                            <td>Solo inicio y fin</td>
+                            <td>Múltiples pasos (keyframes)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Repetición</strong></td>
+                            <td>Una vez por trigger</td>
+                            <td>Puede repetirse infinitamente</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Complejidad</strong></td>
+                            <td>Simple, 2 estados</td>
+                            <td>Complejo, múltiples estados</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Uso ideal</strong></td>
+                            <td>Hover effects, interacciones</td>
+                            <td>Loaders, llamadas de atención</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>1. Transitions: Transiciones Suaves</h2>
+                <p>
+                    Las transiciones permiten cambiar propiedades CSS suavemente a lo largo del tiempo.
+                    Requieren un trigger como :hover, :focus, o cambio de clase con JavaScript.
+                </p>
+
+                <h3>Ejemplos Interactivos (pasa el mouse)</h3>
+
+                <div class="demo-box transition-color">
+                    Hover: Cambio de Color
+                </div>
+
+                <div class="demo-box transition-transform">
+                    Hover: Scale Transform
+                </div>
+
+                <div class="demo-box transition-all">
+                    Hover: Múltiples Propiedades
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Sintaxis básica: property duration timing-function delay */</span>
+.elemento {
+    transition: background-color 0.3s ease;
+}
+
+<span class="code-comment">/* Transición de una propiedad específica */</span>
+.button {
+    background-color: blue;
+    transition: background-color 0.3s ease;
+}
+
+.button:hover {
+    background-color: green;
+}
+
+<span class="code-comment">/* Transición de múltiples propiedades */</span>
+.card {
+    transform: scale(1);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.card:hover {
+    transform: scale(1.05);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+<span class="code-comment">/* Transición de todas las propiedades (usar con cuidado) */</span>
+.elemento {
+    transition: all 0.3s ease;
+}
+
+<span class="code-comment">/* Con delay (retraso) */</span>
+.elemento {
+    transition: opacity 0.3s ease 0.1s;
+    <span class="code-comment">/* property duration timing-function delay */</span>
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Mejor Práctica:</strong> Especifica las propiedades exactas en lugar de usar
+                    "all". Es más performante y predecible.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>2. Timing Functions: Curvas de Animación</h2>
+                <p>
+                    Las timing functions controlan la aceleración de la transición.
+                    Pasa el mouse sobre cada caja para ver el efecto.
+                </p>
+
+                <div class="timing-demo">
+                    <div class="timing-box ease">ease</div>
+                    <div class="timing-box linear">linear</div>
+                    <div class="timing-box ease-in">ease-in</div>
+                    <div class="timing-box ease-out">ease-out</div>
+                    <div class="timing-box ease-in-out">ease-in-out</div>
+                    <div class="timing-box cubic">cubic-bezier</div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Timing functions predefinidas */</span>
+.linear { transition: all 0.3s linear; }          <span class="code-comment">/* Velocidad constante */</span>
+.ease { transition: all 0.3s ease; }              <span class="code-comment">/* Por defecto, lento-rápido-lento */</span>
+.ease-in { transition: all 0.3s ease-in; }        <span class="code-comment">/* Comienza lento */</span>
+.ease-out { transition: all 0.3s ease-out; }      <span class="code-comment">/* Termina lento */</span>
+.ease-in-out { transition: all 0.3s ease-in-out; } <span class="code-comment">/* Lento al inicio y final */</span>
+
+<span class="code-comment">/* Cubic-bezier personalizado */</span>
+.custom {
+    transition: all 0.3s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+    <span class="code-comment">/* Crea efecto de rebote */</span>
+}
+
+<span class="code-comment">/* Steps (animación por pasos) */</span>
+.steps {
+    transition: all 1s steps(5);
+    <span class="code-comment">/* 5 pasos discretos */</span>
+}
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Herramienta:</strong> Usa <a href="https://cubic-bezier.com" target="_blank">cubic-bezier.com</a>
+                    para crear timing functions personalizadas visualmente.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>3. Animations con @keyframes</h2>
+                <p>
+                    @keyframes permite definir animaciones complejas con múltiples pasos.
+                </p>
+
+                <h3>Spinner / Loader</h3>
+                <div class="spinner"></div>
+
+                <div class="code-box">
+<span class="code-comment">/* Definir los keyframes */</span>
+@keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+<span class="code-comment">/* Aplicar la animación */</span>
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 4px solid #f3f3f3;
+    border-top-color: #3498db;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    <span class="code-comment">/* name duration timing-function iteration-count */</span>
+}
+                </div>
+
+                <h3>Pulse (Latido)</h3>
+                <div class="demo-box pulse-box">
+                    Animación Pulse Infinita
+                </div>
+
+                <div class="code-box">
+@keyframes pulse {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+}
+
+.pulse-box {
+    animation: pulse 2s ease-in-out infinite;
+}
+                </div>
+
+                <h3>Slide In</h3>
+                <div class="demo-box slide-in">
+                    Animación Slide In (recarga para ver)
+                </div>
+
+                <div class="code-box">
+@keyframes slideIn {
+    from {
+        transform: translateX(-100%);
+        opacity: 0;
+    }
+    to {
+        transform: translateX(0);
+        opacity: 1;
+    }
+}
+
+.slide-in {
+    animation: slideIn 0.5s ease-out;
+}
+                </div>
+
+                <h3>Bounce (Rebote)</h3>
+                <div class="demo-box bounce-box">
+                    Animación Bounce Infinita
+                </div>
+
+                <div class="code-box">
+@keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
+}
+
+.bounce-box {
+    animation: bounce 1s ease-in-out infinite;
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>4. Propiedades de Animation</h2>
+
+                <div class="code-box">
+<span class="code-comment">/* Todas las propiedades de animation */</span>
+.elemento {
+    animation-name: slideIn;              <span class="code-comment">/* Nombre del @keyframes */</span>
+    animation-duration: 1s;               <span class="code-comment">/* Duración */</span>
+    animation-timing-function: ease-out;  <span class="code-comment">/* Curva de tiempo */</span>
+    animation-delay: 0.5s;                <span class="code-comment">/* Retraso antes de iniciar */</span>
+    animation-iteration-count: 3;         <span class="code-comment">/* Número de veces (o infinite) */</span>
+    animation-direction: normal;          <span class="code-comment">/* normal, reverse, alternate, alternate-reverse */</span>
+    animation-fill-mode: forwards;        <span class="code-comment">/* none, forwards, backwards, both */</span>
+    animation-play-state: running;        <span class="code-comment">/* running o paused */</span>
+}
+
+<span class="code-comment">/* Shorthand (forma corta) */</span>
+.elemento {
+    animation: slideIn 1s ease-out 0.5s 3 normal forwards;
+    <span class="code-comment">/* name duration timing-function delay iteration-count direction fill-mode */</span>
+}
+
+<span class="code-comment">/* Múltiples animaciones */</span>
+.elemento {
+    animation:
+        slideIn 0.5s ease-out,
+        fadeIn 0.5s ease-in,
+        pulse 2s ease-in-out infinite;
+}
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Propiedad</th>
+                            <th>Valores</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>animation-name</strong></td>
+                            <td>nombre del @keyframes</td>
+                            <td>Qué animación ejecutar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>animation-duration</strong></td>
+                            <td>tiempo (s o ms)</td>
+                            <td>Duración de la animación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>animation-timing-function</strong></td>
+                            <td>ease, linear, cubic-bezier, etc.</td>
+                            <td>Curva de aceleración</td>
+                        </tr>
+                        <tr>
+                            <td><strong>animation-delay</strong></td>
+                            <td>tiempo (s o ms)</td>
+                            <td>Retraso antes de iniciar</td>
+                        </tr>
+                        <tr>
+                            <td><strong>animation-iteration-count</strong></td>
+                            <td>número o infinite</td>
+                            <td>Cuántas veces repetir</td>
+                        </tr>
+                        <tr>
+                            <td><strong>animation-direction</strong></td>
+                            <td>normal, reverse, alternate</td>
+                            <td>Dirección de reproducción</td>
+                        </tr>
+                        <tr>
+                            <td><strong>animation-fill-mode</strong></td>
+                            <td>none, forwards, backwards, both</td>
+                            <td>Estilos antes/después</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>5. Ejemplos Prácticos</h2>
+
+                <h3>Shake on Hover (Sacudir)</h3>
+                <div class="demo-box shake-box">
+                    Pasa el mouse para sacudir
+                </div>
+
+                <div class="code-box">
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    10%, 30%, 50%, 70%, 90% { transform: translateX(-10px); }
+    20%, 40%, 60%, 80% { transform: translateX(10px); }
+}
+
+.shake-box:hover {
+    animation: shake 0.5s ease;
+}
+                </div>
+
+                <h3>Glow Effect (Resplandor)</h3>
+                <div class="demo-box glow-box">
+                    Efecto de Resplandor
+                </div>
+
+                <div class="code-box">
+@keyframes glow {
+    0%, 100% {
+        box-shadow: 0 0 5px #3498db;
+    }
+    50% {
+        box-shadow: 0 0 20px #3498db, 0 0 30px #3498db;
+    }
+}
+
+.glow-box {
+    animation: glow 2s ease-in-out infinite;
+}
+                </div>
+
+                <h3>Progress Bar</h3>
+                <div class="progress-container">
+                    <div class="progress-bar">Loading...</div>
+                </div>
+
+                <div class="code-box">
+@keyframes progress {
+    from { width: 0%; }
+    to { width: 100%; }
+}
+
+.progress-bar {
+    height: 30px;
+    background: linear-gradient(90deg, #667eea, #764ba2);
+    animation: progress 3s ease-out;
+}
+                </div>
+
+                <h3>Typing Effect</h3>
+                <div class="typing-demo">
+                    Este es un efecto de escritura CSS...
+                </div>
+
+                <div class="code-box">
+@keyframes typing {
+    from { width: 0; }
+    to { width: 100%; }
+}
+
+@keyframes blink {
+    50% { border-color: transparent; }
+}
+
+.typing-demo {
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    border-right: 3px solid #3498db;
+    animation:
+        typing 4s steps(40) 1s both,
+        blink 0.75s step-end infinite;
+}
+                </div>
+
+                <h3>Flip Card (pasa el mouse)</h3>
+                <div class="flip-card">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <h3>Frente</h3>
+                        </div>
+                        <div class="flip-card-back">
+                            <h3>Reverso</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-box">
+.flip-card {
+    perspective: 1000px;
+}
+
+.flip-card-inner {
+    transition: transform 0.8s;
+    transform-style: preserve-3d;
+}
+
+.flip-card:hover .flip-card-inner {
+    transform: rotateY(180deg);
+}
+
+.flip-card-front, .flip-card-back {
+    backface-visibility: hidden;
+}
+
+.flip-card-back {
+    transform: rotateY(180deg);
+}
+                </div>
+
+                <h3>Botones Animados</h3>
+                <div style="text-align: center;">
+                    <button class="animated-button">Hover Me</button>
+                    <button class="animated-button">Click Me</button>
+                </div>
+
+                <div class="code-box">
+.animated-button {
+    transition: all 0.3s ease;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.animated-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+}
+
+.animated-button:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>6. Performance: Propiedades Optimizadas</h2>
+
+                <div class="alert alert-warning">
+                    <strong>Importante para Performance:</strong> No todas las propiedades CSS son
+                    iguales en términos de rendimiento.
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Performance</th>
+                            <th>Propiedades</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td style="color: #2ecc71;"><strong>Excelente</strong></td>
+                            <td>transform, opacity</td>
+                            <td>No causan reflow/repaint, solo compositing</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #f39c12;"><strong>Moderado</strong></td>
+                            <td>color, background-color</td>
+                            <td>Causan repaint, no reflow</td>
+                        </tr>
+                        <tr>
+                            <td style="color: #e74c3c;"><strong>Costoso</strong></td>
+                            <td>width, height, top, left, margin, padding</td>
+                            <td>Causan reflow y repaint (evitar en animaciones)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-box">
+<span class="code-comment">/* ✓ BUENO: Usa transform y opacity */</span>
+.elemento {
+    transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+.elemento:hover {
+    transform: translateX(10px) scale(1.1);
+    opacity: 0.8;
+}
+
+<span class="code-comment">/* ✗ MALO: Evita animar propiedades de layout */</span>
+.elemento {
+    transition: width 0.3s ease, left 0.3s ease;  <span class="code-comment">/* Causa reflow */</span>
+}
+
+<span class="code-comment">/* will-change: Optimización para animaciones complejas */</span>
+.elemento-que-se-animara {
+    will-change: transform, opacity;
+    <span class="code-comment">/* Avisa al navegador para optimizar
+       USAR CON CUIDADO - No abusar */</span>
+}
+
+<span class="code-comment">/* Remover will-change después de la animación */</span>
+.elemento-que-se-animara.animating {
+    will-change: transform;
+}
+
+.elemento-que-se-animara {
+    will-change: auto;  <span class="code-comment">/* Por defecto */</span>
+}
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Mejores Prácticas de Animaciones</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Prefiere transform y opacity para animaciones suaves</li>
+                    <li>✓ Mantén animaciones bajo 200-500ms para interacciones</li>
+                    <li>✓ Usa ease-out para animaciones de entrada</li>
+                    <li>✓ Usa ease-in para animaciones de salida</li>
+                    <li>✓ Respeta prefers-reduced-motion para accesibilidad</li>
+                    <li>✓ Evita animar width, height, top, left</li>
+                    <li>✓ Usa will-change solo cuando sea necesario</li>
+                    <li>✓ Prueba en dispositivos de gama baja</li>
+                    <li>✓ Las animaciones deben mejorar UX, no distraer</li>
+                </ul>
+            </div>
+
+            <section class="section">
+                <h2>7. Accesibilidad: Respetar Preferencias</h2>
+
+                <div class="code-box">
+<span class="code-comment">/* Respetar preferencia de movimiento reducido */</span>
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+<span class="code-comment">/* O desactivar completamente */</span>
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+<span class="code-comment">/* Aplicar solo a usuarios que prefieren animaciones */</span>
+@media (prefers-reduced-motion: no-preference) {
+    .elemento {
+        animation: slideIn 0.5s ease-out;
+    }
+}
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Importante:</strong> Usuarios con trastornos vestibulares pueden sentirse
+                    mareados con animaciones. Siempre respeta prefers-reduced-motion.
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de Animaciones y Transiciones - STW 2026
+    </footer>
+</body>
+</html>

@@ -1,0 +1,45 @@
+.choice-button {
+  /* Estado base */
+  position: relative;
+  padding: var(--spacing-sm) var(--spacing-md);
+  background: linear-gradient(
+    135deg,
+    var(--color-primary),
+    var(--color-secondary)
+  );
+  border: 2px solid var(--color-accent);
+  border-radius: 8px;
+  cursor: pointer;
+
+  /* Transiciones fluidas */
+  transition: all var(--transition-normal);
+
+  /* Efectos de profundidad */
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.choice-button::before {
+  /* Decorador o icono con pseudoelemento */
+  content: "▸";
+  margin-right: var(--spacing-xs);
+  transition: transform var(--transition-fast);
+}
+
+.choice-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.choice-button:hover::before {
+  transform: translateX(4px);
+}
+
+.choice-button:active {
+  transform: translateY(0);
+}
+
+/* Estados adicionales */
+.choice-button--critical {
+  border-color: var(--color-danger);
+  animation: pulse 2s infinite;
+}

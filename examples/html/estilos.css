@@ -1,0 +1,18 @@
+.listado {
+  color: gray;
+  font-size: 16px;
+  text-decoration: dashed;
+}
+
+.image-carro {
+  width: 200px;
+  height: auto;
+}
+
+body {
+  background-color: lightblue;
+}
+
+#titulo_1 {
+  color: red;
+}

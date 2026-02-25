@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Externo - Ejemplo</title>
+
+    <!-- Enlace a hoja de estilos externa -->
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CSS Externo</h1>
+            <p class="subtitle">Separación de contenido y presentación</p>
+        </header>
+
+        <main class="content">
+            <section class="card">
+                <h2 class="card-title">¿Qué es CSS Externo?</h2>
+                <p>
+                    CSS externo se define en un archivo separado con extensión <code>.css</code> y se enlaza al HTML mediante la etiqueta <code>&lt;link&gt;</code>.
+                    Esta es la forma más recomendada de aplicar estilos en proyectos profesionales.
+                </p>
+
+                <div class="code-block">
+                    <div class="code-header">HTML</div>
+                    <pre>&lt;link rel="stylesheet" href="styles.css"&gt;</pre>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2 class="card-title">Ventajas</h2>
+                <div class="grid-advantages">
+                    <div class="advantage-item">
+                        <div class="icon">🔄</div>
+                        <h3>Reutilizable</h3>
+                        <p>Un archivo CSS puede usarse en múltiples páginas HTML</p>
+                    </div>
+                    <div class="advantage-item">
+                        <div class="icon">🚀</div>
+                        <h3>Cacheable</h3>
+                        <p>El navegador puede cachear el archivo CSS, mejorando el rendimiento</p>
+                    </div>
+                    <div class="advantage-item">
+                        <div class="icon">🛠️</div>
+                        <h3>Mantenible</h3>
+                        <p>Facilita el mantenimiento y actualización de estilos</p>
+                    </div>
+                    <div class="advantage-item">
+                        <div class="icon">📦</div>
+                        <h3>Organizado</h3>
+                        <p>Separa claramente el contenido de la presentación</p>
+                    </div>
+                    <div class="advantage-item">
+                        <div class="icon">🎨</div>
+                        <h3>Consistencia</h3>
+                        <p>Mantiene un diseño consistente en todo el sitio</p>
+                    </div>
+                    <div class="advantage-item">
+                        <div class="icon">👥</div>
+                        <h3>Colaborativo</h3>
+                        <p>Permite que equipos trabajen separadamente en HTML y CSS</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="card">
+                <h2 class="card-title">Estructura de Proyecto</h2>
+                <div class="file-structure">
+                    <div class="folder">
+                        <span class="folder-icon">📁</span> proyecto/
+                        <div class="folder-content">
+                            <div class="file"><span class="file-icon">📄</span> index.html</div>
+                            <div class="file"><span class="file-icon">🎨</span> styles.css</div>
+                            <div class="folder">
+                                <span class="folder-icon">📁</span> css/
+                                <div class="folder-content">
+                                    <div class="file"><span class="file-icon">🎨</span> main.css</div>
+                                    <div class="file"><span class="file-icon">🎨</span> responsive.css</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <div class="best-practice">
+                <h3>Mejor Práctica</h3>
+                <p>
+                    <strong>CSS Externo es la opción recomendada para proyectos profesionales.</strong>
+                    Proporciona la mejor separación de responsabilidades, facilita el mantenimiento
+                    y mejora el rendimiento mediante el cacheo del navegador.
+                </p>
+            </div>
+
+            <section class="card comparison">
+                <h2 class="card-title">Comparación de Tipos de CSS</h2>
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Característica</th>
+                            <th>Inline</th>
+                            <th>Interno</th>
+                            <th>Externo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Reutilización</td>
+                            <td class="bad">Ninguna</td>
+                            <td class="medium">Una página</td>
+                            <td class="good">Múltiples páginas</td>
+                        </tr>
+                        <tr>
+                            <td>Mantenibilidad</td>
+                            <td class="bad">Baja</td>
+                            <td class="medium">Media</td>
+                            <td class="good">Alta</td>
+                        </tr>
+                        <tr>
+                            <td>Rendimiento</td>
+                            <td class="medium">Media</td>
+                            <td class="medium">Media</td>
+                            <td class="good">Alta (cacheable)</td>
+                        </tr>
+                        <tr>
+                            <td>Especificidad</td>
+                            <td class="good">Muy alta</td>
+                            <td class="medium">Media</td>
+                            <td class="medium">Media</td>
+                        </tr>
+                        <tr>
+                            <td>Uso recomendado</td>
+                            <td class="bad">Casos excepcionales</td>
+                            <td class="medium">Páginas únicas</td>
+                            <td class="good">Proyectos profesionales</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </main>
+
+        <footer class="footer">
+            <p>Ejemplo de CSS Externo - STW 2026</p>
+            <p class="footer-note">Este documento usa CSS externo (styles.css)</p>
+        </footer>
+    </div>
+</body>
+</html>

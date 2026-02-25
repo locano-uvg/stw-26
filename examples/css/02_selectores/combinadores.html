@@ -1,0 +1,522 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Combinadores CSS</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        }
+
+        header {
+            background: linear-gradient(135deg, #1e3c72 0%, #2a5298 100%);
+            color: white;
+            padding: 50px 30px;
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .content {
+            padding: 40px;
+        }
+
+        .section {
+            background-color: #f8f9fa;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #1e3c72;
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+        }
+
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 15px 0;
+            overflow-x: auto;
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* ========================================
+           1. COMBINADOR DESCENDENTE (espacio)
+           ======================================== */
+        .demo-descendente {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        /* Aplica a todos los <p> dentro de .demo-descendente */
+        .demo-descendente p {
+            color: #2c3e50;
+            padding: 10px;
+            background-color: #e3f2fd;
+            margin: 5px 0;
+            border-left: 4px solid #2196f3;
+        }
+
+        /* ========================================
+           2. COMBINADOR HIJO DIRECTO (>)
+           ======================================== */
+        .demo-hijo {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        /* Solo aplica a <p> hijos DIRECTOS de .demo-hijo */
+        .demo-hijo > p {
+            background-color: #fff3cd;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #ffc107;
+            font-weight: bold;
+        }
+
+        /* ========================================
+           3. COMBINADOR ADYACENTE (+)
+           ======================================== */
+        .demo-adyacente {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        .demo-adyacente h3 {
+            background-color: #1e3c72;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        /* Solo aplica al primer <p> inmediatamente después de <h3> */
+        .demo-adyacente h3 + p {
+            background-color: #d4edda;
+            padding: 15px;
+            margin: 5px 0;
+            border-left: 4px solid #28a745;
+            font-weight: bold;
+        }
+
+        /* ========================================
+           4. COMBINADOR HERMANOS GENERALES (~)
+           ======================================== */
+        .demo-hermanos {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 2px solid #dee2e6;
+        }
+
+        .demo-hermanos h3 {
+            background-color: #764ba2;
+            color: white;
+            padding: 10px;
+            border-radius: 4px;
+        }
+
+        /* Aplica a TODOS los <p> que siguen a <h3> */
+        .demo-hermanos h3 ~ p {
+            background-color: #f8d7da;
+            padding: 10px;
+            margin: 5px 0;
+            border-left: 4px solid #dc3545;
+        }
+
+        /* Visualización del árbol DOM */
+        .tree-view {
+            background-color: white;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            margin: 20px 0;
+        }
+
+        .tree-indent {
+            margin-left: 30px;
+            border-left: 2px solid #dee2e6;
+            padding-left: 15px;
+        }
+
+        .tree-element {
+            padding: 5px;
+            margin: 3px 0;
+        }
+
+        .tree-parent {
+            color: #1e3c72;
+            font-weight: bold;
+        }
+
+        .tree-child {
+            color: #667eea;
+        }
+
+        .tree-grandchild {
+            color: #764ba2;
+        }
+
+        /* Tabla comparativa */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        table tr:hover {
+            background-color: #f8f9fa;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Combinadores CSS</h1>
+            <p>Selectores que relacionan elementos entre sí</p>
+        </header>
+
+        <div class="content">
+            <!-- Tabla de referencia -->
+            <section class="section">
+                <h2>Referencia Rápida de Combinadores</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Combinador</th>
+                            <th>Símbolo</th>
+                            <th>Descripción</th>
+                            <th>Ejemplo</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Descendente</strong></td>
+                            <td>(espacio)</td>
+                            <td>Selecciona todos los descendientes</td>
+                            <td>div p</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hijo directo</strong></td>
+                            <td>></td>
+                            <td>Selecciona solo hijos directos</td>
+                            <td>div > p</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hermano adyacente</strong></td>
+                            <td>+</td>
+                            <td>Selecciona el elemento inmediatamente siguiente</td>
+                            <td>h3 + p</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Hermanos generales</strong></td>
+                            <td>~</td>
+                            <td>Selecciona todos los hermanos siguientes</td>
+                            <td>h3 ~ p</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- 1. Descendente -->
+            <section class="section">
+                <h2>1. Combinador Descendente (espacio)</h2>
+                <p style="color: #555;">Selecciona TODOS los elementos descendientes, sin importar el nivel de anidación.</p>
+
+                <div class="code-box">
+<span class="code-comment">/* CSS - Selecciona todos los &lt;p&gt; dentro de .demo-descendente */</span>
+.demo-descendente p {
+    color: #2c3e50;
+    background-color: #e3f2fd;
+}
+                </div>
+
+                <h3 style="margin: 20px 0 10px 0;">Demostración:</h3>
+                <div class="demo-descendente">
+                    <p>Párrafo hijo directo (afectado)</p>
+                    <div>
+                        <p>Párrafo nieto (también afectado)</p>
+                        <div>
+                            <p>Párrafo bisnieto (también afectado)</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tree-view">
+                    <div class="tree-element tree-parent">.demo-descendente</div>
+                    <div class="tree-indent">
+                        <div class="tree-element tree-child">&lt;p&gt; ← Seleccionado</div>
+                        <div class="tree-element tree-child">&lt;div&gt;</div>
+                        <div class="tree-indent">
+                            <div class="tree-element tree-grandchild">&lt;p&gt; ← Seleccionado</div>
+                            <div class="tree-element tree-grandchild">&lt;div&gt;</div>
+                            <div class="tree-indent">
+                                <div class="tree-element">&lt;p&gt; ← Seleccionado</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 2. Hijo Directo -->
+            <section class="section">
+                <h2>2. Combinador Hijo Directo (>)</h2>
+                <p style="color: #555;">Selecciona SOLO los elementos hijos DIRECTOS, no los nietos ni descendientes más profundos.</p>
+
+                <div class="code-box">
+<span class="code-comment">/* CSS - Solo hijos directos */</span>
+.demo-hijo > p {
+    background-color: #fff3cd;
+    font-weight: bold;
+}
+                </div>
+
+                <h3 style="margin: 20px 0 10px 0;">Demostración:</h3>
+                <div class="demo-hijo">
+                    <p>Párrafo hijo directo (afectado con fondo amarillo)</p>
+                    <p>Otro párrafo hijo directo (afectado con fondo amarillo)</p>
+                    <div>
+                        <p>Párrafo nieto (NO afectado, fondo normal)</p>
+                    </div>
+                </div>
+
+                <div class="tree-view">
+                    <div class="tree-element tree-parent">.demo-hijo</div>
+                    <div class="tree-indent">
+                        <div class="tree-element tree-child">&lt;p&gt; ← Seleccionado (hijo directo)</div>
+                        <div class="tree-element tree-child">&lt;p&gt; ← Seleccionado (hijo directo)</div>
+                        <div class="tree-element tree-child">&lt;div&gt;</div>
+                        <div class="tree-indent">
+                            <div class="tree-element tree-grandchild">&lt;p&gt; ← NO seleccionado (nieto)</div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Hermano Adyacente -->
+            <section class="section">
+                <h2>3. Combinador Hermano Adyacente (+)</h2>
+                <p style="color: #555;">Selecciona SOLO el elemento que viene INMEDIATAMENTE después del selector.</p>
+
+                <div class="code-box">
+<span class="code-comment">/* CSS - Solo el primer &lt;p&gt; después de &lt;h3&gt; */</span>
+h3 + p {
+    background-color: #d4edda;
+    font-weight: bold;
+}
+                </div>
+
+                <h3 style="margin: 20px 0 10px 0;">Demostración:</h3>
+                <div class="demo-adyacente">
+                    <h3>Título</h3>
+                    <p>Este párrafo viene INMEDIATAMENTE después del h3 (afectado con fondo verde)</p>
+                    <p>Este párrafo NO viene inmediatamente después del h3 (NO afectado)</p>
+                    <p>Tercer párrafo (NO afectado)</p>
+                </div>
+
+                <div class="highlight">
+                    <strong>Uso común:</strong> Eliminar el margin-top del primer párrafo después de un título.
+                    <div class="code-box" style="margin-top: 10px;">
+h2 + p {
+    margin-top: 0; <span class="code-comment">/* Elimina espacio superior */</span>
+}
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Hermanos Generales -->
+            <section class="section">
+                <h2>4. Combinador Hermanos Generales (~)</h2>
+                <p style="color: #555;">Selecciona TODOS los elementos hermanos que vienen DESPUÉS del selector.</p>
+
+                <div class="code-box">
+<span class="code-comment">/* CSS - Todos los &lt;p&gt; que vienen después de &lt;h3&gt; */</span>
+h3 ~ p {
+    background-color: #f8d7da;
+}
+                </div>
+
+                <h3 style="margin: 20px 0 10px 0;">Demostración:</h3>
+                <div class="demo-hermanos">
+                    <p>Párrafo ANTES del h3 (NO afectado)</p>
+                    <h3>Título</h3>
+                    <p>Primer párrafo después del h3 (afectado con fondo rojo)</p>
+                    <p>Segundo párrafo después del h3 (afectado con fondo rojo)</p>
+                    <p>Tercer párrafo después del h3 (afectado con fondo rojo)</p>
+                </div>
+
+                <div class="tree-view">
+                    <div class="tree-element tree-parent">Contenedor</div>
+                    <div class="tree-indent">
+                        <div class="tree-element tree-child">&lt;p&gt; ← NO seleccionado (antes de h3)</div>
+                        <div class="tree-element tree-child">&lt;h3&gt;</div>
+                        <div class="tree-element tree-child">&lt;p&gt; ← Seleccionado</div>
+                        <div class="tree-element tree-child">&lt;p&gt; ← Seleccionado</div>
+                        <div class="tree-element tree-child">&lt;p&gt; ← Seleccionado</div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Comparación visual -->
+            <section class="section">
+                <h2>5. Comparación: Adyacente (+) vs Hermanos Generales (~)</h2>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Combinador</th>
+                            <th>Cantidad seleccionada</th>
+                            <th>Condición</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>h3 + p</strong></td>
+                            <td>Solo 1 elemento</td>
+                            <td>El siguiente inmediato</td>
+                        </tr>
+                        <tr>
+                            <td><strong>h3 ~ p</strong></td>
+                            <td>Todos los siguientes</td>
+                            <td>Todos los hermanos posteriores</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="highlight">
+                    <strong>Ejemplo práctico:</strong> Estilizar formularios
+                    <div class="code-box" style="margin-top: 10px;">
+<span class="code-comment">/* Agregar margen a todos los inputs después del primero */</span>
+input + input {
+    margin-top: 10px;
+}
+
+<span class="code-comment">/* Cambiar color a todos los labels después de un input:invalid */</span>
+input:invalid ~ label {
+    color: red;
+}
+                    </div>
+                </div>
+            </section>
+
+            <!-- Casos de uso -->
+            <section class="section">
+                <h2>6. Casos de Uso Comunes</h2>
+
+                <h3>Descendente (espacio)</h3>
+                <div class="code-box">
+<span class="code-comment">/* Todos los enlaces dentro del nav */</span>
+nav a {
+    text-decoration: none;
+    color: white;
+}
+
+<span class="code-comment">/* Todos los items dentro de una lista */</span>
+.menu li {
+    display: inline-block;
+}
+                </div>
+
+                <h3 style="margin-top: 20px;">Hijo Directo (>)</h3>
+                <div class="code-box">
+<span class="code-comment">/* Solo items directos del menu, no subitems */</span>
+.menu > li {
+    border-right: 1px solid #ccc;
+}
+
+<span class="code-comment">/* Solo párrafos directos del artículo */</span>
+article > p {
+    font-size: 18px;
+}
+                </div>
+
+                <h3 style="margin-top: 20px;">Hermano Adyacente (+)</h3>
+                <div class="code-box">
+<span class="code-comment">/* Eliminar margen del primer párrafo después del título */</span>
+h2 + p {
+    margin-top: 0;
+}
+
+<span class="code-comment">/* Estilo especial para el primer elemento después de un checkbox */</span>
+input[type="checkbox"]:checked + label {
+    color: green;
+    font-weight: bold;
+}
+                </div>
+
+                <h3 style="margin-top: 20px;">Hermanos Generales (~)</h3>
+                <div class="code-box">
+<span class="code-comment">/* Todos los párrafos después de una imagen */</span>
+img ~ p {
+    text-indent: 20px;
+}
+
+<span class="code-comment">/* Ocultar elementos después de uno activo */</span>
+.tab.active ~ .tab {
+    opacity: 0.5;
+}
+                </div>
+            </section>
+        </div>
+    </div>
+</body>
+</html>

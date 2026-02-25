@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Display Property - Propiedad Display en CSS</title>
+    <style>
+        /* ================================================
+           VARIABLES CSS
+           ================================================ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+
+        /* Code examples */
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        /* ================================================
+           ESTILOS ESPECÍFICOS PARA DISPLAY
+           ================================================ */
+
+        .demo-box {
+            background-color: white;
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            border-radius: var(--border-radius-md);
+            border: 2px solid var(--light-color);
+        }
+
+        /* Elementos de demostración */
+        .demo-element {
+            background-color: var(--primary-color);
+            color: white;
+            padding: var(--spacing-md);
+            margin: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        /* Display: block */
+        .display-block {
+            display: block;
+            background-color: var(--secondary-color);
+        }
+
+        /* Display: inline */
+        .display-inline {
+            display: inline;
+            background-color: var(--warning-color);
+        }
+
+        /* Display: inline-block */
+        .display-inline-block {
+            display: inline-block;
+            background-color: var(--danger-color);
+            width: 150px;
+            height: 80px;
+        }
+
+        /* Display: none */
+        .display-none {
+            display: none;
+        }
+
+        /* Display: flex */
+        .display-flex {
+            display: flex;
+            gap: var(--spacing-sm);
+            background-color: #e8f5e9;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+        }
+
+        .flex-item {
+            background-color: var(--secondary-color);
+            color: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            flex: 1;
+            text-align: center;
+        }
+
+        /* Display: grid */
+        .display-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: var(--spacing-sm);
+            background-color: #fff3e0;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+        }
+
+        .grid-item {
+            background-color: var(--warning-color);
+            color: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+        }
+
+        /* Display: inline-flex */
+        .display-inline-flex {
+            display: inline-flex;
+            gap: var(--spacing-sm);
+            background-color: #f3e5f5;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-sm);
+        }
+
+        /* Display: inline-grid */
+        .display-inline-grid {
+            display: inline-grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: var(--spacing-sm);
+            background-color: #e1f5fe;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-sm);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+        }
+
+        .comparison-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .comparison-card h4 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-lg);
+        }
+
+        /* Toggle button demo */
+        .toggle-demo {
+            background-color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            text-align: center;
+        }
+
+        .toggle-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            transition: all var(--transition-base);
+        }
+
+        .toggle-btn:hover {
+            background-color: var(--dark-color);
+            transform: scale(1.05);
+        }
+
+        .toggle-target {
+            background-color: var(--warning-color);
+            color: white;
+            padding: var(--spacing-lg);
+            margin-top: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Display Property</h1>
+            <p>Controlando el tipo de visualización de elementos</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>¿Qué es la propiedad Display?</h2>
+                <p>
+                    La propiedad <code>display</code> es una de las más importantes en CSS. Determina cómo se
+                    comporta y renderiza un elemento en el flujo del documento. Controla si un elemento es de bloque,
+                    en línea, un contenedor flex, grid, o si se oculta completamente.
+                </p>
+
+                <div class="alert alert-info">
+                    <strong>Importante:</strong> La propiedad display afecta tanto al elemento en sí como a sus
+                    elementos hijos, especialmente con valores como flex y grid.
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Valor</th>
+                            <th>Descripción</th>
+                            <th>Comportamiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>block</strong></td>
+                            <td>Elemento de bloque</td>
+                            <td>Ocupa todo el ancho disponible, inicia en nueva línea</td>
+                        </tr>
+                        <tr>
+                            <td><strong>inline</strong></td>
+                            <td>Elemento en línea</td>
+                            <td>Solo ocupa el ancho de su contenido, no acepta width/height</td>
+                        </tr>
+                        <tr>
+                            <td><strong>inline-block</strong></td>
+                            <td>Híbrido inline-block</td>
+                            <td>En línea pero acepta width/height</td>
+                        </tr>
+                        <tr>
+                            <td><strong>none</strong></td>
+                            <td>Oculto completamente</td>
+                            <td>No se renderiza ni ocupa espacio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>flex</strong></td>
+                            <td>Contenedor flexible</td>
+                            <td>Crea un contexto de flexbox para sus hijos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>grid</strong></td>
+                            <td>Contenedor de cuadrícula</td>
+                            <td>Crea un contexto de grid para sus hijos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>inline-flex</strong></td>
+                            <td>Flex en línea</td>
+                            <td>Flexbox pero comportamiento inline</td>
+                        </tr>
+                        <tr>
+                            <td><strong>inline-grid</strong></td>
+                            <td>Grid en línea</td>
+                            <td>Grid pero comportamiento inline</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>display: block</h2>
+                <p>
+                    Los elementos con <code>display: block</code> ocupan todo el ancho disponible y comienzan
+                    en una nueva línea. Ejemplos: <code>&lt;div&gt;</code>, <code>&lt;p&gt;</code>,
+                    <code>&lt;h1&gt;</code>, <code>&lt;section&gt;</code>.
+                </p>
+
+                <div class="demo-box">
+                    <div class="demo-element display-block">Bloque 1 - Ocupa todo el ancho</div>
+                    <div class="demo-element display-block">Bloque 2 - Nueva línea automáticamente</div>
+                    <div class="demo-element display-block">Bloque 3 - Acepta width, height, margin, padding</div>
+                </div>
+
+                <div class="code-box">
+.elemento {
+    display: block;
+    width: 100%;           <span class="code-comment">/* Puede especificar width */</span>
+    height: 50px;          <span class="code-comment">/* Puede especificar height */</span>
+    margin: 10px 0;        <span class="code-comment">/* Acepta todos los márgenes */</span>
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Características de block:</strong> Comienza en nueva línea, ocupa todo el ancho disponible,
+                    acepta width y height, respeta márgenes verticales y horizontales.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>display: inline</h2>
+                <p>
+                    Los elementos con <code>display: inline</code> solo ocupan el espacio necesario para su contenido
+                    y no fuerzan un salto de línea. Ejemplos: <code>&lt;span&gt;</code>, <code>&lt;a&gt;</code>,
+                    <code>&lt;strong&gt;</code>, <code>&lt;em&gt;</code>.
+                </p>
+
+                <div class="demo-box">
+                    <div>
+                        Este es un párrafo con
+                        <span class="display-inline">elemento inline 1</span>
+                        y otro
+                        <span class="display-inline">elemento inline 2</span>
+                        en la misma línea.
+                        <span class="display-inline">No saltan a nueva línea</span>
+                        y solo ocupan el espacio de su contenido.
+                    </div>
+                </div>
+
+                <div class="code-box">
+.elemento {
+    display: inline;
+    <span class="code-comment">/* NO acepta width y height */</span>
+    <span class="code-comment">/* Solo margin y padding horizontales (left/right) */</span>
+    margin: 0 10px;       <span class="code-comment">/* Solo horizontal funciona bien */</span>
+    padding: 0 5px;       <span class="code-comment">/* Solo horizontal funciona bien */</span>
+}
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Limitación de inline:</strong> No acepta width ni height, y los márgenes/padding
+                    verticales no afectan el flujo del documento.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>display: inline-block</h2>
+                <p>
+                    <code>display: inline-block</code> combina lo mejor de ambos mundos: se comporta como inline
+                    (no salta de línea) pero acepta width, height, y todos los márgenes como block.
+                </p>
+
+                <div class="demo-box">
+                    <div class="display-inline-block">Box 1<br>150×80px</div>
+                    <div class="display-inline-block">Box 2<br>150×80px</div>
+                    <div class="display-inline-block">Box 3<br>150×80px</div>
+                </div>
+
+                <div class="code-box">
+.elemento {
+    display: inline-block;
+    width: 150px;         <span class="code-comment">/* SÍ acepta width */</span>
+    height: 80px;         <span class="code-comment">/* SÍ acepta height */</span>
+    margin: 10px;         <span class="code-comment">/* Todos los márgenes funcionan */</span>
+    padding: 15px;        <span class="code-comment">/* Todo el padding funciona */</span>
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Uso común:</strong> Botones, badges, cards en línea, menús de navegación horizontal.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>display: none</h2>
+                <p>
+                    <code>display: none</code> oculta completamente el elemento. No se renderiza y no ocupa espacio
+                    en el documento. Es diferente a <code>visibility: hidden</code> que oculta pero mantiene el espacio.
+                </p>
+
+                <div class="toggle-demo">
+                    <button class="toggle-btn" onclick="toggleElement()">Toggle Elemento</button>
+                    <div id="toggleTarget" class="toggle-target">
+                        Este elemento puede ocultarse con display: none
+                    </div>
+                </div>
+
+                <div class="code-box">
+.oculto {
+    display: none;        <span class="code-comment">/* Completamente removido del flujo */</span>
+}
+
+.visible {
+    display: block;       <span class="code-comment">/* Visible y en el flujo */</span>
+}
+
+<span class="code-comment">/* Comparación */</span>
+.hidden-visibility {
+    visibility: hidden;   <span class="code-comment">/* Oculto pero ocupa espacio */</span>
+}
+                </div>
+
+                <script>
+                function toggleElement() {
+                    const element = document.getElementById('toggleTarget');
+                    if (element.style.display === 'none') {
+                        element.style.display = 'block';
+                    } else {
+                        element.style.display = 'none';
+                    }
+                }
+                </script>
+            </section>
+
+            <section class="section">
+                <h2>display: flex</h2>
+                <p>
+                    <code>display: flex</code> convierte el elemento en un contenedor flexible, permitiendo un control
+                    avanzado sobre la disposición de sus elementos hijos.
+                </p>
+
+                <div class="display-flex">
+                    <div class="flex-item">Item 1</div>
+                    <div class="flex-item">Item 2</div>
+                    <div class="flex-item">Item 3</div>
+                </div>
+
+                <div class="code-box">
+.contenedor {
+    display: flex;
+    gap: 10px;                    <span class="code-comment">/* Espacio entre items */</span>
+    justify-content: space-between; <span class="code-comment">/* Distribución horizontal */</span>
+    align-items: center;          <span class="code-comment">/* Alineación vertical */</span>
+}
+
+.item {
+    flex: 1;                      <span class="code-comment">/* Crecen equitativamente */</span>
+}
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Flexbox:</strong> Ideal para layouts unidimensionales (fila o columna), navegación,
+                    centrado de elementos, distribución de espacio.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>display: grid</h2>
+                <p>
+                    <code>display: grid</code> crea un contenedor de cuadrícula bidimensional, perfecto para layouts
+                    complejos con filas y columnas.
+                </p>
+
+                <div class="display-grid">
+                    <div class="grid-item">1</div>
+                    <div class="grid-item">2</div>
+                    <div class="grid-item">3</div>
+                    <div class="grid-item">4</div>
+                    <div class="grid-item">5</div>
+                    <div class="grid-item">6</div>
+                </div>
+
+                <div class="code-box">
+.contenedor {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); <span class="code-comment">/* 3 columnas iguales */</span>
+    gap: 10px;                             <span class="code-comment">/* Espacio entre celdas */</span>
+}
+
+<span class="code-comment">/* Más control con grid areas */</span>
+.contenedor-avanzado {
+    display: grid;
+    grid-template-areas:
+        "header header header"
+        "sidebar main main"
+        "footer footer footer";
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Grid:</strong> Ideal para layouts bidimensionales, sistemas de cuadrícula complejos,
+                    layouts de página completa.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>display: inline-flex e inline-grid</h2>
+                <p>
+                    Estas variantes permiten que los contenedores flex o grid se comporten como elementos inline,
+                    posicionándose uno al lado del otro en lugar de ocupar todo el ancho.
+                </p>
+
+                <h3>inline-flex</h3>
+                <div class="demo-box">
+                    <div class="display-inline-flex">
+                        <div class="flex-item">A</div>
+                        <div class="flex-item">B</div>
+                    </div>
+                    <div class="display-inline-flex">
+                        <div class="flex-item">C</div>
+                        <div class="flex-item">D</div>
+                    </div>
+                </div>
+
+                <h3>inline-grid</h3>
+                <div class="demo-box">
+                    <div class="display-inline-grid">
+                        <div class="grid-item">1</div>
+                        <div class="grid-item">2</div>
+                        <div class="grid-item">3</div>
+                        <div class="grid-item">4</div>
+                    </div>
+                    <div class="display-inline-grid">
+                        <div class="grid-item">5</div>
+                        <div class="grid-item">6</div>
+                        <div class="grid-item">7</div>
+                        <div class="grid-item">8</div>
+                    </div>
+                </div>
+
+                <div class="code-box">
+.inline-flex-container {
+    display: inline-flex;  <span class="code-comment">/* Se posiciona inline */</span>
+    gap: 5px;
+}
+
+.inline-grid-container {
+    display: inline-grid;  <span class="code-comment">/* Se posiciona inline */</span>
+    grid-template-columns: repeat(2, 1fr);
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Comparación de Valores Display</h2>
+
+                <div class="comparison-grid">
+                    <div class="comparison-card">
+                        <h4>block</h4>
+                        <p>✓ Ocupa todo el ancho</p>
+                        <p>✓ Nueva línea</p>
+                        <p>✓ Acepta width/height</p>
+                        <p>✓ Todos los márgenes</p>
+                        <p><strong>Uso:</strong> Secciones, contenedores</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>inline</h4>
+                        <p>✓ Solo ancho del contenido</p>
+                        <p>✓ Misma línea</p>
+                        <p>✗ No acepta width/height</p>
+                        <p>✗ Solo margin horizontal</p>
+                        <p><strong>Uso:</strong> Texto, enlaces, spans</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>inline-block</h4>
+                        <p>✓ Ancho personalizable</p>
+                        <p>✓ Misma línea</p>
+                        <p>✓ Acepta width/height</p>
+                        <p>✓ Todos los márgenes</p>
+                        <p><strong>Uso:</strong> Botones, badges, cards inline</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>flex</h4>
+                        <p>✓ Layout unidimensional</p>
+                        <p>✓ Control de dirección</p>
+                        <p>✓ Alineación avanzada</p>
+                        <p>✓ Distribución de espacio</p>
+                        <p><strong>Uso:</strong> Navbars, layouts flexibles</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>grid</h4>
+                        <p>✓ Layout bidimensional</p>
+                        <p>✓ Filas y columnas</p>
+                        <p>✓ Grid areas nombradas</p>
+                        <p>✓ Control preciso</p>
+                        <p><strong>Uso:</strong> Layouts complejos, páginas</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>none</h4>
+                        <p>✓ Oculta elemento</p>
+                        <p>✓ No ocupa espacio</p>
+                        <p>✓ Removido del flujo</p>
+                        <p>✓ Toggle con JS</p>
+                        <p><strong>Uso:</strong> Modales, menús, toggles</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Mejores Prácticas</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Usa <code>flex</code> para layouts de una dimensión (fila o columna)</li>
+                    <li>✓ Usa <code>grid</code> para layouts bidimensionales complejos</li>
+                    <li>✓ Usa <code>inline-block</code> para elementos en línea con dimensiones</li>
+                    <li>✓ Usa <code>none</code> para ocultar elementos con JavaScript</li>
+                    <li>✓ Conoce el valor por defecto de cada elemento HTML</li>
+                    <li>✓ Combina display con otras propiedades para control total del layout</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de Display Property - STW 2026
+    </footer>
+</body>
+</html>

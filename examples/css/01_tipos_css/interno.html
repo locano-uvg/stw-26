@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Interno - Ejemplo</title>
+
+    <style>
+        /* Reset básico */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: 12px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 40px 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            font-size: 1.1rem;
+            opacity: 0.9;
+        }
+
+        .content {
+            padding: 40px 30px;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+        }
+
+        .section p {
+            font-size: 1rem;
+            line-height: 1.8;
+            color: #555;
+            margin-bottom: 15px;
+        }
+
+        .highlight {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 4px;
+        }
+
+        .code-example {
+            background-color: #f8f9fa;
+            border: 1px solid #dee2e6;
+            border-radius: 6px;
+            padding: 15px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+        }
+
+        .benefits-list,
+        .drawbacks-list {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .benefits-list li,
+        .drawbacks-list li {
+            padding: 10px;
+            margin-bottom: 8px;
+            border-radius: 4px;
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .benefits-list li {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .benefits-list li::before {
+            content: "✓";
+            position: absolute;
+            left: 10px;
+            font-weight: bold;
+        }
+
+        .drawbacks-list li {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .drawbacks-list li::before {
+            content: "✗";
+            position: absolute;
+            left: 10px;
+            font-weight: bold;
+        }
+
+        .footer {
+            background-color: #f8f9fa;
+            text-align: center;
+            padding: 20px;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>CSS Interno</h1>
+            <p>Estilos definidos dentro de la etiqueta &lt;style&gt; en el &lt;head&gt;</p>
+        </header>
+
+        <main class="content">
+            <section class="section">
+                <h2>¿Qué es CSS Interno?</h2>
+                <p>
+                    CSS interno se define dentro de la etiqueta <code>&lt;style&gt;</code> en la sección <code>&lt;head&gt;</code> del documento HTML.
+                    Permite aplicar estilos a todo el documento sin necesidad de archivos externos.
+                </p>
+
+                <div class="code-example">
+&lt;head&gt;
+    &lt;style&gt;
+        .elemento {
+            color: blue;
+            font-size: 16px;
+        }
+    &lt;/style&gt;
+&lt;/head&gt;
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Ventajas</h2>
+                <ul class="benefits-list">
+                    <li>Todo el CSS está en un solo lugar dentro del HTML</li>
+                    <li>No requiere archivos externos adicionales</li>
+                    <li>Útil para páginas únicas o prototipos rápidos</li>
+                    <li>Los estilos se cargan con el HTML</li>
+                </ul>
+            </section>
+
+            <section class="section">
+                <h2>Desventajas</h2>
+                <ul class="drawbacks-list">
+                    <li>No se puede reutilizar en múltiples páginas</li>
+                    <li>Aumenta el tamaño del archivo HTML</li>
+                    <li>Dificulta el mantenimiento en proyectos grandes</li>
+                    <li>No se puede cachear separadamente del HTML</li>
+                </ul>
+            </section>
+
+            <div class="highlight">
+                <strong>Mejor práctica:</strong> Use CSS interno para páginas individuales o cuando necesite estilos específicos que no se reutilizarán. Para proyectos más grandes, prefiera CSS externo.
+            </div>
+        </main>
+
+        <footer class="footer">
+            Ejemplo de CSS Interno - STW 2026
+        </footer>
+    </div>
+</body>
+</html>

@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="light">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Variables - Sistema de Temas</title>
+    <style>
+        /* ================================================
+           TEMA CLARO (por defecto)
+           ================================================ */
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f8f9fa;
+            --bg-tertiary: #e9ecef;
+
+            --text-primary: #212529;
+            --text-secondary: #6c757d;
+            --text-inverse: #ffffff;
+
+            --accent-color: #667eea;
+            --accent-hover: #5568d3;
+
+            --border-color: #dee2e6;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+
+            --success: #28a745;
+            --warning: #ffc107;
+            --danger: #dc3545;
+            --info: #17a2b8;
+        }
+
+        /* ================================================
+           TEMA OSCURO
+           ================================================ */
+        [data-theme="dark"] {
+            --bg-primary: #1a1a1a;
+            --bg-secondary: #2d2d2d;
+            --bg-tertiary: #3a3a3a;
+
+            --text-primary: #f0f0f0;
+            --text-secondary: #b0b0b0;
+            --text-inverse: #1a1a1a;
+
+            --accent-color: #8b9eff;
+            --accent-hover: #a5b4ff;
+
+            --border-color: #404040;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+
+            --success: #4ade80;
+            --warning: #fbbf24;
+            --danger: #f87171;
+            --info: #60a5fa;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            transition: background-color 0.3s ease, color 0.3s ease;
+            padding: 20px;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        /* Header con switch de tema */
+        header {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 8px var(--shadow-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        header h1 {
+            color: var(--accent-color);
+            font-size: 2.5rem;
+        }
+
+        /* Switch de tema */
+        .theme-switch-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .theme-switch {
+            position: relative;
+            width: 60px;
+            height: 30px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: var(--border-color);
+            transition: 0.4s;
+            border-radius: 30px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 22px;
+            width: 22px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--accent-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(30px);
+        }
+
+        /* Secciones */
+        .section {
+            background-color: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px var(--shadow-color);
+            transition: all 0.3s ease;
+        }
+
+        .section:hover {
+            box-shadow: 0 8px 16px var(--shadow-color);
+        }
+
+        .section h2 {
+            color: var(--accent-color);
+            font-size: 2rem;
+            margin-bottom: 20px;
+            border-bottom: 3px solid var(--accent-color);
+            padding-bottom: 10px;
+        }
+
+        .section h3 {
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            margin: 20px 0 10px 0;
+        }
+
+        .section p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+        }
+
+        /* Grids de ejemplos */
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .card {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 16px var(--shadow-color);
+        }
+
+        .card-title {
+            color: var(--text-primary);
+            font-size: 1.25rem;
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .card-text {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* Botones */
+        .button-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background-color: var(--accent-color);
+            color: var(--text-inverse);
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-hover);
+        }
+
+        .btn-success {
+            background-color: var(--success);
+            color: white;
+        }
+
+        .btn-success:hover {
+            filter: brightness(1.1);
+        }
+
+        .btn-warning {
+            background-color: var(--warning);
+            color: var(--text-inverse);
+        }
+
+        .btn-danger {
+            background-color: var(--danger);
+            color: white;
+        }
+
+        .btn-info {
+            background-color: var(--info);
+            color: white;
+        }
+
+        /* Alertas */
+        .alert {
+            padding: 15px 20px;
+            border-radius: 6px;
+            margin: 15px 0;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background-color: var(--bg-tertiary);
+            border-color: var(--success);
+            color: var(--text-primary);
+        }
+
+        .alert-warning {
+            background-color: var(--bg-tertiary);
+            border-color: var(--warning);
+            color: var(--text-primary);
+        }
+
+        .alert-danger {
+            background-color: var(--bg-tertiary);
+            border-color: var(--danger);
+            color: var(--text-primary);
+        }
+
+        .alert-info {
+            background-color: var(--bg-tertiary);
+            border-color: var(--info);
+            color: var(--text-primary);
+        }
+
+        /* Code box */
+        .code-box {
+            background-color: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 20px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+            margin: 15px 0;
+            color: var(--text-primary);
+        }
+
+        .code-comment {
+            color: var(--text-secondary);
+        }
+
+        /* Tabla de variables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background-color: var(--bg-tertiary);
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 12px 15px;
+            border-bottom: 1px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        table tr:hover {
+            background-color: var(--bg-secondary);
+        }
+
+        /* Color swatches */
+        .color-swatch {
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border-radius: 4px;
+            border: 2px solid var(--border-color);
+            vertical-align: middle;
+            margin-right: 10px;
+        }
+
+        .highlight-box {
+            background-color: var(--accent-color);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+        }
+
+        .highlight-box h3 {
+            color: white !important;
+            margin-top: 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div>
+                <h1>Sistema de Temas con CSS Variables</h1>
+                <p style="color: var(--text-secondary); margin-top: 10px;">
+                    Implementación de tema claro y oscuro usando Custom Properties
+                </p>
+            </div>
+            <div class="theme-switch-wrapper">
+                <span style="color: var(--text-primary);">☀️ Claro</span>
+                <label class="theme-switch">
+                    <input type="checkbox" id="theme-toggle">
+                    <span class="slider"></span>
+                </label>
+                <span style="color: var(--text-primary);">🌙 Oscuro</span>
+            </div>
+        </header>
+
+        <div class="section">
+            <h2>¿Cómo Funciona?</h2>
+            <p>
+                Este sistema de temas utiliza CSS Variables definidas de manera diferente para cada tema.
+                Al cambiar el atributo <code>data-theme</code> en el elemento HTML, todas las variables
+                se actualizan automáticamente.
+            </p>
+
+            <div class="code-box">
+<span class="code-comment">/* Tema Claro (por defecto) */</span>
+:root {
+    --bg-primary: #ffffff;
+    --text-primary: #212529;
+    --accent-color: #667eea;
+}
+
+<span class="code-comment">/* Tema Oscuro */</span>
+[data-theme="dark"] {
+    --bg-primary: #1a1a1a;
+    --text-primary: #f0f0f0;
+    --accent-color: #8b9eff;
+}
+
+<span class="code-comment">/* Los elementos usan las variables */</span>
+body {
+    background-color: var(--bg-primary);
+    color: var(--text-primary);
+    transition: all 0.3s ease;
+}
+            </div>
+
+            <div class="alert alert-info">
+                <strong>Transición suave:</strong> Al agregar <code>transition</code> a los elementos,
+                el cambio entre temas es gradual y agradable a la vista.
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>Variables del Tema Actual</h2>
+            <table>
+                <thead>
+                    <tr>
+                        <th>Variable</th>
+                        <th>Color</th>
+                        <th>Uso</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>--bg-primary</td>
+                        <td><span class="color-swatch" style="background-color: var(--bg-primary);"></span>Fondo principal</td>
+                        <td>Fondo del body</td>
+                    </tr>
+                    <tr>
+                        <td>--bg-secondary</td>
+                        <td><span class="color-swatch" style="background-color: var(--bg-secondary);"></span>Fondo secundario</td>
+                        <td>Cards y secciones</td>
+                    </tr>
+                    <tr>
+                        <td>--text-primary</td>
+                        <td><span class="color-swatch" style="background-color: var(--text-primary);"></span>Texto principal</td>
+                        <td>Títulos y texto</td>
+                    </tr>
+                    <tr>
+                        <td>--text-secondary</td>
+                        <td><span class="color-swatch" style="background-color: var(--text-secondary);"></span>Texto secundario</td>
+                        <td>Descripciones</td>
+                    </tr>
+                    <tr>
+                        <td>--accent-color</td>
+                        <td><span class="color-swatch" style="background-color: var(--accent-color);"></span>Color de acento</td>
+                        <td>Botones, títulos</td>
+                    </tr>
+                    <tr>
+                        <td>--border-color</td>
+                        <td><span class="color-swatch" style="background-color: var(--border-color);"></span>Color de borde</td>
+                        <td>Bordes y líneas</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section">
+            <h2>Componentes con Temas</h2>
+
+            <h3>Botones</h3>
+            <div class="button-group">
+                <button class="btn btn-primary">Primario</button>
+                <button class="btn btn-success">Éxito</button>
+                <button class="btn btn-warning">Advertencia</button>
+                <button class="btn btn-danger">Peligro</button>
+                <button class="btn btn-info">Info</button>
+            </div>
+
+            <h3>Alertas</h3>
+            <div class="alert alert-success">
+                <strong>Éxito:</strong> La operación se completó correctamente.
+            </div>
+            <div class="alert alert-warning">
+                <strong>Advertencia:</strong> Revise la información antes de continuar.
+            </div>
+            <div class="alert alert-danger">
+                <strong>Error:</strong> Ocurrió un problema al procesar la solicitud.
+            </div>
+            <div class="alert alert-info">
+                <strong>Info:</strong> Los colores se adaptan automáticamente al tema.
+            </div>
+
+            <h3>Cards</h3>
+            <div class="cards-grid">
+                <div class="card">
+                    <h4 class="card-title">Card 1</h4>
+                    <p class="card-text">
+                        Este card se adapta automáticamente al tema seleccionado usando variables CSS.
+                    </p>
+                </div>
+                <div class="card">
+                    <h4 class="card-title">Card 2</h4>
+                    <p class="card-text">
+                        Los colores de fondo, texto y bordes cambian según el tema activo.
+                    </p>
+                </div>
+                <div class="card">
+                    <h4 class="card-title">Card 3</h4>
+                    <p class="card-text">
+                        Las transiciones suaves hacen que el cambio sea agradable a la vista.
+                    </p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>JavaScript para Cambiar Tema</h2>
+            <div class="code-box">
+<span class="code-comment">// Obtener el toggle</span>
+const toggle = document.getElementById('theme-toggle');
+const html = document.documentElement;
+
+<span class="code-comment">// Cargar tema guardado</span>
+const savedTheme = localStorage.getItem('theme') || 'light';
+html.setAttribute('data-theme', savedTheme);
+toggle.checked = savedTheme === 'dark';
+
+<span class="code-comment">// Evento de cambio</span>
+toggle.addEventListener('change', () => {
+    const theme = toggle.checked ? 'dark' : 'light';
+    html.setAttribute('data-theme', theme);
+    localStorage.setItem('theme', theme);
+});
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <h3>Ventajas de este Enfoque</h3>
+            <ul style="margin-top: 15px; padding-left: 20px;">
+                <li>Cambio instantáneo de tema en toda la aplicación</li>
+                <li>Mantenimiento sencillo: un solo lugar para definir colores</li>
+                <li>Transiciones suaves entre temas</li>
+                <li>Persistencia del tema con localStorage</li>
+                <li>Escalable: fácil agregar más temas (ej: azul, verde, etc.)</li>
+            </ul>
+        </div>
+
+        <div class="section">
+            <h2>Agregar Más Temas</h2>
+            <p>Puedes extender fácilmente este sistema para incluir más variantes:</p>
+            <div class="code-box">
+<span class="code-comment">/* Tema Azul */</span>
+[data-theme="blue"] {
+    --bg-primary: #e3f2fd;
+    --bg-secondary: #bbdefb;
+    --text-primary: #0d47a1;
+    --accent-color: #2196f3;
+}
+
+<span class="code-comment">/* Tema Alto Contraste */</span>
+[data-theme="high-contrast"] {
+    --bg-primary: #000000;
+    --text-primary: #ffffff;
+    --accent-color: #ffff00;
+    --border-color: #ffffff;
+}
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sistema de temas
+        const toggle = document.getElementById('theme-toggle');
+        const html = document.documentElement;
+
+        // Cargar tema guardado del localStorage
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        html.setAttribute('data-theme', savedTheme);
+        toggle.checked = savedTheme === 'dark';
+
+        // Evento de cambio de tema
+        toggle.addEventListener('change', () => {
+            const theme = toggle.checked ? 'dark' : 'light';
+            html.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Diseño Responsive CSS</title>
+    <style>
+        /* ================================================
+           VARIABLES CSS
+           ================================================ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: clamp(1.5rem, 5vw, 2rem);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+
+        /* Code examples */
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        /* ================================================
+           ESTILOS ESPECÍFICOS PARA RESPONSIVE
+           ================================================ */
+
+        /* Viewport size indicator */
+        .viewport-indicator {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: var(--dark-color);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: bold;
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .viewport-indicator::before {
+            content: 'Desktop';
+        }
+
+        /* Grid responsive demo */
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .grid-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            text-align: center;
+            font-weight: bold;
+        }
+
+        /* Mobile First: Diseño por defecto para móvil */
+        .mobile-first-demo {
+            background-color: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .mobile-first-demo h3 {
+            font-size: 1.2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        /* Navegación responsive */
+        .responsive-nav {
+            background-color: var(--dark-color);
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+        }
+
+        .nav-menu {
+            display: flex;
+            flex-direction: column;
+            gap: var(--spacing-sm);
+            list-style: none;
+        }
+
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            padding: var(--spacing-sm);
+            border-radius: var(--border-radius-sm);
+            transition: var(--transition-base);
+        }
+
+        .nav-menu a:hover {
+            background-color: var(--primary-color);
+        }
+
+        /* Cards responsive */
+        .card-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: var(--spacing-md);
+        }
+
+        .card {
+            background-color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* Imagen responsive */
+        .responsive-image-demo img {
+            width: 100%;
+            height: auto;
+            border-radius: var(--border-radius-md);
+        }
+
+        /* Typography responsive */
+        .responsive-text {
+            font-size: clamp(1rem, 3vw, 1.5rem);
+            line-height: 1.6;
+        }
+
+        /* Container queries demo */
+        .container-query-demo {
+            container-type: inline-size;
+            background-color: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            border: 2px solid var(--primary-color);
+        }
+
+        .container-card {
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+        }
+
+        /* ================================================
+           MEDIA QUERIES - MOBILE FIRST
+           ================================================ */
+
+        /* Tablets (768px y más) */
+        @media (min-width: 768px) {
+            .viewport-indicator::before {
+                content: 'Tablet';
+            }
+
+            .responsive-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .nav-menu {
+                flex-direction: row;
+                justify-content: center;
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* Desktop (1024px y más) */
+        @media (min-width: 1024px) {
+            .viewport-indicator::before {
+                content: 'Desktop';
+            }
+
+            .responsive-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .card-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Large Desktop (1440px y más) */
+        @media (min-width: 1440px) {
+            .viewport-indicator::before {
+                content: 'Large Desktop';
+            }
+
+            .responsive-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
+        }
+
+        /* Orientation landscape */
+        @media (orientation: landscape) {
+            .orientation-demo {
+                background-color: #d4edda;
+                border-left: 4px solid var(--secondary-color);
+            }
+        }
+
+        @media (orientation: portrait) {
+            .orientation-demo {
+                background-color: #fff3cd;
+                border-left: 4px solid var(--warning-color);
+            }
+        }
+
+        /* Dark mode */
+        @media (prefers-color-scheme: dark) {
+            .dark-mode-demo {
+                background-color: #2c3e50;
+                color: white;
+            }
+        }
+
+        @media (prefers-color-scheme: light) {
+            .dark-mode-demo {
+                background-color: white;
+                color: #2c3e50;
+            }
+        }
+
+        /* Reduced motion */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation: none !important;
+                transition: none !important;
+            }
+        }
+
+        /* Print styles */
+        @media print {
+            body {
+                background-color: white;
+            }
+
+            .viewport-indicator,
+            .no-print {
+                display: none !important;
+            }
+
+            .section {
+                page-break-inside: avoid;
+            }
+        }
+
+        /* Container Queries (CSS moderno) */
+        @container (min-width: 400px) {
+            .container-card {
+                display: flex;
+                gap: var(--spacing-md);
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="viewport-indicator"></div>
+
+    <div class="container">
+        <header>
+            <h1>Diseño Responsive CSS</h1>
+            <p>Media queries y técnicas modernas</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>¿Qué es el Diseño Responsive?</h2>
+                <p>
+                    El diseño responsive es una técnica de desarrollo web que permite que un sitio web
+                    se adapte automáticamente a diferentes tamaños de pantalla y dispositivos. Se logra
+                    principalmente mediante media queries, layouts flexibles y unidades relativas.
+                </p>
+
+                <div class="alert alert-info">
+                    <strong>Viewport Meta Tag:</strong> Esencial para responsive design. Asegúrate de incluirlo
+                    en el &lt;head&gt; de tu HTML:<br>
+                    <code>&lt;meta name="viewport" content="width=device-width, initial-scale=1.0"&gt;</code>
+                </div>
+
+                <h3>Breakpoints Comunes</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Dispositivo</th>
+                            <th>Ancho Mínimo</th>
+                            <th>Media Query</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Móvil</strong></td>
+                            <td>0px - 767px</td>
+                            <td>Por defecto (mobile first)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tablet</strong></td>
+                            <td>768px+</td>
+                            <td>@media (min-width: 768px)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Desktop</strong></td>
+                            <td>1024px+</td>
+                            <td>@media (min-width: 1024px)</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Large Desktop</strong></td>
+                            <td>1440px+</td>
+                            <td>@media (min-width: 1440px)</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>1. Media Queries Básicas</h2>
+                <p>
+                    Las media queries permiten aplicar estilos CSS diferentes según las características
+                    del dispositivo.
+                </p>
+
+                <div class="code-box">
+<span class="code-comment">/* Mobile First: Estilos base para móvil */</span>
+.container {
+    padding: 16px;
+    font-size: 14px;
+}
+
+<span class="code-comment">/* Tablet: 768px y más */</span>
+@media (min-width: 768px) {
+    .container {
+        padding: 24px;
+        font-size: 16px;
+    }
+}
+
+<span class="code-comment">/* Desktop: 1024px y más */</span>
+@media (min-width: 1024px) {
+    .container {
+        padding: 32px;
+        font-size: 18px;
+    }
+}
+
+<span class="code-comment">/* Large Desktop: 1440px y más */</span>
+@media (min-width: 1440px) {
+    .container {
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Mobile First:</strong> Es la mejor práctica moderna. Define estilos base para
+                    móvil y usa min-width para agregar complejidad en pantallas más grandes.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>2. Grid Responsive (Demostración Interactiva)</h2>
+                <p>
+                    Cambia el tamaño de tu ventana para ver cómo se adapta el grid.
+                    El indicador en la esquina superior derecha muestra el breakpoint actual.
+                </p>
+
+                <div class="responsive-grid">
+                    <div class="grid-item">Item 1</div>
+                    <div class="grid-item">Item 2</div>
+                    <div class="grid-item">Item 3</div>
+                    <div class="grid-item">Item 4</div>
+                    <div class="grid-item">Item 5</div>
+                    <div class="grid-item">Item 6</div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Mobile: 1 columna */</span>
+.grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 16px;
+}
+
+<span class="code-comment">/* Tablet: 2 columnas */</span>
+@media (min-width: 768px) {
+    .grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+<span class="code-comment">/* Desktop: 3 columnas */</span>
+@media (min-width: 1024px) {
+    .grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+<span class="code-comment">/* Large Desktop: 4 columnas */</span>
+@media (min-width: 1440px) {
+    .grid {
+        grid-template-columns: repeat(4, 1fr);
+    }
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>3. Navegación Responsive</h2>
+
+                <nav class="responsive-nav">
+                    <ul class="nav-menu">
+                        <li><a href="#">Inicio</a></li>
+                        <li><a href="#">Servicios</a></li>
+                        <li><a href="#">Portafolio</a></li>
+                        <li><a href="#">Blog</a></li>
+                        <li><a href="#">Contacto</a></li>
+                    </ul>
+                </nav>
+
+                <div class="code-box">
+<span class="code-comment">/* Mobile: Navegación vertical */</span>
+.nav-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+<span class="code-comment">/* Tablet y Desktop: Navegación horizontal */</span>
+@media (min-width: 768px) {
+    .nav-menu {
+        flex-direction: row;
+        justify-content: center;
+        gap: 32px;
+    }
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>4. Cards Responsive</h2>
+
+                <div class="card-grid">
+                    <div class="card">
+                        <h4>Card 1</h4>
+                        <p>En móvil: 1 columna<br>En tablet: 2 columnas<br>En desktop: 3 columnas</p>
+                    </div>
+                    <div class="card">
+                        <h4>Card 2</h4>
+                        <p>El layout se adapta automáticamente según el ancho de la pantalla.</p>
+                    </div>
+                    <div class="card">
+                        <h4>Card 3</h4>
+                        <p>Aprovecha las media queries para proporcionar la mejor experiencia.</p>
+                    </div>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>5. Tipografía Responsive con clamp()</h2>
+                <p>
+                    La función <code>clamp()</code> permite crear tipografía fluida sin media queries.
+                </p>
+
+                <div class="responsive-text" style="background-color: white; padding: var(--spacing-lg); border-radius: var(--border-radius-md);">
+                    Este texto se escala automáticamente entre 1rem y 1.5rem usando clamp(1rem, 3vw, 1.5rem).
+                    Cambia el tamaño de la ventana para verlo en acción.
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Tipografía fluida con clamp() */</span>
+h1 {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    <span class="code-comment">/* mínimo: 1.5rem, ideal: 5vw, máximo: 3rem */</span>
+}
+
+p {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+<span class="code-comment">/* Sin media queries - se adapta automáticamente */</span>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Ventaja de clamp():</strong> Elimina la necesidad de múltiples media queries
+                    para ajustar tamaños de fuente. El texto escala suavemente entre mínimo y máximo.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>6. Media Queries Avanzadas</h2>
+
+                <h3>Orientación del Dispositivo</h3>
+                <div class="alert orientation-demo">
+                    Esta caja cambia de color según la orientación de tu dispositivo.
+                    Verde en landscape (horizontal), amarillo en portrait (vertical).
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Orientación horizontal */</span>
+@media (orientation: landscape) {
+    .elemento {
+        background-color: green;
+    }
+}
+
+<span class="code-comment">/* Orientación vertical */</span>
+@media (orientation: portrait) {
+    .elemento {
+        background-color: yellow;
+    }
+}
+                </div>
+
+                <h3>Preferencia de Modo Oscuro</h3>
+                <div class="alert dark-mode-demo" style="padding: var(--spacing-lg); border-radius: var(--border-radius-md);">
+                    Esta caja respeta la preferencia de modo oscuro/claro del sistema operativo.
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Modo claro (por defecto) */</span>
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: white;
+        color: #2c3e50;
+    }
+}
+
+<span class="code-comment">/* Modo oscuro */</span>
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #2c3e50;
+        color: white;
+    }
+}
+                </div>
+
+                <h3>Preferencia de Movimiento Reducido</h3>
+                <div class="code-box">
+<span class="code-comment">/* Respetar preferencia de movimiento reducido (accesibilidad) */</span>
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation: none !important;
+        transition: none !important;
+    }
+}
+
+<span class="code-comment">/* Usuario prefiere animaciones */</span>
+@media (prefers-reduced-motion: no-preference) {
+    .elemento {
+        transition: all 0.3s ease;
+    }
+}
+                </div>
+
+                <h3>Resolución de Pantalla (Retina)</h3>
+                <div class="code-box">
+<span class="code-comment">/* Pantallas de alta resolución (Retina) */</span>
+@media (min-resolution: 2dppx) {
+    .logo {
+        background-image: url('logo@2x.png');
+    }
+}
+
+<span class="code-comment">/* O usando -webkit- para compatibilidad */</span>
+@media (-webkit-min-device-pixel-ratio: 2) {
+    .logo {
+        background-image: url('logo@2x.png');
+    }
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>7. Container Queries (CSS Moderno)</h2>
+                <p>
+                    Container queries permiten que los estilos respondan al tamaño del contenedor padre
+                    en lugar del viewport. Más flexible que media queries para componentes.
+                </p>
+
+                <div class="container-query-demo">
+                    <div class="container-card">
+                        <div>
+                            <h4>Container Query Demo</h4>
+                            <p>Cambia el tamaño de la ventana. Este card se reorganiza basándose en el
+                            tamaño de su contenedor, no del viewport.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Definir el contenedor */</span>
+.container {
+    container-type: inline-size;
+    <span class="code-comment">/* o container-name: sidebar; para nombrarlo */</span>
+}
+
+<span class="code-comment">/* Query basada en el tamaño del contenedor */</span>
+@container (min-width: 400px) {
+    .card {
+        display: flex;
+        gap: 16px;
+    }
+}
+
+@container (min-width: 600px) {
+    .card {
+        font-size: 1.2rem;
+    }
+}
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Soporte de Navegadores:</strong> Container queries son una característica moderna.
+                    Verifica la compatibilidad en <a href="https://caniuse.com/css-container-queries" target="_blank">caniuse.com</a>
+                    antes de usar en producción.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>8. Imágenes Responsive</h2>
+
+                <div class="code-box">
+<span class="code-comment">/* Imagen responsive básica */</span>
+img {
+    max-width: 100%;
+    height: auto;
+    display: block;
+}
+
+<span class="code-comment">/* Responsive con picture element (HTML) */</span>
+&lt;picture&gt;
+    &lt;source media="(min-width: 1024px)" srcset="large.jpg"&gt;
+    &lt;source media="(min-width: 768px)" srcset="medium.jpg"&gt;
+    &lt;img src="small.jpg" alt="Descripción"&gt;
+&lt;/picture&gt;
+
+<span class="code-comment">/* Object-fit para controlar el ajuste */</span>
+.image-container img {
+    width: 100%;
+    height: 300px;
+    object-fit: cover;  <span class="code-comment">/* cover, contain, fill, none */</span>
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>9. Rangos de Media Queries</h2>
+
+                <div class="code-box">
+<span class="code-comment">/* Entre 768px y 1024px solamente */</span>
+@media (min-width: 768px) and (max-width: 1023px) {
+    .elemento {
+        /* Estilos solo para tablets */
+    }
+}
+
+<span class="code-comment">/* Múltiples condiciones */</span>
+@media (min-width: 768px) and (orientation: landscape) {
+    .elemento {
+        /* Tablet en modo landscape */
+    }
+}
+
+<span class="code-comment">/* Sintaxis moderna de rangos (CSS4) */</span>
+@media (768px <= width <= 1024px) {
+    .elemento {
+        /* Más legible */
+    }
+}
+
+<span class="code-comment">/* Operador OR con coma */</span>
+@media (max-width: 767px), (min-width: 1440px) {
+    .elemento {
+        /* Móvil O Large Desktop */
+    }
+}
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Mejores Prácticas Responsive</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Usa enfoque Mobile First (min-width en lugar de max-width)</li>
+                    <li>✓ Define breakpoints basados en contenido, no en dispositivos específicos</li>
+                    <li>✓ Usa unidades relativas (rem, em, %, vw, vh) en lugar de px fijos</li>
+                    <li>✓ Aprovecha clamp() para tipografía y espaciado fluidos</li>
+                    <li>✓ Prueba en dispositivos reales, no solo en emuladores</li>
+                    <li>✓ Usa Grid y Flexbox para layouts flexibles</li>
+                    <li>✓ Optimiza imágenes para diferentes tamaños con picture/srcset</li>
+                    <li>✓ Considera container queries para componentes reutilizables</li>
+                    <li>✓ Respeta prefers-reduced-motion para accesibilidad</li>
+                    <li>✓ Incluye siempre el meta viewport tag</li>
+                </ul>
+            </div>
+
+            <section class="section">
+                <h2>10. Estrategia de Breakpoints</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Framework</th>
+                            <th>Breakpoints</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Bootstrap</strong></td>
+                            <td>576px, 768px, 992px, 1200px, 1400px</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tailwind CSS</strong></td>
+                            <td>640px, 768px, 1024px, 1280px, 1536px</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Material Design</strong></td>
+                            <td>600px, 960px, 1280px, 1920px</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Recomendación General</strong></td>
+                            <td>768px (tablet), 1024px (desktop), 1440px (large)</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info">
+                    <strong>Consejo:</strong> No te cases con breakpoints específicos. Ajusta según las
+                    necesidades de tu contenido. Si tu diseño se rompe a 900px, ese es tu breakpoint.
+                </div>
+            </section>
+
+            <section class="section no-print">
+                <h2>11. Estilos de Impresión</h2>
+
+                <div class="code-box">
+<span class="code-comment">/* Estilos específicos para impresión */</span>
+@media print {
+    <span class="code-comment">/* Ocultar elementos innecesarios */</span>
+    nav, .sidebar, .no-print {
+        display: none !important;
+    }
+
+    <span class="code-comment">/* Ajustar colores para impresión */</span>
+    body {
+        background: white;
+        color: black;
+    }
+
+    <span class="code-comment">/* Evitar saltos de página dentro de elementos */</span>
+    .section, .card {
+        page-break-inside: avoid;
+    }
+
+    <span class="code-comment">/* Mostrar URLs de enlaces */</span>
+    a[href]::after {
+        content: " (" attr(href) ")";
+    }
+
+    <span class="code-comment">/* Ajustar tamaños de fuente */</span>
+    body {
+        font-size: 12pt;
+        line-height: 1.5;
+    }
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Tip:</strong> Prueba los estilos de impresión con Ctrl+P o usando DevTools
+                    (F12 → Rendering → Emulate CSS media type → print).
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de Diseño Responsive - STW 2026
+    </footer>
+</body>
+</html>

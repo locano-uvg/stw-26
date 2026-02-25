@@ -1,0 +1,943 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Funciones Modernas CSS</title>
+    <style>
+        /* ================================================
+           VARIABLES CSS
+           ================================================ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+
+        /* Code examples */
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        /* ================================================
+           EJEMPLOS DE FUNCIONES MODERNAS
+           ================================================ */
+
+        /* calc() demos */
+        .calc-demo {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) 0;
+            width: calc(100% - 40px);
+        }
+
+        .calc-sidebar-layout {
+            display: flex;
+            gap: var(--spacing-md);
+        }
+
+        .calc-sidebar {
+            width: 250px;
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+        }
+
+        .calc-main {
+            width: calc(100% - 250px - 16px);
+            background-color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+        }
+
+        /* clamp() demos */
+        .clamp-text {
+            font-size: clamp(1rem, 3vw, 2rem);
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: var(--spacing-md) 0;
+        }
+
+        .clamp-box {
+            width: clamp(200px, 50%, 600px);
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) auto;
+            text-align: center;
+        }
+
+        /* min() y max() demos */
+        .min-demo {
+            width: min(500px, 100%);
+            background-color: var(--secondary-color);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .max-demo {
+            width: max(300px, 50%);
+            background-color: var(--warning-color);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        /* aspect-ratio demos */
+        .aspect-ratio-demo {
+            aspect-ratio: 16 / 9;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            margin: var(--spacing-md) 0;
+        }
+
+        .aspect-ratio-square {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* object-fit demos */
+        .object-fit-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .object-fit-box {
+            height: 200px;
+            background-color: #f0f0f0;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .object-fit-box::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 300px;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .fit-cover::before {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .fit-contain::before {
+            max-width: 100%;
+            max-height: 100%;
+        }
+
+        /* backdrop-filter demos */
+        .backdrop-demo {
+            position: relative;
+            height: 300px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="100" height="100"><rect fill="%23667eea" width="100" height="100"/><circle fill="%23764ba2" cx="50" cy="50" r="40"/></svg>') repeat;
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .glass-card {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-xl);
+            color: white;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        /* filter demos */
+        .filter-demo-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .filter-box {
+            height: 150px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: var(--border-radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        .blur-demo { filter: blur(3px); }
+        .brightness-demo { filter: brightness(1.5); }
+        .contrast-demo { filter: contrast(1.5); }
+        .grayscale-demo { filter: grayscale(100%); }
+        .hue-rotate-demo { filter: hue-rotate(90deg); }
+        .saturate-demo { filter: saturate(200%); }
+
+        /* Ejemplos prácticos combinados */
+        .modern-card {
+            width: clamp(300px, 80%, 600px);
+            margin: var(--spacing-md) auto;
+            padding: var(--spacing-lg);
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .modern-card img {
+            width: 100%;
+            aspect-ratio: 16 / 9;
+            object-fit: cover;
+            border-radius: var(--border-radius-md);
+        }
+
+        .responsive-container {
+            width: min(90%, 1200px);
+            margin: 0 auto;
+            padding: clamp(1rem, 5vw, 3rem);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Funciones Modernas CSS</h1>
+            <p>calc(), clamp(), min(), max() y más</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>Funciones Matemáticas en CSS</h2>
+                <p>
+                    CSS moderno ofrece potentes funciones matemáticas que permiten crear layouts
+                    dinámicos y responsive sin necesidad de JavaScript.
+                </p>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Función</th>
+                            <th>Sintaxis</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>calc()</strong></td>
+                            <td>calc(expresión)</td>
+                            <td>Realiza cálculos matemáticos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>clamp()</strong></td>
+                            <td>clamp(min, ideal, max)</td>
+                            <td>Limita un valor entre mínimo y máximo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>min()</strong></td>
+                            <td>min(valor1, valor2, ...)</td>
+                            <td>Retorna el valor más pequeño</td>
+                        </tr>
+                        <tr>
+                            <td><strong>max()</strong></td>
+                            <td>max(valor1, valor2, ...)</td>
+                            <td>Retorna el valor más grande</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>1. calc(): Cálculos Dinámicos</h2>
+                <p>
+                    La función <code>calc()</code> permite realizar operaciones matemáticas mezclando
+                    diferentes unidades (px, %, rem, vw, etc.).
+                </p>
+
+                <div class="calc-demo">
+                    Esta caja tiene width: calc(100% - 40px)
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Operaciones básicas: +, -, *, / */</span>
+.elemento {
+    width: calc(100% - 40px);         <span class="code-comment">/* Ancho completo menos 40px */</span>
+    height: calc(100vh - 80px);       <span class="code-comment">/* Altura viewport menos 80px */</span>
+    margin: calc(1rem + 2px);         <span class="code-comment">/* Sumar diferentes unidades */</span>
+    font-size: calc(1rem + 0.5vw);    <span class="code-comment">/* Tipografía responsive */</span>
+}
+
+<span class="code-comment">/* Espacios obligatorios con + y - */</span>
+.correcto { width: calc(100% - 20px); }
+.incorrecto { width: calc(100%-20px); }  <span class="code-comment">/* ¡ERROR! */</span>
+
+<span class="code-comment">/* No requiere espacios con * y / */</span>
+.elemento {
+    width: calc(100%/3);              <span class="code-comment">/* Funciona */</span>
+    padding: calc(2rem * 1.5);        <span class="code-comment">/* Funciona */</span>
+}
+                </div>
+
+                <h3>Ejemplo Práctico: Layout con Sidebar</h3>
+                <div class="calc-sidebar-layout">
+                    <aside class="calc-sidebar">
+                        <h4>Sidebar</h4>
+                        <p>Ancho fijo: 250px</p>
+                    </aside>
+                    <main class="calc-main">
+                        <h4>Contenido Principal</h4>
+                        <p>Ancho: calc(100% - 250px - 16px)</p>
+                        <p>Se resta el ancho del sidebar y el gap.</p>
+                    </main>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Layout con sidebar de ancho fijo */</span>
+.layout {
+    display: flex;
+    gap: 16px;
+}
+
+.sidebar {
+    width: 250px;
+}
+
+.main {
+    width: calc(100% - 250px - 16px);  <span class="code-comment">/* Total - sidebar - gap */</span>
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Caso de uso común:</strong> calc() es perfecto para layouts que combinan
+                    elementos de tamaño fijo con elementos flexibles.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>2. clamp(): Valores Fluidos con Límites</h2>
+                <p>
+                    <code>clamp()</code> define un valor que crece/decrece según el viewport, pero
+                    nunca excede los límites mínimo y máximo.
+                </p>
+
+                <div class="clamp-text">
+                    Este texto usa: font-size: clamp(1rem, 3vw, 2rem)
+                </div>
+
+                <div class="clamp-box">
+                    Esta caja usa: width: clamp(200px, 50%, 600px)<br>
+                    Cambia el tamaño de la ventana para verlo en acción
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Sintaxis: clamp(mínimo, ideal, máximo) */</span>
+h1 {
+    font-size: clamp(1.5rem, 5vw, 3rem);
+    <span class="code-comment">/* Mínimo: 1.5rem
+       Ideal: 5vw (crece con el viewport)
+       Máximo: 3rem */</span>
+}
+
+<span class="code-comment">/* Tipografía fluida sin media queries */</span>
+p {
+    font-size: clamp(1rem, 2.5vw, 1.25rem);
+}
+
+<span class="code-comment">/* Espaciado responsive */</span>
+.container {
+    padding: clamp(1rem, 5vw, 3rem);
+}
+
+<span class="code-comment">/* Ancho de contenedor */</span>
+.wrapper {
+    width: clamp(300px, 90%, 1200px);
+    margin: 0 auto;
+}
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Ventaja principal:</strong> clamp() elimina la necesidad de múltiples media
+                    queries para ajustar tamaños. El valor escala suavemente entre mínimo y máximo.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>3. min(): El Valor Más Pequeño</h2>
+                <p>
+                    <code>min()</code> retorna el menor valor de una lista. Útil para establecer
+                    límites máximos.
+                </p>
+
+                <div class="min-demo">
+                    width: min(500px, 100%)<br>
+                    Nunca excede 500px, pero se adapta en pantallas pequeñas
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* El valor más pequeño gana */</span>
+.elemento {
+    width: min(500px, 100%);
+    <span class="code-comment">/* En pantallas grandes: 500px
+       En pantallas pequeñas: 100% */</span>
+}
+
+<span class="code-comment">/* Equivalente a */</span>
+.elemento {
+    width: 100%;
+    max-width: 500px;
+}
+
+<span class="code-comment">/* Con múltiples valores */</span>
+.elemento {
+    width: min(800px, 90%, 70vw);
+    <span class="code-comment">/* Usa el más pequeño de los tres */</span>
+}
+
+<span class="code-comment">/* Espaciado que no excede cierto valor */</span>
+.grid {
+    gap: min(2rem, 5vw);
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>4. max(): El Valor Más Grande</h2>
+                <p>
+                    <code>max()</code> retorna el mayor valor de una lista. Útil para establecer
+                    límites mínimos.
+                </p>
+
+                <div class="max-demo">
+                    width: max(300px, 50%)<br>
+                    Nunca es menor a 300px
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* El valor más grande gana */</span>
+.elemento {
+    width: max(300px, 50%);
+    <span class="code-comment">/* En pantallas grandes: 50%
+       En pantallas pequeñas: 300px (mínimo) */</span>
+}
+
+<span class="code-comment">/* Equivalente a */</span>
+.elemento {
+    width: 50%;
+    min-width: 300px;
+}
+
+<span class="code-comment">/* Asegurar tamaño mínimo de fuente */</span>
+p {
+    font-size: max(16px, 1rem);
+}
+
+<span class="code-comment">/* Padding que nunca es muy pequeño */</span>
+.card {
+    padding: max(1rem, 3vw);
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>5. aspect-ratio: Mantener Proporciones</h2>
+                <p>
+                    La propiedad <code>aspect-ratio</code> mantiene una relación de aspecto específica
+                    automáticamente.
+                </p>
+
+                <div class="aspect-ratio-demo">
+                    aspect-ratio: 16 / 9
+                </div>
+
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 16px; margin: 16px 0;">
+                    <div class="aspect-ratio-square">1:1</div>
+                    <div class="aspect-ratio-square">1:1</div>
+                    <div class="aspect-ratio-square">1:1</div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Mantener proporción 16:9 (videos) */</span>
+.video-container {
+    aspect-ratio: 16 / 9;
+    width: 100%;
+}
+
+<span class="code-comment">/* Cuadrado perfecto */</span>
+.square {
+    aspect-ratio: 1;
+    width: 200px;  <span class="code-comment">/* Altura será automáticamente 200px */</span>
+}
+
+<span class="code-comment">/* Proporción 4:3 (imágenes clásicas) */</span>
+.thumbnail {
+    aspect-ratio: 4 / 3;
+}
+
+<span class="code-comment">/* Con object-fit para control de contenido */</span>
+.image-wrapper {
+    aspect-ratio: 16 / 9;
+}
+
+.image-wrapper img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Antes de aspect-ratio:</strong> Se usaba el "padding-bottom hack".
+                    Ahora aspect-ratio es mucho más simple y limpio.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>6. object-fit: Control de Imágenes y Videos</h2>
+                <p>
+                    <code>object-fit</code> controla cómo el contenido de un elemento reemplazado
+                    (img, video) se ajusta a su contenedor.
+                </p>
+
+                <div class="code-box">
+<span class="code-comment">/* Valores de object-fit */</span>
+img {
+    width: 300px;
+    height: 200px;
+    object-fit: cover;      <span class="code-comment">/* Cubre el área, puede recortar */</span>
+}
+
+.contain { object-fit: contain; }    <span class="code-comment">/* Cabe completo, puede haber espacio */</span>
+.cover { object-fit: cover; }        <span class="code-comment">/* Cubre el área, mantiene proporción */</span>
+.fill { object-fit: fill; }          <span class="code-comment">/* Rellena (puede distorsionar) */</span>
+.none { object-fit: none; }          <span class="code-comment">/* Tamaño original (puede recortar) */</span>
+.scale-down { object-fit: scale-down; } <span class="code-comment">/* El menor entre none y contain */</span>
+
+<span class="code-comment">/* Posicionar el contenido */</span>
+img {
+    object-fit: cover;
+    object-position: center;     <span class="code-comment">/* top, bottom, left, right, center */</span>
+    object-position: 50% 50%;    <span class="code-comment">/* Coordenadas */</span>
+    object-position: top right;  <span class="code-comment">/* Esquina superior derecha */</span>
+}
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Caso de uso:</strong> object-fit: cover es perfecto para thumbnails y
+                    galerías donde necesitas tamaños uniformes sin distorsión.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>7. backdrop-filter: Efectos de Glass Morphism</h2>
+                <p>
+                    <code>backdrop-filter</code> aplica efectos gráficos al área detrás del elemento,
+                    creando efectos de vidrio esmerilado.
+                </p>
+
+                <div class="backdrop-demo">
+                    <div class="glass-card">
+                        <h3>Glass Morphism</h3>
+                        <p>backdrop-filter: blur(10px)</p>
+                        <p>Efecto de vidrio esmerilado moderno</p>
+                    </div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Efecto de vidrio esmerilado */</span>
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);  <span class="code-comment">/* Safari */</span>
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 12px;
+}
+
+<span class="code-comment">/* Combinando múltiples filtros */</span>
+.advanced-glass {
+    backdrop-filter: blur(10px) saturate(180%);
+}
+
+<span class="code-comment">/* Modal con fondo desenfocado */</span>
+.modal-overlay {
+    backdrop-filter: blur(5px) brightness(0.7);
+}
+
+<span class="code-comment">/* Navbar translúcida */</span>
+.navbar {
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(20px);
+}
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Rendimiento:</strong> backdrop-filter puede ser costoso en términos de
+                    rendimiento. Úsalo con moderación en elementos pequeños.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>8. filter: Efectos Visuales</h2>
+                <p>
+                    La propiedad <code>filter</code> aplica efectos gráficos como desenfoque, brillo,
+                    contraste, etc.
+                </p>
+
+                <div class="filter-demo-grid">
+                    <div class="filter-box">Original</div>
+                    <div class="filter-box blur-demo">Blur</div>
+                    <div class="filter-box brightness-demo">Brightness</div>
+                    <div class="filter-box contrast-demo">Contrast</div>
+                    <div class="filter-box grayscale-demo">Grayscale</div>
+                    <div class="filter-box hue-rotate-demo">Hue Rotate</div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Filtros individuales */</span>
+img {
+    filter: blur(5px);              <span class="code-comment">/* Desenfoque */</span>
+    filter: brightness(1.5);        <span class="code-comment">/* Más brillante */</span>
+    filter: contrast(200%);         <span class="code-comment">/* Más contraste */</span>
+    filter: grayscale(100%);        <span class="code-comment">/* Blanco y negro */</span>
+    filter: hue-rotate(90deg);      <span class="code-comment">/* Rotar colores */</span>
+    filter: saturate(200%);         <span class="code-comment">/* Más saturación */</span>
+    filter: sepia(100%);            <span class="code-comment">/* Efecto sepia */</span>
+    filter: invert(100%);           <span class="code-comment">/* Invertir colores */</span>
+    filter: opacity(50%);           <span class="code-comment">/* Transparencia */</span>
+}
+
+<span class="code-comment">/* Combinar múltiples filtros */</span>
+.vintage {
+    filter: sepia(50%) contrast(1.2) brightness(0.9);
+}
+
+<span class="code-comment">/* Hover effects */</span>
+img:hover {
+    filter: brightness(1.2) saturate(1.3);
+    transition: filter 0.3s ease;
+}
+
+<span class="code-comment">/* Drop shadow (sombra que sigue la forma) */</span>
+.icon {
+    filter: drop-shadow(2px 2px 4px rgba(0,0,0,0.3));
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Ejemplo Práctico Completo</h2>
+                <p>
+                    Combinando múltiples funciones modernas en un componente real.
+                </p>
+
+                <div class="modern-card">
+                    <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='800' height='450'><defs><linearGradient id='grad' x1='0%' y1='0%' x2='100%' y2='100%'><stop offset='0%' style='stop-color:%23667eea'/><stop offset='100%' style='stop-color:%23764ba2'/></linearGradient></defs><rect fill='url(%23grad)' width='800' height='450'/></svg>" alt="Demo">
+                    <h3 style="margin: 16px 0 8px;">Card Moderna</h3>
+                    <p>Este componente usa:</p>
+                    <ul style="margin-left: 20px; line-height: 1.8;">
+                        <li>clamp() para ancho responsive</li>
+                        <li>aspect-ratio para la imagen</li>
+                        <li>object-fit para ajustar la imagen</li>
+                    </ul>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Card con funciones modernas */</span>
+.modern-card {
+    <span class="code-comment">/* Ancho fluido con límites */</span>
+    width: clamp(300px, 80%, 600px);
+    margin: 0 auto;
+
+    <span class="code-comment">/* Espaciado responsive */</span>
+    padding: clamp(1rem, 3vw, 2rem);
+
+    background-color: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+.modern-card img {
+    width: 100%;
+
+    <span class="code-comment">/* Mantener proporción 16:9 */</span>
+    aspect-ratio: 16 / 9;
+
+    <span class="code-comment">/* Ajustar la imagen al contenedor */</span>
+    object-fit: cover;
+
+    border-radius: 8px;
+}
+
+.modern-card h3 {
+    <span class="code-comment">/* Tipografía fluida */</span>
+    font-size: clamp(1.25rem, 4vw, 1.75rem);
+
+    <span class="code-comment">/* Espaciado calculado */</span>
+    margin: calc(1rem + 0.5vw) 0 0.5rem;
+}
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Mejores Prácticas</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Usa clamp() para tipografía y espaciado fluidos sin media queries</li>
+                    <li>✓ calc() es perfecto para layouts que mezclan unidades fijas y relativas</li>
+                    <li>✓ min() para establecer máximos, max() para establecer mínimos</li>
+                    <li>✓ aspect-ratio simplifica el mantenimiento de proporciones</li>
+                    <li>✓ object-fit: cover para imágenes de tamaño uniforme en galerías</li>
+                    <li>✓ backdrop-filter con moderación (costo de rendimiento)</li>
+                    <li>✓ Combina funciones para crear componentes verdaderamente responsive</li>
+                    <li>✓ Verifica soporte de navegadores para funciones muy nuevas</li>
+                </ul>
+            </div>
+
+            <section class="section">
+                <h2>Soporte de Navegadores</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Función</th>
+                            <th>Soporte</th>
+                            <th>Notas</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>calc()</strong></td>
+                            <td>Excelente (IE9+)</td>
+                            <td>Muy maduro, úsalo sin preocupación</td>
+                        </tr>
+                        <tr>
+                            <td><strong>clamp()</strong></td>
+                            <td>Muy bueno (2020+)</td>
+                            <td>No funciona en IE, bien en otros</td>
+                        </tr>
+                        <tr>
+                            <td><strong>min() / max()</strong></td>
+                            <td>Muy bueno (2020+)</td>
+                            <td>Similar a clamp()</td>
+                        </tr>
+                        <tr>
+                            <td><strong>aspect-ratio</strong></td>
+                            <td>Bueno (2021+)</td>
+                            <td>Usa fallback para navegadores antiguos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>object-fit</strong></td>
+                            <td>Excelente (2015+)</td>
+                            <td>No en IE, bien en navegadores modernos</td>
+                        </tr>
+                        <tr>
+                            <td><strong>backdrop-filter</strong></td>
+                            <td>Bueno (con prefijo)</td>
+                            <td>Requiere -webkit- en Safari</td>
+                        </tr>
+                        <tr>
+                            <td><strong>filter</strong></td>
+                            <td>Excelente (2013+)</td>
+                            <td>Amplio soporte</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info">
+                    <strong>Recomendación:</strong> Verifica siempre en <a href="https://caniuse.com" target="_blank">caniuse.com</a>
+                    antes de usar funciones nuevas en producción.
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de Funciones Modernas CSS - STW 2026
+    </footer>
+</body>
+</html>

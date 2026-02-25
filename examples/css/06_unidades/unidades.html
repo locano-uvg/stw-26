@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Unidades CSS - Absolutas y Relativas</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+            font-size: 16px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xxl);
+            margin-bottom: 8px;
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: 8px;
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 8px 0;
+        }
+
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: 8px var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        /* Demostraciones */
+        .demo-box {
+            background-color: white;
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            border-radius: var(--border-radius-md);
+            border: 2px dashed #ccc;
+        }
+
+        .unit-demo {
+            background-color: var(--primary-color);
+            color: white;
+            padding: var(--spacing-md);
+            margin: 8px 0;
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .px-demo { width: 200px; }
+        .percent-demo { width: 50%; }
+        .em-demo { font-size: 2em; }
+        .rem-demo { font-size: 2rem; }
+        .vw-demo { width: 50vw; max-width: 100%; }
+        .vh-demo { height: 20vh; background-color: var(--secondary-color); }
+
+        .responsive-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .comparison-card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            box-shadow: var(--shadow-md);
+        }
+
+        .comparison-card h4 {
+            color: var(--primary-color);
+            margin-bottom: var(--spacing-md);
+            font-size: var(--font-size-lg);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        /* Demostración em vs rem */
+        .em-container {
+            font-size: 20px;
+            background-color: #e8f5e9;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .em-child {
+            font-size: 1.5em;
+            background-color: var(--secondary-color);
+            color: white;
+            padding: var(--spacing-md);
+            margin: 8px 0;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .em-grandchild {
+            font-size: 1.5em;
+            background-color: var(--warning-color);
+            padding: 8px;
+            margin-top: 8px;
+        }
+
+        .rem-container {
+            font-size: 20px;
+            background-color: #fff3e0;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .rem-child {
+            font-size: 1.5rem;
+            background-color: var(--warning-color);
+            color: white;
+            padding: var(--spacing-md);
+            margin: 8px 0;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .rem-grandchild {
+            font-size: 1.5rem;
+            background-color: var(--danger-color);
+            padding: 8px;
+            margin-top: 8px;
+        }
+
+        .viewport-demo {
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-md) 0;
+            text-align: center;
+        }
+
+        .vw-box {
+            background-color: var(--primary-color);
+            color: white;
+            padding: var(--spacing-md);
+            margin: 8px auto;
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+        }
+
+        .box-10vw { width: 10vw; min-width: 60px; }
+        .box-25vw { width: 25vw; }
+        .box-50vw { width: 50vw; }
+        .box-75vw { width: 75vw; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Unidades CSS</h1>
+            <p>Absolutas, Relativas y Viewport Units</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>¿Qué son las Unidades CSS?</h2>
+                <p>
+                    Las unidades en CSS definen el tamaño y las dimensiones de los elementos. Existen dos categorías principales:
+                    <strong>unidades absolutas</strong> (tamaño fijo) y <strong>unidades relativas</strong> (se adaptan al contexto).
+                </p>
+
+                <div class="alert alert-info">
+                    <strong>Importante:</strong> Elegir la unidad correcta es fundamental para crear diseños responsive
+                    y accesibles.
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Tipo</th>
+                            <th>Unidad</th>
+                            <th>Descripción</th>
+                            <th>Uso común</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td rowspan="6"><strong>Absolutas</strong></td>
+                            <td><code>px</code></td>
+                            <td>Píxeles</td>
+                            <td>Bordes, sombras, elementos fijos</td>
+                        </tr>
+                        <tr>
+                            <td><code>cm</code></td>
+                            <td>Centímetros</td>
+                            <td>Impresión</td>
+                        </tr>
+                        <tr>
+                            <td><code>mm</code></td>
+                            <td>Milímetros</td>
+                            <td>Impresión</td>
+                        </tr>
+                        <tr>
+                            <td><code>in</code></td>
+                            <td>Pulgadas (1in = 96px)</td>
+                            <td>Impresión</td>
+                        </tr>
+                        <tr>
+                            <td><code>pt</code></td>
+                            <td>Puntos (1pt = 1/72in)</td>
+                            <td>Impresión, tipografía</td>
+                        </tr>
+                        <tr>
+                            <td><code>pc</code></td>
+                            <td>Picas (1pc = 12pt)</td>
+                            <td>Impresión</td>
+                        </tr>
+                        <tr>
+                            <td rowspan="7"><strong>Relativas</strong></td>
+                            <td><code>%</code></td>
+                            <td>Porcentaje del padre</td>
+                            <td>Layouts, width responsive</td>
+                        </tr>
+                        <tr>
+                            <td><code>em</code></td>
+                            <td>Relativo al font-size del elemento</td>
+                            <td>Padding, margin, font-size anidado</td>
+                        </tr>
+                        <tr>
+                            <td><code>rem</code></td>
+                            <td>Relativo al font-size del root (:root)</td>
+                            <td>Font-size, spacing, diseño moderno</td>
+                        </tr>
+                        <tr>
+                            <td><code>vw</code></td>
+                            <td>1% del ancho del viewport</td>
+                            <td>Anchos responsive, tipografía fluida</td>
+                        </tr>
+                        <tr>
+                            <td><code>vh</code></td>
+                            <td>1% de la altura del viewport</td>
+                            <td>Secciones de pantalla completa</td>
+                        </tr>
+                        <tr>
+                            <td><code>vmin</code></td>
+                            <td>1% de la dimensión más pequeña del viewport</td>
+                            <td>Elementos cuadrados responsive</td>
+                        </tr>
+                        <tr>
+                            <td><code>vmax</code></td>
+                            <td>1% de la dimensión más grande del viewport</td>
+                            <td>Fondos, overlays</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>Unidades Absolutas</h2>
+
+                <h3>Píxeles (px)</h3>
+                <p>
+                    Los píxeles son la unidad absoluta más común en diseño web. Un píxel CSS no siempre equivale a
+                    un píxel físico (especialmente en pantallas retina).
+                </p>
+
+                <div class="demo-box">
+                    <div class="unit-demo px-demo">width: 200px</div>
+                </div>
+
+                <div class="code-box">
+.elemento {
+    width: 200px;        <span class="code-comment">/* Siempre 200 píxeles */</span>
+    font-size: 16px;
+    border: 1px solid black;
+    padding: 10px;
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Ventajas de px:</strong> Precisión exacta, consistencia, fácil de entender.
+                    Ideal para bordes, sombras y elementos que no deben escalar.
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Desventajas de px:</strong> No escala con la configuración de accesibilidad del navegador,
+                    puede causar problemas en diseños responsive.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Unidades Relativas</h2>
+
+                <h3>Porcentaje (%)</h3>
+                <p>
+                    El porcentaje es relativo al elemento padre. Muy útil para layouts responsive.
+                </p>
+
+                <div class="demo-box">
+                    <div class="unit-demo percent-demo">width: 50%</div>
+                </div>
+
+                <div class="code-box">
+.contenedor {
+    width: 600px;
+}
+
+.elemento {
+    width: 50%;          <span class="code-comment">/* 50% de 600px = 300px */</span>
+    padding: 5%;         <span class="code-comment">/* 5% del ancho del padre */</span>
+}
+                </div>
+
+                <h3>em - Relativo al font-size del elemento</h3>
+                <p>
+                    <code>em</code> es relativo al <code>font-size</code> del elemento actual. Se compone
+                    (multiplica) en elementos anidados.
+                </p>
+
+                <div class="em-container">
+                    <strong>Contenedor (font-size: 20px)</strong>
+                    <div class="em-child">
+                        Hijo (font-size: 1.5em = 30px)
+                        <div class="em-grandchild">
+                            Nieto (font-size: 1.5em = 45px)<br>
+                            <small>1.5 × 30px = 45px (se compone!)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-box">
+.contenedor {
+    font-size: 20px;
+}
+
+.hijo {
+    font-size: 1.5em;    <span class="code-comment">/* 1.5 × 20px = 30px */</span>
+}
+
+.nieto {
+    font-size: 1.5em;    <span class="code-comment">/* 1.5 × 30px = 45px (se multiplica!) */</span>
+}
+                </div>
+
+                <h3>rem - Relativo al font-size del root</h3>
+                <p>
+                    <code>rem</code> (root em) siempre es relativo al <code>font-size</code> del elemento
+                    <code>:root</code> (generalmente <code>&lt;html&gt;</code>). No se compone en elementos anidados.
+                </p>
+
+                <div class="rem-container">
+                    <strong>Contenedor (font-size: 20px)</strong>
+                    <div class="rem-child">
+                        Hijo (font-size: 1.5rem = 24px)
+                        <div class="rem-grandchild">
+                            Nieto (font-size: 1.5rem = 24px)<br>
+                            <small>Siempre relativo al root (16px × 1.5)</small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-box">
+:root {
+    font-size: 16px;     <span class="code-comment">/* Base del documento */</span>
+}
+
+.hijo {
+    font-size: 1.5rem;   <span class="code-comment">/* 1.5 × 16px = 24px */</span>
+}
+
+.nieto {
+    font-size: 1.5rem;   <span class="code-comment">/* También 1.5 × 16px = 24px */</span>
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Mejor práctica moderna:</strong> Usa <code>rem</code> para tamaños de fuente y spacing.
+                    Es más predecible que <code>em</code> y respeta la configuración de accesibilidad del usuario.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Viewport Units</h2>
+                <p>
+                    Las unidades de viewport son relativas al tamaño de la ventana del navegador. Perfectas para
+                    diseños responsive y layouts de pantalla completa.
+                </p>
+
+                <h3>vw - Viewport Width</h3>
+                <p><code>1vw</code> = 1% del ancho del viewport</p>
+
+                <div class="viewport-demo">
+                    <div class="vw-box box-10vw">10vw</div>
+                    <div class="vw-box box-25vw">25vw</div>
+                    <div class="vw-box box-50vw">50vw</div>
+                    <div class="vw-box box-75vw">75vw</div>
+                    <p style="margin-top: var(--spacing-md); font-size: var(--font-size-sm); color: #666;">
+                        Redimensiona la ventana del navegador para ver cómo cambian los anchos
+                    </p>
+                </div>
+
+                <div class="code-box">
+.hero-section {
+    width: 100vw;        <span class="code-comment">/* Ancho completo de la ventana */</span>
+    height: 100vh;       <span class="code-comment">/* Alto completo de la ventana */</span>
+}
+
+.half-screen {
+    width: 50vw;         <span class="code-comment">/* Mitad del ancho */</span>
+}
+
+<span class="code-comment">/* Tipografía fluida con vw */</span>
+h1 {
+    font-size: 5vw;      <span class="code-comment">/* Se escala con el viewport */</span>
+}
+                </div>
+
+                <h3>vh - Viewport Height</h3>
+                <div class="demo-box">
+                    <div class="vh-demo">
+                        <p style="line-height: 20vh; margin: 0;">height: 20vh</p>
+                    </div>
+                </div>
+
+                <h3>vmin y vmax</h3>
+                <div class="code-box">
+<span class="code-comment">/* vmin: usa el valor más pequeño entre vw y vh */</span>
+.square {
+    width: 50vmin;
+    height: 50vmin;      <span class="code-comment">/* Siempre cuadrado */</span>
+}
+
+<span class="code-comment">/* vmax: usa el valor más grande entre vw y vh */</span>
+.full-coverage {
+    width: 100vmax;
+    height: 100vmax;     <span class="code-comment">/* Cubre todo el viewport */</span>
+}
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Cuidado con vw:</strong> En móviles, <code>100vw</code> puede causar scroll horizontal
+                    si hay scrollbar vertical. Usa con precaución o combina con <code>max-width: 100%</code>.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Comparación: ¿Cuándo usar cada unidad?</h2>
+
+                <div class="responsive-grid">
+                    <div class="comparison-card">
+                        <h4>px - Píxeles</h4>
+                        <p><strong>Usar para:</strong></p>
+                        <ul>
+                            <li>Bordes (1px, 2px)</li>
+                            <li>Sombras</li>
+                            <li>Elementos de UI pequeños</li>
+                            <li>Cuando necesitas precisión exacta</li>
+                        </ul>
+                        <p><strong>Evitar para:</strong> Font-size principal</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>% - Porcentaje</h4>
+                        <p><strong>Usar para:</strong></p>
+                        <ul>
+                            <li>Layouts de columnas</li>
+                            <li>Anchos responsive</li>
+                            <li>Sistemas de grid</li>
+                            <li>Elementos relativos al padre</li>
+                        </ul>
+                        <p><strong>Ejemplo:</strong> width: 50%</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>rem - Root EM</h4>
+                        <p><strong>Usar para:</strong></p>
+                        <ul>
+                            <li>Font-size (recomendado)</li>
+                            <li>Padding y margin</li>
+                            <li>Spacing consistente</li>
+                            <li>Accesibilidad</li>
+                        </ul>
+                        <p><strong>Ventaja:</strong> Predecible, no se compone</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>em - Relativo</h4>
+                        <p><strong>Usar para:</strong></p>
+                        <ul>
+                            <li>Padding/margin en botones</li>
+                            <li>Media queries</li>
+                            <li>Componentes que escalan juntos</li>
+                        </ul>
+                        <p><strong>Cuidado:</strong> Se compone en anidados</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>vw/vh - Viewport</h4>
+                        <p><strong>Usar para:</strong></p>
+                        <ul>
+                            <li>Hero sections (100vh)</li>
+                            <li>Tipografía fluida</li>
+                            <li>Layouts de pantalla completa</li>
+                            <li>Elementos que se adaptan al viewport</li>
+                        </ul>
+                        <p><strong>Combinar:</strong> Con clamp() para límites</p>
+                    </div>
+
+                    <div class="comparison-card">
+                        <h4>cm/mm/in - Físicas</h4>
+                        <p><strong>Usar para:</strong></p>
+                        <ul>
+                            <li>Hojas de estilo de impresión</li>
+                            <li>Documentos físicos</li>
+                            <li>PDFs</li>
+                        </ul>
+                        <p><strong>Evitar:</strong> Diseño web regular</p>
+                    </div>
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Mejores Prácticas 2026</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Usa <code>rem</code> para font-size y spacing (accesible y predecible)</li>
+                    <li>✓ Usa <code>%</code> para anchos de columnas y layouts responsivos</li>
+                    <li>✓ Usa <code>px</code> para bordes, sombras y detalles finos</li>
+                    <li>✓ Usa <code>vw/vh</code> para secciones de pantalla completa</li>
+                    <li>✓ Combina <code>clamp()</code> con viewport units para tipografía fluida</li>
+                    <li>✓ Establece <code>font-size: 16px</code> en <code>:root</code> como base</li>
+                    <li>✓ Evita <code>em</code> para font-size (puede componerse inesperadamente)</li>
+                </ul>
+            </div>
+
+            <section class="section">
+                <h2>Ejemplo Práctico: Sistema de Spacing</h2>
+                <div class="code-box">
+<span class="code-comment">/* Sistema moderno con rem */</span>
+:root {
+    --spacing-xs: 0.25rem;   <span class="code-comment">/* 4px */</span>
+    --spacing-sm: 0.5rem;    <span class="code-comment">/* 8px */</span>
+    --spacing-md: 1rem;      <span class="code-comment">/* 16px */</span>
+    --spacing-lg: 1.5rem;    <span class="code-comment">/* 24px */</span>
+    --spacing-xl: 2rem;      <span class="code-comment">/* 32px */</span>
+}
+
+.card {
+    padding: var(--spacing-lg);
+    margin-bottom: var(--spacing-md);
+}
+
+<span class="code-comment">/* Tipografía fluida con clamp() y viewport units */</span>
+h1 {
+    font-size: clamp(2rem, 5vw, 4rem);
+    <span class="code-comment">/* Mínimo 2rem, ideal 5vw, máximo 4rem */</span>
+}
+
+<span class="code-comment">/* Layout responsive con % */</span>
+.column {
+    width: 50%;
+}
+
+@media (max-width: 768px) {
+    .column {
+        width: 100%;
+    }
+}
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de Unidades CSS - STW 2026
+    </footer>
+</body>
+</html>

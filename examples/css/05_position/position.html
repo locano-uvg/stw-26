@@ -1,0 +1,807 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Position Property - Posicionamiento en CSS</title>
+    <style>
+        /* ================================================
+           VARIABLES CSS
+           ================================================ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+
+        /* Code examples */
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        .alert-danger {
+            background-color: #f8d7da;
+            border-color: var(--danger-color);
+            color: #721c24;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        /* ================================================
+           ESTILOS ESPECÍFICOS PARA POSITION
+           ================================================ */
+
+        .demo-container {
+            background-color: white;
+            border: 2px dashed #ccc;
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            border-radius: var(--border-radius-md);
+            min-height: 300px;
+            position: relative;
+        }
+
+        .demo-box {
+            background-color: var(--primary-color);
+            color: white;
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            font-weight: bold;
+            text-align: center;
+            width: 150px;
+        }
+
+        /* Position: static */
+        .pos-static {
+            position: static;
+            background-color: #95a5a6;
+        }
+
+        /* Position: relative */
+        .pos-relative {
+            position: relative;
+            top: 20px;
+            left: 30px;
+            background-color: var(--secondary-color);
+        }
+
+        /* Position: absolute */
+        .pos-absolute {
+            position: absolute;
+            top: 50px;
+            right: 20px;
+            background-color: var(--warning-color);
+        }
+
+        /* Position: fixed */
+        .pos-fixed {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background-color: var(--danger-color);
+            z-index: 1000;
+            box-shadow: var(--shadow-lg);
+        }
+
+        /* Position: sticky */
+        .pos-sticky {
+            position: sticky;
+            top: 0;
+            background-color: #9b59b6;
+            z-index: 100;
+            box-shadow: var(--shadow-md);
+        }
+
+        /* Ejemplo de z-index */
+        .z-index-demo {
+            position: relative;
+            height: 200px;
+            margin: var(--spacing-md) 0;
+        }
+
+        .box-layer {
+            position: absolute;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            color: white;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .layer-1 {
+            background-color: var(--danger-color);
+            top: 0;
+            left: 0;
+            z-index: 1;
+        }
+
+        .layer-2 {
+            background-color: var(--warning-color);
+            top: 30px;
+            left: 30px;
+            z-index: 2;
+        }
+
+        .layer-3 {
+            background-color: var(--primary-color);
+            top: 60px;
+            left: 60px;
+            z-index: 3;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        /* Ejemplo sticky header */
+        .sticky-header-demo {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+            margin: var(--spacing-md) 0;
+            max-height: 400px;
+            overflow-y: scroll;
+            border: 2px solid var(--light-color);
+        }
+
+        .sticky-nav {
+            position: sticky;
+            top: 0;
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            font-weight: bold;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .sticky-content {
+            padding: var(--spacing-md);
+            background-color: white;
+        }
+
+        .content-block {
+            margin-bottom: var(--spacing-md);
+            padding: var(--spacing-md);
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-sm);
+        }
+
+        /* Ejemplo de tooltip */
+        .tooltip-container {
+            display: inline-block;
+            position: relative;
+            margin: var(--spacing-lg);
+        }
+
+        .tooltip-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+        }
+
+        .tooltip-text {
+            visibility: hidden;
+            position: absolute;
+            bottom: 125%;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            white-space: nowrap;
+            font-size: var(--font-size-sm);
+            z-index: 1000;
+        }
+
+        .tooltip-text::after {
+            content: "";
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            margin-left: -5px;
+            border-width: 5px;
+            border-style: solid;
+            border-color: var(--dark-color) transparent transparent transparent;
+        }
+
+        .tooltip-container:hover .tooltip-text {
+            visibility: visible;
+        }
+
+        /* Ejemplo de modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 999;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            position: relative;
+            background-color: white;
+            padding: var(--spacing-xl);
+            border-radius: var(--border-radius-lg);
+            max-width: 500px;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            font-size: 28px;
+            font-weight: bold;
+            color: #aaa;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .modal-close:hover {
+            color: #000;
+        }
+
+        .open-modal-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: var(--spacing-md) var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            cursor: pointer;
+            font-size: var(--font-size-base);
+            transition: all var(--transition-base);
+        }
+
+        .open-modal-btn:hover {
+            background-color: var(--dark-color);
+        }
+
+        .spacer {
+            height: 100px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Position Property</h1>
+            <p>Controlando el posicionamiento de elementos</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>¿Qué es la propiedad Position?</h2>
+                <p>
+                    La propiedad <code>position</code> especifica el tipo de posicionamiento de un elemento.
+                    Determina cómo se ubica en el documento y cómo interactúa con otros elementos.
+                    Las propiedades <code>top</code>, <code>right</code>, <code>bottom</code> y <code>left</code>
+                    solo funcionan cuando position está definido.
+                </p>
+
+                <div class="alert alert-info">
+                    <strong>Importante:</strong> El valor por defecto es <code>static</code>, donde los elementos
+                    siguen el flujo normal del documento.
+                </div>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Valor</th>
+                            <th>Descripción</th>
+                            <th>Comportamiento</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>static</strong></td>
+                            <td>Posicionamiento normal</td>
+                            <td>Flujo normal, ignora top/right/bottom/left</td>
+                        </tr>
+                        <tr>
+                            <td><strong>relative</strong></td>
+                            <td>Relativo a su posición original</td>
+                            <td>Offset desde su posición normal, mantiene espacio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>absolute</strong></td>
+                            <td>Relativo al ancestro posicionado</td>
+                            <td>Removido del flujo, no ocupa espacio</td>
+                        </tr>
+                        <tr>
+                            <td><strong>fixed</strong></td>
+                            <td>Relativo al viewport</td>
+                            <td>Permanece fijo al hacer scroll</td>
+                        </tr>
+                        <tr>
+                            <td><strong>sticky</strong></td>
+                            <td>Híbrido relative/fixed</td>
+                            <td>Relativo hasta cierto punto, luego fijo</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>position: static (por defecto)</h2>
+                <p>
+                    <code>position: static</code> es el valor por defecto. Los elementos se posicionan según
+                    el flujo normal del documento. Las propiedades top, right, bottom y left no tienen efecto.
+                </p>
+
+                <div class="demo-container">
+                    <div class="demo-box pos-static">Static Box</div>
+                    <p style="margin-top: 20px;">El elemento static sigue el flujo normal del documento.</p>
+                </div>
+
+                <div class="code-box">
+.elemento {
+    position: static;  <span class="code-comment">/* Valor por defecto */</span>
+    top: 20px;         <span class="code-comment">/* NO tiene efecto */</span>
+    left: 30px;        <span class="code-comment">/* NO tiene efecto */</span>
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>position: relative</h2>
+                <p>
+                    <code>position: relative</code> posiciona el elemento <strong>relativo a su posición original</strong>
+                    en el flujo del documento. El espacio original se mantiene reservado.
+                </p>
+
+                <div class="demo-container">
+                    <div class="demo-box" style="background-color: #95a5a6;">Box Original</div>
+                    <div class="demo-box pos-relative">Relative Box<br>(top: 20px, left: 30px)</div>
+                    <div class="demo-box" style="background-color: #95a5a6;">Box Siguiente</div>
+                </div>
+
+                <div class="code-box">
+.elemento {
+    position: relative;
+    top: 20px;      <span class="code-comment">/* Desplaza 20px hacia abajo */</span>
+    left: 30px;     <span class="code-comment">/* Desplaza 30px hacia la derecha */</span>
+}
+
+<span class="code-comment">/* El espacio original se mantiene vacío
+   Otros elementos no ocupan ese espacio */</span>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Uso común:</strong> Ajustes sutiles de posición, contexto de posicionamiento
+                    para elementos absolute hijos, animaciones.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>position: absolute</h2>
+                <p>
+                    <code>position: absolute</code> posiciona el elemento <strong>relativo a su ancestro posicionado
+                    más cercano</strong> (cualquier ancestro con position diferente a static). Si no existe, se posiciona
+                    relativo al documento. El elemento se <strong>remueve del flujo normal</strong>.
+                </p>
+
+                <div class="demo-container">
+                    <div class="demo-box" style="background-color: #95a5a6;">Box Normal</div>
+                    <div class="demo-box pos-absolute">Absolute Box<br>(top: 50px, right: 20px)</div>
+                    <div class="demo-box" style="background-color: #95a5a6;">Box Siguiente</div>
+                    <p style="margin-top: 60px; font-size: 0.9rem; color: #666;">
+                        Nota: El absolute box se posiciona relativo al contenedor con borde punteado (position: relative)
+                    </p>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Contenedor padre */</span>
+.contenedor {
+    position: relative;  <span class="code-comment">/* Crea contexto de posicionamiento */</span>
+}
+
+<span class="code-comment">/* Elemento hijo */</span>
+.elemento {
+    position: absolute;
+    top: 50px;      <span class="code-comment">/* 50px desde el top del contenedor */</span>
+    right: 20px;    <span class="code-comment">/* 20px desde el right del contenedor */</span>
+}
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Importante:</strong> Los elementos absolute se remueven del flujo, no ocupan espacio,
+                    y otros elementos actúan como si no existieran.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>position: fixed</h2>
+                <p>
+                    <code>position: fixed</code> posiciona el elemento <strong>relativo al viewport</strong> (ventana del navegador).
+                    Permanece en la misma posición incluso al hacer scroll. Se remueve del flujo normal.
+                </p>
+
+                <div class="alert alert-info">
+                    <strong>Ejemplo en vivo:</strong> Observa la caja roja en la esquina inferior derecha de tu pantalla.
+                    Es un elemento fixed que permanece visible al hacer scroll.
+                </div>
+
+                <div class="demo-box pos-fixed">
+                    Fixed Box<br>Scroll para verlo
+                </div>
+
+                <div class="code-box">
+.elemento {
+    position: fixed;
+    bottom: 20px;    <span class="code-comment">/* 20px desde el bottom del viewport */</span>
+    right: 20px;     <span class="code-comment">/* 20px desde el right del viewport */</span>
+    z-index: 1000;   <span class="code-comment">/* Encima de otros elementos */</span>
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Uso común:</strong> Headers fijos, botones de "volver arriba", chat widgets,
+                    notificaciones, menús de navegación fijos.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>position: sticky</h2>
+                <p>
+                    <code>position: sticky</code> es un híbrido entre relative y fixed. Se comporta como
+                    <code>relative</code> hasta que alcanza un umbral de scroll, entonces se comporta como
+                    <code>fixed</code>.
+                </p>
+
+                <h3>Demostración interactiva - Scroll dentro del contenedor:</h3>
+                <div class="sticky-header-demo">
+                    <div class="sticky-nav">
+                        ⬇ Sticky Header - Scroll hacia abajo ⬇
+                    </div>
+                    <div class="sticky-content">
+                        <div class="content-block">
+                            <h4>Sección 1</h4>
+                            <p>Este es el contenido de la sección 1. El header arriba es sticky y se quedará fijo cuando hagas scroll.</p>
+                        </div>
+                        <div class="content-block">
+                            <h4>Sección 2</h4>
+                            <p>Contenido de la sección 2. Continúa haciendo scroll para ver el efecto sticky en acción.</p>
+                        </div>
+                        <div class="content-block">
+                            <h4>Sección 3</h4>
+                            <p>Más contenido aquí. El header permanece visible en la parte superior del contenedor.</p>
+                        </div>
+                        <div class="content-block">
+                            <h4>Sección 4</h4>
+                            <p>Contenido adicional para demostrar el scroll.</p>
+                        </div>
+                        <div class="content-block">
+                            <h4>Sección 5</h4>
+                            <p>Última sección de contenido.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="code-box">
+.sticky-element {
+    position: sticky;
+    top: 0;          <span class="code-comment">/* Se fija cuando llega a top: 0 */</span>
+    z-index: 10;     <span class="code-comment">/* Encima del contenido */</span>
+}
+
+<span class="code-comment">/* Importante: El elemento padre debe tener altura/overflow definido
+   para que sticky funcione correctamente */</span>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Uso común:</strong> Headers de tabla, navegación de secciones, sidebars que
+                    siguen el scroll hasta cierto punto.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>z-index y Stacking Context</h2>
+                <p>
+                    La propiedad <code>z-index</code> controla el orden de apilamiento de elementos posicionados
+                    (non-static). Valores mayores aparecen encima de valores menores.
+                </p>
+
+                <h3>Demostración visual:</h3>
+                <div class="z-index-demo">
+                    <div class="box-layer layer-1">z-index: 1</div>
+                    <div class="box-layer layer-2">z-index: 2</div>
+                    <div class="box-layer layer-3">z-index: 3</div>
+                </div>
+
+                <div class="code-box">
+.capa-1 {
+    position: absolute;
+    z-index: 1;      <span class="code-comment">/* Capa más baja */</span>
+}
+
+.capa-2 {
+    position: absolute;
+    z-index: 2;      <span class="code-comment">/* Capa media */</span>
+}
+
+.capa-3 {
+    position: absolute;
+    z-index: 3;      <span class="code-comment">/* Capa más alta */</span>
+}
+
+<span class="code-comment">/* z-index solo funciona con elementos posicionados
+   (position: relative, absolute, fixed, sticky) */</span>
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Nota:</strong> z-index solo funciona en elementos con position diferente a static.
+                    Los valores pueden ser negativos.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Ejemplos Prácticos</h2>
+
+                <h3>1. Tooltip con position: absolute</h3>
+                <div style="text-align: center; padding: var(--spacing-xl); background-color: white; border-radius: var(--border-radius-md);">
+                    <div class="tooltip-container">
+                        <button class="tooltip-btn">Hover para Tooltip</button>
+                        <span class="tooltip-text">¡Soy un tooltip posicionado!</span>
+                    </div>
+                </div>
+
+                <div class="code-box">
+.tooltip-container {
+    position: relative;  <span class="code-comment">/* Contexto para el tooltip */</span>
+}
+
+.tooltip-text {
+    position: absolute;
+    bottom: 125%;        <span class="code-comment">/* Arriba del botón */</span>
+    left: 50%;
+    transform: translateX(-50%); <span class="code-comment">/* Centrar */</span>
+    visibility: hidden;
+}
+
+.tooltip-container:hover .tooltip-text {
+    visibility: visible;
+}
+                </div>
+
+                <h3>2. Modal con position: fixed</h3>
+                <div style="text-align: center; padding: var(--spacing-lg);">
+                    <button class="open-modal-btn" onclick="openModal()">Abrir Modal</button>
+                </div>
+
+                <div class="code-box">
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 999;    <span class="code-comment">/* Encima de todo */</span>
+}
+
+.modal-content {
+    position: relative;
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+}
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Mejores Prácticas</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Usa <code>position: relative</code> en el contenedor padre de elementos absolute</li>
+                    <li>✓ Usa <code>position: fixed</code> para elementos que deben permanecer visibles al scroll</li>
+                    <li>✓ Usa <code>position: sticky</code> para headers y navegación contextual</li>
+                    <li>✓ Usa <code>z-index</code> con moderación, valores entre 0-1000 suelen ser suficientes</li>
+                    <li>✓ Recuerda que absolute y fixed remueven el elemento del flujo normal</li>
+                    <li>✓ Combina position con transform para centrado perfecto</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal-overlay">
+        <div class="modal-content">
+            <button class="modal-close" onclick="closeModal()">&times;</button>
+            <h2 style="color: var(--primary-color); margin-bottom: 1rem;">Modal con position: fixed</h2>
+            <p>Este modal usa <code>position: fixed</code> para centrarse en la pantalla y permanecer encima de todo el contenido.</p>
+            <p style="margin-top: 1rem;">El overlay oscuro también usa <code>position: fixed</code> para cubrir toda la pantalla.</p>
+            <button class="open-modal-btn" onclick="closeModal()" style="margin-top: 1.5rem;">Cerrar</button>
+        </div>
+    </div>
+
+    <script>
+        function openModal() {
+            document.getElementById('modal').style.display = 'flex';
+        }
+
+        function closeModal() {
+            document.getElementById('modal').style.display = 'none';
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('modal');
+            if (event.target === modal) {
+                closeModal();
+            }
+        }
+    </script>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de Position Property - STW 2026
+    </footer>
+</body>
+</html>

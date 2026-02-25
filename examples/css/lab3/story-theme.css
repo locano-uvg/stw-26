@@ -1,0 +1,28 @@
+:root {
+  /* Paleta de colores semántica */
+  --color-primary: #...;
+  --color-secondary: #...;
+  --color-accent: #...;
+
+  /* Estados de la narrativa */
+  --bg-inicio: ...;
+  --bg-decision: ...;
+  --bg-final-positivo: ...;
+  --bg-final-negativo: ...;
+
+  /* Tipografía */
+  --font-heading: "...", serif;
+  --font-body: "...", sans-serif;
+  --font-interactive: "...", system-ui;
+
+  /* Espaciado consistente */
+  --spacing-xs: 0.5rem;
+  --spacing-sm: 1rem;
+  --spacing-md: 2rem;
+  --spacing-lg: 3rem;
+
+  /* Animaciones */
+  --transition-fast: 200ms ease-in-out;
+  --transition-normal: 400ms ease-in-out;
+  --transition-slow: 600ms ease-in-out;
+}

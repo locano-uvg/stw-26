@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Box Model - Modelo de Caja CSS</title>
+    <style>
+        /* ================================================
+           VARIABLES CSS
+           ================================================ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, var(--primary-color), var(--dark-color));
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+
+        /* Code examples */
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        /* ================================================
+           ESTILOS ESPECÍFICOS PARA BOX MODEL
+           ================================================ */
+
+        .box-demo {
+            background-color: white;
+            padding: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+            border-radius: var(--border-radius-md);
+        }
+
+        /* Demostración visual del Box Model */
+        .box-visual {
+            max-width: 400px;
+            margin: var(--spacing-lg) auto;
+            text-align: center;
+        }
+
+        .box-layer {
+            padding: 20px;
+            border: 3px solid;
+            margin: 20px;
+            position: relative;
+        }
+
+        .margin-layer {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+        }
+
+        .border-layer {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            margin: 0;
+        }
+
+        .padding-layer {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            margin: 0;
+        }
+
+        .content-layer {
+            background-color: var(--danger-color);
+            color: white;
+            padding: 30px;
+            margin: 0;
+            border: none;
+            font-weight: bold;
+        }
+
+        /* Comparación box-sizing */
+        .sizing-comparison {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-lg);
+            margin: var(--spacing-md) 0;
+        }
+
+        .box-example {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            text-align: center;
+        }
+
+        .demo-box-content {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 20px;
+            border: 10px solid var(--secondary-color);
+            margin: 10px;
+            font-weight: bold;
+        }
+
+        .content-box-demo {
+            box-sizing: content-box;
+            width: 200px;
+        }
+
+        .border-box-demo {
+            box-sizing: border-box;
+            width: 200px;
+        }
+
+        /* Ejemplos prácticos */
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-md);
+            box-shadow: var(--shadow-sm);
+            transition: all var(--transition-base);
+        }
+
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-4px);
+        }
+
+        .card-title {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .examples-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        /* Diagrama del box model */
+        .box-diagram {
+            max-width: 600px;
+            margin: var(--spacing-lg) auto;
+            background-color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-md);
+        }
+
+        .diagram-margin {
+            background-color: #fff3cd;
+            padding: 30px;
+            border: 2px dashed var(--warning-color);
+            text-align: center;
+        }
+
+        .diagram-border {
+            background-color: #d4edda;
+            padding: 30px;
+            border: 5px solid var(--secondary-color);
+        }
+
+        .diagram-padding {
+            background-color: #d1ecf1;
+            padding: 30px;
+            border: 2px dashed var(--primary-color);
+        }
+
+        .diagram-content {
+            background-color: var(--primary-color);
+            color: white;
+            padding: 40px;
+            font-weight: bold;
+            text-align: center;
+            border-radius: var(--border-radius-sm);
+        }
+
+        .label {
+            font-size: var(--font-size-sm);
+            font-weight: bold;
+            text-transform: uppercase;
+            margin-bottom: var(--spacing-xs);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Box Model - Modelo de Caja</h1>
+            <p>Entendiendo la estructura fundamental de CSS</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>¿Qué es el Box Model?</h2>
+                <p>
+                    El Box Model (Modelo de Caja) es un concepto fundamental en CSS que describe cómo se calculan
+                    las dimensiones y el espacio de cada elemento HTML. Cada elemento se representa como una caja
+                    rectangular compuesta por cuatro áreas: <strong>content</strong>, <strong>padding</strong>,
+                    <strong>border</strong> y <strong>margin</strong>.
+                </p>
+
+                <div class="box-diagram">
+                    <div class="diagram-margin">
+                        <div class="label">Margin (Margen externo)</div>
+                        <div class="diagram-border">
+                            <div class="label">Border (Borde)</div>
+                            <div class="diagram-padding">
+                                <div class="label">Padding (Relleno interno)</div>
+                                <div class="diagram-content">
+                                    CONTENT<br>(Contenido)
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>Importante:</strong> Comprender el Box Model es esencial para controlar el diseño
+                    y el espaciado de los elementos en una página web.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Componentes del Box Model</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Componente</th>
+                            <th>Descripción</th>
+                            <th>Propiedad CSS</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Content</strong></td>
+                            <td>El contenido real del elemento (texto, imágenes, etc.)</td>
+                            <td>width, height</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Padding</strong></td>
+                            <td>Espacio transparente entre el contenido y el borde</td>
+                            <td>padding, padding-top, padding-right, padding-bottom, padding-left</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Border</strong></td>
+                            <td>Borde que rodea el padding y el contenido</td>
+                            <td>border, border-width, border-style, border-color</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Margin</strong></td>
+                            <td>Espacio transparente fuera del borde, separa de otros elementos</td>
+                            <td>margin, margin-top, margin-right, margin-bottom, margin-left</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-box">
+<span class="code-comment">/* Ejemplo de Box Model */</span>
+.elemento {
+    <span class="code-comment">/* Contenido */</span>
+    width: 300px;
+    height: 200px;
+
+    <span class="code-comment">/* Padding - Espacio interno */</span>
+    padding: 20px;
+
+    <span class="code-comment">/* Border - Borde */</span>
+    border: 5px solid #3498db;
+
+    <span class="code-comment">/* Margin - Espacio externo */</span>
+    margin: 15px;
+}
+
+<span class="code-comment">/* Tamaño total del elemento:
+   Ancho total = width + padding-left + padding-right + border-left + border-right
+   Ancho total = 300px + 20px + 20px + 5px + 5px = 350px
+
+   Alto total = height + padding-top + padding-bottom + border-top + border-bottom
+   Alto total = 200px + 20px + 20px + 5px + 5px = 250px
+*/</span>
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Box-Sizing: content-box vs border-box</h2>
+                <p>
+                    La propiedad <code>box-sizing</code> controla cómo se calculan las dimensiones totales de un elemento.
+                </p>
+
+                <h3>content-box (por defecto)</h3>
+                <p>
+                    Con <code>box-sizing: content-box</code>, las propiedades <code>width</code> y <code>height</code>
+                    solo se aplican al contenido. El padding y border se suman al tamaño total.
+                </p>
+
+                <div class="code-box">
+.elemento {
+    box-sizing: content-box; <span class="code-comment">/* Valor por defecto */</span>
+    width: 200px;
+    padding: 20px;
+    border: 10px solid blue;
+
+    <span class="code-comment">/* Ancho total = 200px + 20px + 20px + 10px + 10px = 260px */</span>
+}
+                </div>
+
+                <h3>border-box (recomendado)</h3>
+                <p>
+                    Con <code>box-sizing: border-box</code>, las propiedades <code>width</code> y <code>height</code>
+                    incluyen el contenido, padding y border. Esto hace el cálculo más intuitivo.
+                </p>
+
+                <div class="code-box">
+.elemento {
+    box-sizing: border-box;
+    width: 200px;
+    padding: 20px;
+    border: 10px solid blue;
+
+    <span class="code-comment">/* Ancho total = 200px (incluye todo) */</span>
+    <span class="code-comment">/* Ancho del contenido = 200px - 20px - 20px - 10px - 10px = 140px */</span>
+}
+                </div>
+
+                <h3>Comparación Visual</h3>
+                <div class="sizing-comparison">
+                    <div class="box-example">
+                        <h4>content-box</h4>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">
+                            width: 200px<br>
+                            Tamaño real: 260px
+                        </p>
+                        <div class="demo-box-content content-box-demo">
+                            200px
+                        </div>
+                    </div>
+
+                    <div class="box-example">
+                        <h4>border-box</h4>
+                        <p style="font-size: 0.9rem; color: #666; margin-bottom: 10px;">
+                            width: 200px<br>
+                            Tamaño real: 200px
+                        </p>
+                        <div class="demo-box-content border-box-demo">
+                            200px
+                        </div>
+                    </div>
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Mejor Práctica:</strong> Se recomienda usar <code>box-sizing: border-box</code>
+                    para todos los elementos. Es más intuitivo y facilita el diseño responsive.
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Aplicar border-box globalmente (mejor práctica) */</span>
+* {
+    box-sizing: border-box;
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Propiedades de Spacing</h2>
+
+                <h3>Margin (Margen)</h3>
+                <p>
+                    El margin crea espacio <strong>fuera</strong> del elemento, separándolo de otros elementos.
+                    Los márgenes pueden colapsar (margin collapsing) entre elementos adyacentes.
+                </p>
+
+                <div class="code-box">
+<span class="code-comment">/* Margin individual */</span>
+.elemento {
+    margin-top: 10px;
+    margin-right: 20px;
+    margin-bottom: 10px;
+    margin-left: 20px;
+}
+
+<span class="code-comment">/* Margin shorthand (arriba, derecha, abajo, izquierda) */</span>
+.elemento {
+    margin: 10px 20px 10px 20px;
+}
+
+<span class="code-comment">/* Margin shorthand (vertical horizontal) */</span>
+.elemento {
+    margin: 10px 20px;
+}
+
+<span class="code-comment">/* Margin shorthand (todos los lados) */</span>
+.elemento {
+    margin: 15px;
+}
+
+<span class="code-comment">/* Centrar elemento horizontalmente */</span>
+.elemento {
+    margin: 0 auto;
+}
+
+<span class="code-comment">/* Margin negativo (permitido) */</span>
+.elemento {
+    margin-top: -10px;
+}
+                </div>
+
+                <h3>Padding (Relleno)</h3>
+                <p>
+                    El padding crea espacio <strong>dentro</strong> del elemento, entre el contenido y el borde.
+                    El padding siempre es positivo y hereda el color de fondo del elemento.
+                </p>
+
+                <div class="code-box">
+<span class="code-comment">/* Padding individual */</span>
+.elemento {
+    padding-top: 10px;
+    padding-right: 20px;
+    padding-bottom: 10px;
+    padding-left: 20px;
+}
+
+<span class="code-comment">/* Padding shorthand (arriba, derecha, abajo, izquierda) */</span>
+.elemento {
+    padding: 10px 20px 10px 20px;
+}
+
+<span class="code-comment">/* Padding shorthand (vertical horizontal) */</span>
+.elemento {
+    padding: 10px 20px;
+}
+
+<span class="code-comment">/* Padding shorthand (todos los lados) */</span>
+.elemento {
+    padding: 15px;
+}
+                </div>
+
+                <div class="alert alert-warning">
+                    <strong>Nota:</strong> A diferencia del margin, el padding NO puede tener valores negativos
+                    y NO colapsa entre elementos.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Ejemplos Prácticos</h2>
+
+                <div class="examples-grid">
+                    <div class="card">
+                        <h4 class="card-title">Card con Padding</h4>
+                        <p>Esta card usa padding: 24px para crear espacio interno entre el contenido y el borde.</p>
+                    </div>
+
+                    <div class="card">
+                        <h4 class="card-title">Card con Margin</h4>
+                        <p>El margin-bottom: 16px separa esta card de otros elementos.</p>
+                    </div>
+
+                    <div class="card">
+                        <h4 class="card-title">Card con Border</h4>
+                        <p>El border-radius y box-shadow crean un efecto visual profesional.</p>
+                    </div>
+                </div>
+
+                <div class="code-box">
+.card {
+    <span class="code-comment">/* Box model completo */</span>
+    padding: 24px;              <span class="code-comment">/* Espacio interno */</span>
+    margin-bottom: 16px;        <span class="code-comment">/* Separación entre cards */</span>
+    border-radius: 8px;         <span class="code-comment">/* Bordes redondeados */</span>
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1); <span class="code-comment">/* Sombra */</span>
+
+    <span class="code-comment">/* Mejor práctica */</span>
+    box-sizing: border-box;
+}
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Resumen de Mejores Prácticas</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Usa <code>box-sizing: border-box</code> globalmente</li>
+                    <li>✓ Usa margin para separar elementos entre sí</li>
+                    <li>✓ Usa padding para crear espacio interno en elementos</li>
+                    <li>✓ Inspecciona el box model con DevTools (F12) para debugging</li>
+                    <li>✓ Recuerda que margin puede colapsar, padding no</li>
+                    <li>✓ Usa margin: 0 auto para centrar elementos horizontalmente</li>
+                </ul>
+            </div>
+
+            <section class="section">
+                <h2>Inspección con DevTools</h2>
+                <p>
+                    Para visualizar el Box Model de cualquier elemento en el navegador:
+                </p>
+                <ol style="line-height: 1.8; margin-left: 20px;">
+                    <li>Presiona <strong>F12</strong> para abrir DevTools</li>
+                    <li>Selecciona la pestaña <strong>Elements</strong> (o Elementos)</li>
+                    <li>Haz clic en un elemento HTML</li>
+                    <li>Observa el diagrama del Box Model en la sección <strong>Computed</strong></li>
+                    <li>Verás una representación visual de margin (naranja), border (amarillo), padding (verde) y content (azul)</li>
+                </ol>
+
+                <div class="alert alert-info">
+                    <strong>Tip profesional:</strong> Usa DevTools para experimentar con los valores del Box Model
+                    en tiempo real y entender cómo afectan al layout.
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de Box Model - STW 2026
+    </footer>
+</body>
+</html>

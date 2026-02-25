@@ -1,0 +1,880 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Grid Layout</title>
+    <style>
+        /* ================================================
+           VARIABLES CSS
+           ================================================ */
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --danger-color: #e74c3c;
+            --warning-color: #f39c12;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+
+            --spacing-xs: 4px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+            --spacing-lg: 24px;
+            --spacing-xl: 32px;
+
+            --font-family-base: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            --font-family-code: 'Courier New', monospace;
+            --font-size-sm: 0.875rem;
+            --font-size-base: 1rem;
+            --font-size-lg: 1.25rem;
+            --font-size-xl: 1.5rem;
+            --font-size-xxl: 2rem;
+
+            --border-radius-sm: 4px;
+            --border-radius-md: 8px;
+            --border-radius-lg: 12px;
+
+            --shadow-sm: 0 2px 4px rgba(0, 0, 0, 0.1);
+            --shadow-md: 0 4px 8px rgba(0, 0, 0, 0.15);
+            --shadow-lg: 0 8px 16px rgba(0, 0, 0, 0.2);
+
+            --transition-base: 0.3s ease;
+        }
+
+        /* ================================================
+           ESTILOS GENERALES
+           ================================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: var(--font-family-base);
+            background-color: var(--light-color);
+            padding: var(--spacing-lg);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: white;
+            border-radius: var(--border-radius-lg);
+            box-shadow: var(--shadow-lg);
+            overflow: hidden;
+        }
+
+        header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: var(--spacing-xl) var(--spacing-lg);
+            text-align: center;
+        }
+
+        header h1 {
+            font-size: var(--font-size-xxl);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .content {
+            padding: var(--spacing-xl);
+        }
+
+        .section {
+            background-color: var(--light-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-lg);
+            margin-bottom: var(--spacing-lg);
+        }
+
+        .section h2 {
+            color: var(--primary-color);
+            font-size: var(--font-size-xl);
+            margin-bottom: var(--spacing-md);
+            border-bottom: 3px solid var(--primary-color);
+            padding-bottom: var(--spacing-sm);
+        }
+
+        .section h3 {
+            color: var(--dark-color);
+            font-size: var(--font-size-lg);
+            margin: var(--spacing-md) 0 var(--spacing-sm) 0;
+        }
+
+        /* Code examples */
+        .code-box {
+            background-color: #2d3748;
+            color: #68d391;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            font-family: var(--font-family-code);
+            overflow-x: auto;
+            margin: var(--spacing-md) 0;
+            font-size: var(--font-size-sm);
+        }
+
+        .code-comment {
+            color: #a0aec0;
+        }
+
+        /* Alert boxes */
+        .alert {
+            padding: var(--spacing-md);
+            border-radius: var(--border-radius-sm);
+            margin: var(--spacing-md) 0;
+            border-left: 4px solid;
+        }
+
+        .alert-info {
+            background-color: #d1ecf1;
+            border-color: var(--primary-color);
+            color: #0c5460;
+        }
+
+        .alert-success {
+            background-color: #d4edda;
+            border-color: var(--secondary-color);
+            color: #155724;
+        }
+
+        .alert-warning {
+            background-color: #fff3cd;
+            border-color: var(--warning-color);
+            color: #856404;
+        }
+
+        /* Tabla */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: var(--spacing-md) 0;
+            background-color: white;
+            border-radius: var(--border-radius-md);
+            overflow: hidden;
+        }
+
+        table th {
+            background-color: var(--dark-color);
+            color: white;
+            padding: var(--spacing-md);
+            text-align: left;
+        }
+
+        table td {
+            padding: var(--spacing-sm) var(--spacing-md);
+            border-bottom: 1px solid var(--light-color);
+        }
+
+        table tr:hover {
+            background-color: var(--light-color);
+        }
+
+        .highlight-box {
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            margin: var(--spacing-lg) 0;
+        }
+
+        /* ================================================
+           ESTILOS ESPECÍFICOS PARA GRID
+           ================================================ */
+
+        .grid-demo {
+            background-color: white;
+            border: 2px dashed var(--primary-color);
+            border-radius: var(--border-radius-md);
+            padding: var(--spacing-md);
+            margin: var(--spacing-md) 0;
+        }
+
+        .grid-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 80px;
+        }
+
+        /* Grid básico */
+        .grid-basic {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        /* Grid con diferentes columnas */
+        .grid-mixed {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: var(--spacing-md);
+        }
+
+        /* Grid con repeat */
+        .grid-repeat {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        /* Grid auto-fit */
+        .grid-auto-fit {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        /* Grid con áreas */
+        .grid-areas {
+            display: grid;
+            grid-template-columns: 1fr 2fr 1fr;
+            grid-template-rows: auto 1fr auto;
+            grid-template-areas:
+                "header header header"
+                "sidebar main aside"
+                "footer footer footer";
+            gap: var(--spacing-md);
+            min-height: 400px;
+        }
+
+        .grid-header {
+            grid-area: header;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+        }
+
+        .grid-sidebar {
+            grid-area: sidebar;
+            background: linear-gradient(135deg, #f093fb, #f5576c);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .grid-main {
+            grid-area: main;
+            background-color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            box-shadow: var(--shadow-sm);
+        }
+
+        .grid-aside {
+            grid-area: aside;
+            background: linear-gradient(135deg, #4facfe, #00f2fe);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+        }
+
+        .grid-footer {
+            grid-area: footer;
+            background: linear-gradient(135deg, #43e97b, #38f9d7);
+            color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-sm);
+            text-align: center;
+        }
+
+        /* Grid con span */
+        .grid-span {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: var(--spacing-md);
+        }
+
+        .span-2 {
+            grid-column: span 2;
+        }
+
+        .span-3 {
+            grid-column: span 3;
+        }
+
+        .span-4 {
+            grid-column: span 4;
+        }
+
+        /* Gallery Grid */
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: var(--spacing-sm);
+        }
+
+        .gallery-item {
+            aspect-ratio: 1;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: var(--border-radius-sm);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+
+        /* Dashboard Grid */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: var(--spacing-md);
+        }
+
+        .dashboard-card {
+            background-color: white;
+            padding: var(--spacing-lg);
+            border-radius: var(--border-radius-md);
+            box-shadow: var(--shadow-sm);
+            border-left: 4px solid;
+        }
+
+        .dashboard-card.primary { border-color: var(--primary-color); }
+        .dashboard-card.success { border-color: var(--secondary-color); }
+        .dashboard-card.danger { border-color: var(--danger-color); }
+        .dashboard-card.warning { border-color: var(--warning-color); }
+
+        .dashboard-card h4 {
+            color: var(--dark-color);
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .dashboard-card .value {
+            font-size: 2rem;
+            font-weight: bold;
+            margin: var(--spacing-sm) 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>CSS Grid Layout</h1>
+            <p>Sistema de layout bidimensional potente y flexible</p>
+        </header>
+
+        <div class="content">
+            <section class="section">
+                <h2>¿Qué es CSS Grid?</h2>
+                <p>
+                    CSS Grid Layout es un sistema de diseño bidimensional que permite crear layouts complejos
+                    organizando elementos en filas y columnas simultáneamente. Es ideal para diseños de página
+                    completa y componentes complejos.
+                </p>
+
+                <div class="alert alert-info">
+                    <strong>Grid vs Flexbox:</strong> Grid trabaja en dos dimensiones (filas Y columnas),
+                    mientras que Flexbox trabaja en una dimensión (fila O columna). Son complementarios,
+                    no excluyentes.
+                </div>
+
+                <h3>Propiedades Principales del Grid Container</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Propiedad</th>
+                            <th>Descripción</th>
+                            <th>Valores</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>display</strong></td>
+                            <td>Define un contenedor grid</td>
+                            <td>grid, inline-grid</td>
+                        </tr>
+                        <tr>
+                            <td><strong>grid-template-columns</strong></td>
+                            <td>Define las columnas</td>
+                            <td>px, fr, %, auto, repeat(), minmax()</td>
+                        </tr>
+                        <tr>
+                            <td><strong>grid-template-rows</strong></td>
+                            <td>Define las filas</td>
+                            <td>px, fr, %, auto, repeat(), minmax()</td>
+                        </tr>
+                        <tr>
+                            <td><strong>grid-template-areas</strong></td>
+                            <td>Define áreas con nombres</td>
+                            <td>Nombres personalizados</td>
+                        </tr>
+                        <tr>
+                            <td><strong>gap</strong></td>
+                            <td>Espacio entre celdas</td>
+                            <td>px, rem, %</td>
+                        </tr>
+                        <tr>
+                            <td><strong>justify-items</strong></td>
+                            <td>Alineación horizontal de items</td>
+                            <td>start, end, center, stretch</td>
+                        </tr>
+                        <tr>
+                            <td><strong>align-items</strong></td>
+                            <td>Alineación vertical de items</td>
+                            <td>start, end, center, stretch</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <section class="section">
+                <h2>1. Grid Básico con FR (Fraction Units)</h2>
+
+                <h3>3 Columnas Iguales (1fr cada una)</h3>
+                <div class="grid-demo grid-basic">
+                    <div class="grid-item">1</div>
+                    <div class="grid-item">2</div>
+                    <div class="grid-item">3</div>
+                    <div class="grid-item">4</div>
+                    <div class="grid-item">5</div>
+                    <div class="grid-item">6</div>
+                </div>
+
+                <div class="code-box">
+.grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;  <span class="code-comment">/* 3 columnas iguales */</span>
+    gap: 16px;
+}
+                </div>
+
+                <h3>Columnas de Diferentes Tamaños</h3>
+                <div class="grid-demo grid-mixed">
+                    <div class="grid-item">2fr (66%)</div>
+                    <div class="grid-item">1fr (33%)</div>
+                </div>
+
+                <div class="code-box">
+.grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;  <span class="code-comment">/* Primera columna 2x más ancha */</span>
+    gap: 16px;
+}
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Unidad FR:</strong> La unidad "fr" (fraction) distribuye el espacio disponible
+                    proporcionalmente. Es la forma más flexible de definir tamaños en Grid.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>2. Repeat(): Repetir Columnas/Filas</h2>
+
+                <h3>4 Columnas con repeat()</h3>
+                <div class="grid-demo grid-repeat">
+                    <div class="grid-item">1</div>
+                    <div class="grid-item">2</div>
+                    <div class="grid-item">3</div>
+                    <div class="grid-item">4</div>
+                    <div class="grid-item">5</div>
+                    <div class="grid-item">6</div>
+                    <div class="grid-item">7</div>
+                    <div class="grid-item">8</div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* En lugar de escribir: 1fr 1fr 1fr 1fr */</span>
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);  <span class="code-comment">/* 4 columnas de 1fr */</span>
+    gap: 16px;
+}
+
+<span class="code-comment">/* También funciona con patrones */</span>
+.grid-pattern {
+    grid-template-columns: repeat(3, 2fr 1fr);  <span class="code-comment">/* Patrón 2fr 1fr repetido 3 veces */</span>
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>3. Auto-fit y Minmax(): Grid Responsive</h2>
+
+                <h3>Grid que se ajusta automáticamente</h3>
+                <div class="grid-demo grid-auto-fit">
+                    <div class="grid-item">1</div>
+                    <div class="grid-item">2</div>
+                    <div class="grid-item">3</div>
+                    <div class="grid-item">4</div>
+                    <div class="grid-item">5</div>
+                    <div class="grid-item">6</div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Grid responsive sin media queries */</span>
+.grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 16px;
+}
+
+<span class="code-comment">/*
+auto-fit: Crea tantas columnas como quepan
+minmax(200px, 1fr): Mínimo 200px, máximo 1fr
+Resultado: Columnas que se ajustan automáticamente al ancho disponible
+*/</span>
+                </div>
+
+                <div class="alert alert-info">
+                    <strong>auto-fit vs auto-fill:</strong><br>
+                    • <strong>auto-fit:</strong> Colapsa las celdas vacías y expande las existentes<br>
+                    • <strong>auto-fill:</strong> Mantiene las celdas vacías
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>4. Grid Template Areas: Layout con Nombres</h2>
+                <p>
+                    Una de las características más poderosas de Grid es la capacidad de nombrar áreas
+                    y crear layouts visualmente descriptivos.
+                </p>
+
+                <div class="grid-demo grid-areas">
+                    <div class="grid-header">
+                        <h3>Header</h3>
+                    </div>
+                    <div class="grid-sidebar">
+                        <h4>Sidebar</h4>
+                        <p>Navegación</p>
+                    </div>
+                    <div class="grid-main">
+                        <h4>Contenido Principal</h4>
+                        <p>Aquí va el contenido principal de la página.</p>
+                    </div>
+                    <div class="grid-aside">
+                        <h4>Aside</h4>
+                        <p>Información adicional</p>
+                    </div>
+                    <div class="grid-footer">
+                        <h4>Footer</h4>
+                    </div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Definir el grid con áreas nombradas */</span>
+.layout {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-template-areas:
+        "header header header"
+        "sidebar main aside"
+        "footer footer footer";
+    gap: 16px;
+    min-height: 400px;
+}
+
+<span class="code-comment">/* Asignar elementos a las áreas */</span>
+.header { grid-area: header; }
+.sidebar { grid-area: sidebar; }
+.main { grid-area: main; }
+.aside { grid-area: aside; }
+.footer { grid-area: footer; }
+                </div>
+
+                <div class="alert alert-success">
+                    <strong>Ventaja:</strong> Grid template areas hace el código muy legible. Puedes
+                    visualizar el layout directamente en el CSS.
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>5. Grid Column/Row Span</h2>
+                <p>
+                    Los items pueden ocupar múltiples columnas o filas usando span.
+                </p>
+
+                <div class="grid-demo grid-span">
+                    <div class="grid-item span-4">Span 4 columnas</div>
+                    <div class="grid-item span-2">Span 2</div>
+                    <div class="grid-item span-2">Span 2</div>
+                    <div class="grid-item">1</div>
+                    <div class="grid-item span-3">Span 3 columnas</div>
+                </div>
+
+                <div class="code-box">
+.grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 16px;
+}
+
+<span class="code-comment">/* Hacer que un item ocupe múltiples columnas */</span>
+.item-wide {
+    grid-column: span 2;  <span class="code-comment">/* Ocupa 2 columnas */</span>
+}
+
+.item-full {
+    grid-column: span 4;  <span class="code-comment">/* Ocupa 4 columnas (ancho completo) */</span>
+}
+
+<span class="code-comment">/* También funciona con filas */</span>
+.item-tall {
+    grid-row: span 2;     <span class="code-comment">/* Ocupa 2 filas */</span>
+}
+
+<span class="code-comment">/* Posicionamiento específico */</span>
+.item-positioned {
+    grid-column: 2 / 4;   <span class="code-comment">/* Desde línea 2 hasta línea 4 */</span>
+    grid-row: 1 / 3;      <span class="code-comment">/* Desde línea 1 hasta línea 3 */</span>
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>6. Ejemplos Prácticos</h2>
+
+                <h3>Gallery Grid Responsive</h3>
+                <div class="grid-demo gallery-grid">
+                    <div class="gallery-item">1</div>
+                    <div class="gallery-item">2</div>
+                    <div class="gallery-item">3</div>
+                    <div class="gallery-item">4</div>
+                    <div class="gallery-item">5</div>
+                    <div class="gallery-item">6</div>
+                    <div class="gallery-item">7</div>
+                    <div class="gallery-item">8</div>
+                    <div class="gallery-item">9</div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Galería de imágenes responsive */</span>
+.gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 8px;
+}
+
+.gallery-item {
+    aspect-ratio: 1;  <span class="code-comment">/* Mantiene proporción cuadrada */</span>
+}
+                </div>
+
+                <h3>Dashboard con Cards</h3>
+                <div class="grid-demo dashboard">
+                    <div class="dashboard-card primary">
+                        <h4>Usuarios Activos</h4>
+                        <div class="value" style="color: var(--primary-color);">1,234</div>
+                        <p>+12% este mes</p>
+                    </div>
+                    <div class="dashboard-card success">
+                        <h4>Ventas</h4>
+                        <div class="value" style="color: var(--secondary-color);">$45,678</div>
+                        <p>+8% este mes</p>
+                    </div>
+                    <div class="dashboard-card danger">
+                        <h4>Errores</h4>
+                        <div class="value" style="color: var(--danger-color);">23</div>
+                        <p>-15% este mes</p>
+                    </div>
+                    <div class="dashboard-card warning">
+                        <h4>Pendientes</h4>
+                        <div class="value" style="color: var(--warning-color);">89</div>
+                        <p>Requieren atención</p>
+                    </div>
+                </div>
+
+                <div class="code-box">
+<span class="code-comment">/* Dashboard responsive */</span>
+.dashboard {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 16px;
+}
+
+.dashboard-card {
+    padding: 24px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Funciones Especiales de Grid</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Función</th>
+                            <th>Sintaxis</th>
+                            <th>Descripción</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>repeat()</strong></td>
+                            <td>repeat(n, tamaño)</td>
+                            <td>Repite un patrón n veces</td>
+                        </tr>
+                        <tr>
+                            <td><strong>minmax()</strong></td>
+                            <td>minmax(min, max)</td>
+                            <td>Define tamaño mínimo y máximo</td>
+                        </tr>
+                        <tr>
+                            <td><strong>auto-fit</strong></td>
+                            <td>repeat(auto-fit, ...)</td>
+                            <td>Ajusta columnas al espacio disponible</td>
+                        </tr>
+                        <tr>
+                            <td><strong>auto-fill</strong></td>
+                            <td>repeat(auto-fill, ...)</td>
+                            <td>Llena con columnas, mantiene vacías</td>
+                        </tr>
+                        <tr>
+                            <td><strong>fr</strong></td>
+                            <td>1fr, 2fr, etc.</td>
+                            <td>Fracción del espacio disponible</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="code-box">
+<span class="code-comment">/* Combinando funciones para layouts avanzados */</span>
+
+<span class="code-comment">/* Layout con columna fija y flexible */</span>
+.layout {
+    grid-template-columns: 250px 1fr;  <span class="code-comment">/* Sidebar fijo, contenido flexible */</span>
+}
+
+<span class="code-comment">/* Columnas que nunca son más pequeñas que 200px */</span>
+.grid {
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+}
+
+<span class="code-comment">/* Tres columnas, la del medio crece más */</span>
+.grid {
+    grid-template-columns: 1fr 2fr 1fr;
+}
+
+<span class="code-comment">/* Filas automáticas con tamaño mínimo */</span>
+.grid {
+    grid-template-rows: repeat(3, minmax(100px, auto));
+}
+
+<span class="code-comment">/* Grid denso (rellena huecos automáticamente) */</span>
+.grid {
+    grid-auto-flow: dense;
+}
+                </div>
+            </section>
+
+            <section class="section">
+                <h2>Alineación en Grid</h2>
+
+                <div class="code-box">
+<span class="code-comment">/* Alinear todos los items */</span>
+.grid {
+    justify-items: center;    <span class="code-comment">/* Horizontal: start | end | center | stretch */</span>
+    align-items: center;      <span class="code-comment">/* Vertical: start | end | center | stretch */</span>
+}
+
+<span class="code-comment">/* Alinear el contenido del grid completo */</span>
+.grid {
+    justify-content: center;  <span class="code-comment">/* Alineación horizontal del grid */</span>
+    align-content: center;    <span class="code-comment">/* Alineación vertical del grid */</span>
+}
+
+<span class="code-comment">/* Alinear un item específico */</span>
+.item {
+    justify-self: center;     <span class="code-comment">/* Horizontal */</span>
+    align-self: center;       <span class="code-comment">/* Vertical */</span>
+}
+
+<span class="code-comment">/* Shorthand para centrar */</span>
+.grid {
+    place-items: center;      <span class="code-comment">/* = align-items + justify-items */</span>
+}
+                </div>
+            </section>
+
+            <div class="highlight-box">
+                <h3 style="margin-bottom: var(--spacing-md);">Mejores Prácticas de CSS Grid</h3>
+                <ul style="line-height: 1.8;">
+                    <li>✓ Usa Grid para layouts bidimensionales (página completa)</li>
+                    <li>✓ Aprovecha grid-template-areas para layouts complejos legibles</li>
+                    <li>✓ Combina auto-fit + minmax() para grids responsive sin media queries</li>
+                    <li>✓ Usa unidades FR en lugar de porcentajes para mayor flexibilidad</li>
+                    <li>✓ Gap es mejor que margins para espaciado entre items</li>
+                    <li>✓ Considera Grid para el layout general, Flexbox para componentes</li>
+                    <li>✓ Usa repeat() para evitar repetir código</li>
+                    <li>✓ Aprovecha grid-auto-flow: dense para diseños tipo masonry</li>
+                </ul>
+            </div>
+
+            <section class="section">
+                <h2>Grid vs Flexbox: Guía de Uso</h2>
+
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Escenario</th>
+                            <th>Recomendación</th>
+                            <th>Razón</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Layout de página completa</td>
+                            <td><strong>Grid</strong></td>
+                            <td>Control bidimensional preciso</td>
+                        </tr>
+                        <tr>
+                            <td>Barra de navegación</td>
+                            <td><strong>Flexbox</strong></td>
+                            <td>Layout unidimensional simple</td>
+                        </tr>
+                        <tr>
+                            <td>Galería de imágenes</td>
+                            <td><strong>Grid</strong></td>
+                            <td>Estructura regular en 2D</td>
+                        </tr>
+                        <tr>
+                            <td>Lista de cards en fila</td>
+                            <td><strong>Flexbox</strong></td>
+                            <td>Alineación flexible en 1D</td>
+                        </tr>
+                        <tr>
+                            <td>Dashboard con widgets</td>
+                            <td><strong>Grid</strong></td>
+                            <td>Layout complejo bidimensional</td>
+                        </tr>
+                        <tr>
+                            <td>Centrar elemento</td>
+                            <td><strong>Flexbox</strong></td>
+                            <td>Más simple para centrado</td>
+                        </tr>
+                        <tr>
+                            <td>Formulario con campos</td>
+                            <td><strong>Grid</strong></td>
+                            <td>Alineación precisa de labels e inputs</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <div class="alert alert-info">
+                    <strong>Recuerda:</strong> Grid y Flexbox no son competidores, son complementarios.
+                    Puedes (y debes) usar ambos en el mismo proyecto donde cada uno tenga sentido.
+                </div>
+            </section>
+        </div>
+    </div>
+
+    <footer style="text-align: center; padding: var(--spacing-lg); color: #7f8c8d; background-color: var(--light-color);">
+        Ejemplo de CSS Grid - STW 2026
+    </footer>
+</body>
+</html>
