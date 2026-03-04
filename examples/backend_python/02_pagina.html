@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Página desde el Backend</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: "Segoe UI", Arial, sans-serif;
+      background: #0f1117;
+      color: #e0e0e0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    .tarjeta {
+      background: #1e2130;
+      border: 1px solid #2e3250;
+      border-radius: 12px;
+      padding: 48px 56px;
+      max-width: 560px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #2563eb;
+      color: white;
+      font-size: 0.75rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 20px;
+      margin-bottom: 24px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: #ffffff;
+      margin-bottom: 16px;
+    }
+
+    p {
+      color: #9ca3af;
+      line-height: 1.7;
+      margin-bottom: 12px;
+    }
+
+    .flujo {
+      margin: 32px 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      font-size: 0.9rem;
+    }
+
+    .paso {
+      background: #111827;
+      border: 1px solid #374151;
+      border-radius: 8px;
+      padding: 10px 18px;
+      color: #d1d5db;
+    }
+
+    .flecha { color: #4b5563; font-size: 1.2rem; }
+
+    .codigo {
+      background: #111827;
+      border-left: 3px solid #2563eb;
+      border-radius: 6px;
+      padding: 16px 20px;
+      text-align: left;
+      font-family: "Courier New", monospace;
+      font-size: 0.85rem;
+      color: #86efac;
+      margin-top: 24px;
+    }
+  </style>
+</head>
+<body>
+  <div class="tarjeta">
+    <span class="badge">Backend → Frontend</span>
+
+    <h1>¡Página servida por Python!</h1>
+
+    <p>
+      Este archivo fue leído del disco por el servidor Python
+      y enviado al navegador como respuesta HTTP.
+    </p>
+
+    <p>
+      El navegador recibió HTML en texto plano y lo renderizó
+      automáticamente — esto es lo que los servidores web hacen.
+    </p>
+
+    <div class="flujo">
+      <div class="paso">Browser</div>
+      <span class="flecha">→ GET /</span>
+      <div class="paso">Python</div>
+      <span class="flecha">→ 200 HTML</span>
+      <div class="paso">Browser</div>
+    </div>
+
+    <div class="codigo">
+      Content-Type: text/html<br>
+      Status: 200 OK<br><br>
+      &lt;!DOCTYPE html&gt; ...
+    </div>
+  </div>
+</body>
+</html>

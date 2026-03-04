@@ -1,0 +1,855 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8" />
+    <title>JavaScript — Backend y Frontend</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/moon.min.css"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+
+        <!-- ═══════════════════════════════════════════════
+             BLOQUE 0: Contexto — HTML y CSS
+        ═══════════════════════════════════════════════ -->
+        <section>
+          <section>
+            <h2>HTML y CSS</h2>
+            <p>Lo que ya conocemos</p>
+          </section>
+          <section>
+            <h2>¿Qué es HTML y CSS?</h2>
+            <p>HTML define la estructura y CSS el diseño visual de una página web.</p>
+          </section>
+          <section>
+            <img src="./images/html.png" alt="HTML" />
+            <p>Lenguaje de marcado para dar significado al contenido web.</p>
+          </section>
+          <section>
+            <img src="./images/css.png" alt="CSS" />
+            <p>Lenguaje de reglas de estilo aplicado al contenido HTML.</p>
+          </section>
+          <section>
+            <img
+              src="./images/estructura.png"
+              alt="Estructura de una página web"
+              style="background-color: white"
+            />
+            <p>Estructura de una Página Web</p>
+          </section>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════
+             BLOQUE 1: ¿Qué es el Backend?
+        ═══════════════════════════════════════════════ -->
+        <section>
+          <section>
+            <h2>¿Qué es el Backend?</h2>
+          </section>
+
+          <section>
+            <h2>Modelo Cliente — Servidor</h2>
+            <p>
+              Cuando visitas un sitio web, tu navegador (cliente) le
+              <strong>solicita</strong> información a un servidor.
+            </p>
+            <p>El servidor la procesa y te <strong>responde</strong>.</p>
+          </section>
+
+          <section>
+            <h3>¿Dónde vive el código?</h3>
+            <table style="width: 100%; font-size: 0.85em;">
+              <tr>
+                <th style="text-align: center;">Frontend</th>
+                <th style="text-align: center;">Backend</th>
+              </tr>
+              <tr>
+                <td style="text-align: center;">Navegador del usuario</td>
+                <td style="text-align: center;">Servidor remoto</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;">HTML / CSS / JS en el browser</td>
+                <td style="text-align: center;">Node.js / Python / Go / Java…</td>
+              </tr>
+              <tr>
+                <td style="text-align: center;">Lo que el usuario ve</td>
+                <td style="text-align: center;">Lo que el usuario NO ve</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <h3>¿Qué hace el Backend?</h3>
+            <ul>
+              <li>Recibe solicitudes HTTP del cliente.</li>
+              <li>Ejecuta la lógica de negocio.</li>
+              <li>Consulta o modifica bases de datos.</li>
+              <li>Devuelve una respuesta (JSON, HTML, archivos…).</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Analogía: Restaurante</h3>
+            <ul>
+              <li> Tú = Cliente (navegador)</li>
+              <li> Menú = Documentación de la API</li>
+              <li> Camarero = API (intermediario)</li>
+              <li> Cocina = <strong>Backend</strong> (servidor)</li>
+              <li> Comida = Respuesta con datos</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Ciclo de una solicitud web</h3>
+            <pre><code>
+  [Navegador]  ──── HTTP Request ────  [Servidor]
+                                              │
+                                        Lógica + DB
+                                              │
+  [Navegador]  ─── HTTP Response ───  [Servidor]
+            </code></pre>
+            <p style="font-size: 0.7em;">
+              El backend procesa, el frontend presenta.
+            </p>
+          </section>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════
+             BLOQUE 2: JavaScript — más allá del navegador
+        ═══════════════════════════════════════════════ -->
+        <section>
+          <section>
+            <h2>JavaScript</h2>
+            <p>Un lenguaje, dos mundos</p>
+          </section>
+
+          <section>
+            <h2>¿Qué es JavaScript?</h2>
+            <ul>
+              <li>Creado en 1995 para ejecutarse en navegadores.</li>
+              <li>Lenguaje <strong>interpretado</strong> (no compilado).</li>
+              <li>Hoy es el único lenguaje que corre de forma nativa en el navegador.</li>
+              <li>Desde 2009, también corre en el <strong>servidor</strong> gracias a Node.js.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>JS en el Frontend vs el Backend</h3>
+            <table style="font-size: 0.8em; width: 100%;">
+              <tr>
+                <th>Frontend (Navegador)</th>
+                <th>Backend (Servidor)</th>
+              </tr>
+              <tr>
+                <td>Manipula el DOM</td>
+                <td>Responde solicitudes HTTP</td>
+              </tr>
+              <tr>
+                <td>Maneja eventos del usuario</td>
+                <td>Accede a bases de datos</td>
+              </tr>
+              <tr>
+                <td>Corre en el browser</td>
+                <td>Corre en Node.js</td>
+              </tr>
+            </table>
+          </section>
+
+          <section>
+            <img
+              src="./images/js.png"
+              alt="JavaScript"
+              width="300"
+            />
+            <p>
+              Un mismo lenguaje que puedes usar en ambos lados del stack.
+            </p>
+          </section>
+
+          <section>
+            <h3>Características</h3>
+            <ul>
+              <li>Variables y tipos de datos.</li>
+              <li>Ejecución de operaciones y lógica.</li>
+              <li>Funciones y módulos.</li>
+              <li>Programación asíncrona (callbacks, Promises, async/await).</li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════
+             BLOQUE 3: Fundamentos de JavaScript
+        ═══════════════════════════════════════════════ -->
+        <section>
+          <section>
+            <h2>Fundamentos de JavaScript</h2>
+            <p>Que necesitas para escribir código backend</p>
+          </section>
+
+          <section>
+            <h2>Variables</h2>
+            <ul>
+              <li>Nombres que almacenan datos en memoria.</li>
+              <li>Usamos <b>let</b>, <b>const</b> y <b>var</b>.</li>
+              <li>
+                Preferir <code>let</code> y <code>const</code> por su alcance
+                de bloque.
+              </li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Ejemplo:</h3>
+            <pre><code style="color: white;">
+let nombre = "Juan";
+const PUERTO = 3000;
+var edad = 25;        // evitar — alcance de función
+            </code></pre>
+            <p style="font-size: 0.7em;">
+              <code>const</code> no puede reasignarse.
+              <code>let</code> sí puede cambiar.
+            </p>
+          </section>
+
+          <section>
+            <h2>Tipos de Datos</h2>
+            <p>JavaScript tiene 7 tipos de datos primitivos.</p>
+            <p>Para encontrar el tipo usamos <b>typeof</b>.</p>
+            <img src="./images/tipos.png" alt="Tipos de datos" height="380" />
+          </section>
+
+          <section>
+            <h2>Condicionales</h2>
+            <p>Ejecutan código según una condición.</p>
+            <pre><code style="color: white;">
+let statusCode = 404;
+
+if (statusCode === 200) {
+  console.log("OK");
+} else if (statusCode === 404) {
+  console.log("Not Found");
+} else {
+  console.log("Error del servidor");
+}
+            </code></pre>
+          </section>
+
+          <section>
+            <h2>Estructura básica</h2>
+            <ul>
+              <li><strong>Semicolons</strong> — opcionales pero recomendados.</li>
+              <li><strong>Statements</strong> — instrucciones.</li>
+              <li><strong>Comentarios</strong> — <code>// linea</code> y <code>/* bloque */</code>.</li>
+              <li><strong>Variables</strong> — <code>let</code> / <code>const</code>.</li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════
+             BLOQUE 4: JavaScript en el Backend — Node.js
+        ═══════════════════════════════════════════════ -->
+        <section>
+          <section>
+            <h2>JavaScript en el Backend</h2>
+            <h3>Node.js</h3>
+          </section>
+
+          <section>
+            <h3>¿Qué es Node.js?</h3>
+            <ul>
+              <li>Entorno de ejecución de JS fuera del navegador.</li>
+              <li>Basado en el motor V8 de Google Chrome.</li>
+              <li>Modelo de eventos no bloqueante (asíncrono).</li>
+              <li>Ideal para servidores web, APIs, CLI tools.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Instalación</h3>
+            <p>Descargar desde: <a href="https://nodejs.org/">nodejs.org</a></p>
+            <pre><code>
+node -v      # versión de Node.js
+npm -v       # versión del gestor de paquetes
+            </code></pre>
+          </section>
+
+          <section>
+            <h3>Mi primer archivo backend</h3>
+            <p><code>servidor.js</code></p>
+            <pre><code style="color: white;">
+// Módulo nativo de Node.js para crear servidores HTTP
+const http = require('http');
+
+const servidor = http.createServer((req, res) => {
+  res.writeHead(200, { 'Content-Type': 'text/plain' });
+  res.end('¡Hola desde el servidor!');
+});
+
+servidor.listen(3000, () => {
+  console.log('Servidor corriendo en http://localhost:3000');
+});
+            </code></pre>
+          </section>
+
+          <section>
+            <h3>Ejecutar el servidor</h3>
+            <pre><code>
+node servidor.js
+            </code></pre>
+            <p>Abre tu navegador en <code>http://localhost:3000</code></p>
+            <p style="font-size: 0.7em;">
+              El servidor recibe la petición del browser y responde texto.
+              Esto es el ciclo cliente-servidor en acción.
+            </p>
+          </section>
+
+          <section>
+            <h3>NPM — Gestor de paquetes</h3>
+            <ul>
+              <li>Instala librerías con un solo comando.</li>
+              <li><code>npm init -y</code> — crea <code>package.json</code>.</li>
+              <li>Más de 2 millones de paquetes disponibles.</li>
+            </ul>
+            <pre><code>
+npm init -y
+npm install express
+            </code></pre>
+          </section>
+
+          <section>
+            <h3>Express.js — Servidor simplificado</h3>
+            <p>Framework que hace más sencillo crear APIs y servidores.</p>
+            <pre><code style="color: white;">
+const express = require('express');
+const app = express();
+
+app.get('/', (req, res) => {
+  res.json({ mensaje: '¡Hola desde el backend!' });
+});
+
+app.listen(3000, () => {
+  console.log('API corriendo en el puerto 3000');
+});
+            </code></pre>
+          </section>
+
+          <section>
+            <h3>Rutas REST con Express</h3>
+            <pre><code style="color: white;">
+const usuarios = [
+  { id: 1, nombre: 'Ana' },
+  { id: 2, nombre: 'Luis' }
+];
+
+// GET /usuarios  → devuelve la lista
+app.get('/usuarios', (req, res) => {
+  res.json(usuarios);
+});
+
+// GET /usuarios/:id  → devuelve uno
+app.get('/usuarios/:id', (req, res) => {
+  const usuario = usuarios.find(u => u.id == req.params.id);
+  res.json(usuario || { error: 'No encontrado' });
+});
+            </code></pre>
+          </section>
+
+          <section>
+            <h3>El backend responde JSON</h3>
+            <pre><code style="color: white;">
+// GET http://localhost:3000/usuarios
+// Respuesta del servidor:
+[
+  { "id": 1, "nombre": "Ana" },
+  { "id": 2, "nombre": "Luis" }
+]
+            </code></pre>
+            <p style="font-size: 0.7em;">
+              JSON (JavaScript Object Notation) es el formato estándar
+              para transferir datos entre backend y frontend.
+            </p>
+          </section>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════
+             BLOQUE 5: Ejemplos de Backend — Python
+        ═══════════════════════════════════════════════ -->
+        <section>
+          <section>
+            <h2>Backend en la práctica</h2>
+            <h3>Ejemplos con Python</h3>
+            <p style="font-size: 0.7em;">
+              El concepto es el mismo en cualquier lenguaje.
+              Cambia la sintaxis, no la idea.
+            </p>
+          </section>
+
+          <!-- ── ¿Por qué Python? ── -->
+          <section>
+            <h3>¿Por qué Python para el backend?</h3>
+            <ul>
+              <li>Viene preinstalado en macOS y Linux.</li>
+              <li>Sintaxis clara — ideal para aprender el concepto.</li>
+              <li>Módulo <code>http.server</code> incluido, sin instalar nada.</li>
+              <li>Flask y Django son frameworks web muy usados en la industria.</li>
+            </ul>
+          </section>
+
+          <!-- ── Servidor mínimo Python ── -->
+          <section>
+            <h3>El servidor más simple posible</h3>
+            <pre><code>
+# servidor.py
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class MiServidor(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.end_headers()
+        self.wfile.write(b"Hola desde Python")
+
+servidor = HTTPServer(("localhost", 8000), MiServidor)
+print("Corriendo en http://localhost:8000")
+servidor.serve_forever()
+            </code></pre>
+            <pre><code>python3 servidor.py</code></pre>
+          </section>
+
+          <!-- ── Responder HTML ── -->
+          <section>
+            <h3>El backend responde HTML</h3>
+            <pre><code>
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class MiServidor(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "text/html")
+        self.end_headers()
+
+        html = """
+        &lt;html&gt;
+          &lt;body&gt;
+            &lt;h1&gt;Bienvenido&lt;/h1&gt;
+            &lt;p&gt;Página generada por el servidor Python&lt;/p&gt;
+          &lt;/body&gt;
+        &lt;/html&gt;
+        """
+        self.wfile.write(html.encode())
+
+HTTPServer(("localhost", 8000), MiServidor).serve_forever()
+            </code></pre>
+          </section>
+
+          <!-- ── Responder JSON ── -->
+          <section>
+            <h3>El backend responde JSON</h3>
+            <pre><code>
+import json
+from http.server import HTTPServer, BaseHTTPRequestHandler
+
+class MiServidor(BaseHTTPRequestHandler):
+    def do_GET(self):
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self.end_headers()
+
+        datos = {"id": 1, "nombre": "Ana", "activo": True}
+        self.wfile.write(json.dumps(datos).encode())
+
+HTTPServer(("localhost", 8000), MiServidor).serve_forever()
+            </code></pre>
+          </section>
+
+          <!-- ── HTML vs JSON ── -->
+          <section>
+            <h3>HTML vs JSON — ¿qué recibe el cliente?</h3>
+            <table style="font-size: 0.75em; width: 100%;">
+              <tr>
+                <th>Content-Type: text/html</th>
+                <th>Content-Type: application/json</th>
+              </tr>
+              <tr>
+                <td>El browser lo renderiza visualmente</td>
+                <td>El browser o JS lo procesa como datos</td>
+              </tr>
+              <tr>
+                <td>
+                  <code>
+                    &lt;h1&gt;Bienvenido&lt;/h1&gt;
+                  </code>
+                </td>
+                <td>
+                  <code>
+                    {"id":1,"nombre":"Ana"}
+                  </code>
+                </td>
+              </tr>
+              <tr>
+                <td>Para páginas web tradicionales</td>
+                <td>Para APIs consumidas por el frontend</td>
+              </tr>
+            </table>
+          </section>
+
+          <!-- ── Intro a los 4 métodos ── -->
+          <section>
+            <h3>Los 4 métodos HTTP</h3>
+            <p>El backend decide qué hacer según el método recibido.</p>
+            <table style="font-size: 0.8em; width: 100%;">
+              <tr>
+                <th>Método</th>
+                <th>Acción</th>
+                <th>Equivale a</th>
+              </tr>
+              <tr><td><code>GET</code></td><td>Leer</td><td>Consultar</td></tr>
+              <tr><td><code>POST</code></td><td>Crear</td><td>Agregar</td></tr>
+              <tr><td><code>PUT</code></td><td>Actualizar</td><td>Modificar</td></tr>
+              <tr><td><code>DELETE</code></td><td>Eliminar</td><td>Borrar</td></tr>
+            </table>
+          </section>
+
+          <!-- ── Flask setup ── -->
+          <section>
+            <h3>Flask — servidor con métodos HTTP</h3>
+            <pre><code>pip install flask</code></pre>
+            <pre><code>
+# app.py
+from flask import Flask, jsonify, request
+
+app = Flask(__name__)
+
+# Lista en memoria (simula una base de datos)
+usuarios = [
+    {"id": 1, "nombre": "Ana"},
+    {"id": 2, "nombre": "Luis"}
+]
+
+if __name__ == "__main__":
+    app.run(port=8000, debug=True)
+            </code></pre>
+          </section>
+
+          <!-- ── GET ── -->
+          <section>
+            <h3>GET — Leer datos</h3>
+            <p style="font-size: 0.7em;">El cliente pide información. El servidor la devuelve.</p>
+            <pre><code>
+# GET /usuarios  → devuelve todos
+@app.route("/usuarios", methods=["GET"])
+def obtener_todos():
+    return jsonify(usuarios)
+
+# GET /usuarios/1  → devuelve uno
+@app.route("/usuarios/&lt;int:id&gt;", methods=["GET"])
+def obtener_uno(id):
+    usuario = next((u for u in usuarios if u["id"] == id), None)
+    if usuario:
+        return jsonify(usuario)
+    return jsonify({"error": "No encontrado"}), 404
+            </code></pre>
+            <pre><code>
+# Respuesta: GET /usuarios
+[{"id": 1, "nombre": "Ana"}, {"id": 2, "nombre": "Luis"}]
+            </code></pre>
+          </section>
+
+          <!-- ── POST ── -->
+          <section>
+            <h3>POST — Crear datos</h3>
+            <p style="font-size: 0.7em;">El cliente envía datos nuevos. El servidor los guarda.</p>
+            <pre><code>
+@app.route("/usuarios", methods=["POST"])
+def crear():
+    nuevo = request.json          # datos que envió el cliente
+    usuarios.append(nuevo)
+    return jsonify(nuevo), 201    # 201 Created
+            </code></pre>
+            <pre><code>
+# El cliente envía (body JSON):
+{"id": 3, "nombre": "Carlos"}
+
+# El servidor responde:
+{"id": 3, "nombre": "Carlos"}   ← con status 201
+            </code></pre>
+          </section>
+
+          <!-- ── PUT ── -->
+          <section>
+            <h3>PUT — Actualizar datos</h3>
+            <p style="font-size: 0.7em;">El cliente envía los datos nuevos de un recurso existente.</p>
+            <pre><code>
+@app.route("/usuarios/&lt;int:id&gt;", methods=["PUT"])
+def actualizar(id):
+    for u in usuarios:
+        if u["id"] == id:
+            u.update(request.json)
+            return jsonify(u)
+    return jsonify({"error": "No encontrado"}), 404
+            </code></pre>
+            <pre><code>
+# PUT /usuarios/1  con body:
+{"nombre": "Ana González"}
+
+# Respuesta:
+{"id": 1, "nombre": "Ana González"}
+            </code></pre>
+          </section>
+
+          <!-- ── DELETE ── -->
+          <section>
+            <h3>DELETE — Eliminar datos</h3>
+            <p style="font-size: 0.7em;">El cliente indica qué recurso borrar. El servidor lo elimina.</p>
+            <pre><code>
+@app.route("/usuarios/&lt;int:id&gt;", methods=["DELETE"])
+def eliminar(id):
+    global usuarios
+    antes = len(usuarios)
+    usuarios = [u for u in usuarios if u["id"] != id]
+    if len(usuarios) < antes:
+        return jsonify({"mensaje": "Usuario eliminado"})
+    return jsonify({"error": "No encontrado"}), 404
+            </code></pre>
+            <pre><code>
+# DELETE /usuarios/2
+
+# Respuesta:
+{"mensaje": "Usuario eliminado"}
+            </code></pre>
+          </section>
+
+          <!-- ── Resumen CRUD ── -->
+          <section>
+            <h3>CRUD — Las 4 operaciones base</h3>
+            <table style="font-size: 0.78em; width: 100%;">
+              <tr>
+                <th>CRUD</th>
+                <th>HTTP</th>
+                <th>Ruta</th>
+                <th>Status típico</th>
+              </tr>
+              <tr>
+                <td><strong>C</strong>reate</td>
+                <td><code>POST</code></td>
+                <td><code>/usuarios</code></td>
+                <td>201</td>
+              </tr>
+              <tr>
+                <td><strong>R</strong>ead</td>
+                <td><code>GET</code></td>
+                <td><code>/usuarios</code></td>
+                <td>200</td>
+              </tr>
+              <tr>
+                <td><strong>U</strong>pdate</td>
+                <td><code>PUT</code></td>
+                <td><code>/usuarios/1</code></td>
+                <td>200</td>
+              </tr>
+              <tr>
+                <td><strong>D</strong>elete</td>
+                <td><code>DELETE</code></td>
+                <td><code>/usuarios/1</code></td>
+                <td>200</td>
+              </tr>
+            </table>
+          </section>
+
+          <!-- ── Puente hacia el frontend ── -->
+          <section>
+            <h3>El backend ya está listo</h3>
+            <p>El frontend lo consume.</p>
+            <pre><code style="color: white;">
+// JavaScript en el navegador — fetch al backend Python
+fetch("http://localhost:8000/usuarios")
+  .then(res => res.json())
+  .then(datos => console.log(datos));
+
+// Resultado en consola:
+// [{"id": 1, "nombre": "Ana"}, {"id": 2, "nombre": "Luis"}]
+            </code></pre>
+            <p style="font-size: 0.7em;">
+              Ahora veamos cómo JS en el navegador puede leer y
+              presentar esos datos en pantalla.
+            </p>
+          </section>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════
+             BLOQUE 6: JS en el Frontend — DOM
+             (Ahora, después de entender el backend)
+        ═══════════════════════════════════════════════ -->
+        <section>
+          <section>
+            <h2>JavaScript en el Frontend</h2>
+            <p>Ahora veamos JS en el navegador</p>
+          </section>
+
+          <section>
+            <h2>¿Qué es el DOM?</h2>
+            <ul>
+              <li>Document Object Model (DOM)</li>
+              <li>Representación en árbol del documento HTML.</li>
+              <li>JS puede leerlo y modificarlo en tiempo real.</li>
+              <li>Solo existe en el navegador (no en Node.js).</li>
+            </ul>
+          </section>
+
+          <section>
+            <h2>Manipulación del DOM</h2>
+            <ul>
+              <li>Cada etiqueta HTML es un nodo del árbol.</li>
+              <li>Podemos acceder, crear, modificar o eliminar nodos.</li>
+              <li>Responde a eventos del usuario (click, input, scroll…).</li>
+            </ul>
+          </section>
+
+          <section>
+            <img
+              src="./images/dom1.png"
+              alt="Árbol del DOM"
+              style="background-color: white"
+            />
+          </section>
+
+          <section>
+            <img
+              src="./images/dom2.gif"
+              alt="Nodos del DOM"
+              style="background-color: white"
+            />
+          </section>
+
+          <section>
+            <h3>Ejemplo: modificar contenido</h3>
+            <pre><code style="color: white;">
+document.getElementById("titulo").textContent =
+  "¡Hola, JavaScript!";
+            </code></pre>
+          </section>
+
+          <section>
+            <h3>Ejemplo: responder a un evento</h3>
+            <pre><code style="color: white;">
+document.querySelector("button")
+  .addEventListener("click", function() {
+    alert("¡Botón clickeado!");
+  });
+            </code></pre>
+          </section>
+        </section>
+
+        <!-- ═══════════════════════════════════════════════
+             BLOQUE 7: Acceso a nodos del DOM
+        ═══════════════════════════════════════════════ -->
+        <section>
+          <section>
+            <h2>Acceso a Nodos del DOM</h2>
+          </section>
+
+          <section>
+            <h2>Métodos de acceso</h2>
+            <p>Dos formas de llegar a un nodo:</p>
+            <ul>
+              <li>A través de su nodo padre (recorrido).</li>
+              <li>Acceso directo por id, clase o selector.</li>
+            </ul>
+          </section>
+
+          <section>
+            <p><strong>getElementsByTagName</strong></p>
+            <p>Obtiene todos los elementos con una etiqueta dada.</p>
+            <pre><code style="color: white;">
+let parrafos = document.getElementsByTagName("p");
+let primer_parrafo = parrafos[0];
+            </code></pre>
+          </section>
+
+          <section>
+            <p><strong>getElementById</strong></p>
+            <p>Obtiene el elemento con un <code>id</code> específico.</p>
+            <pre><code style="color: white;">
+let titulo = document.getElementById("titulo");
+console.log(titulo);
+            </code></pre>
+          </section>
+
+          <section>
+            <p><strong>getElementsByClassName</strong></p>
+            <p>Obtiene todos los elementos con una clase dada.</p>
+            <pre><code style="color: white;">
+let elementos = document.getElementsByClassName("parrafo");
+console.log(elementos);
+            </code></pre>
+          </section>
+
+          <section>
+            <p><strong>querySelector / querySelectorAll</strong></p>
+            <p>Selecciona usando sintaxis CSS.</p>
+            <pre><code style="color: white;">
+let parrafo  = document.querySelector("p");         // primero
+let parrafos = document.querySelectorAll("p");      // todos
+            </code></pre>
+          </section>
+
+          <section>
+            <h2>Crear y eliminar nodos</h2>
+            <img
+              src="./images/create_node.png"
+              alt="Crear nodo"
+              style="background-color: white"
+            />
+          </section>
+
+          <section>
+            <img
+              src="./images/delete_node.png"
+              alt="Eliminar nodo"
+              style="background-color: white"
+            />
+          </section>
+
+          <section>
+            <h2>Modificar nodos</h2>
+            <ul>
+              <li><code>textContent</code> — texto plano.</li>
+              <li><code>innerHTML</code> — HTML interno.</li>
+              <li><code>style</code> — estilos inline.</li>
+              <li><code>setAttribute</code> — atributos HTML.</li>
+            </ul>
+          </section>
+
+          <section>
+            <h3>Ejemplos de modificación</h3>
+            <pre><code style="color: white;">
+// Texto
+document.getElementById("titulo").textContent = "¡Hola!";
+
+// HTML interno
+document.getElementById("titulo").innerHTML =
+  "<strong>¡Hola!</strong>";
+
+// Estilo
+document.getElementById("titulo").style.color = "red";
+            </code></pre>
+          </section>
+        </section>
+
+      </div>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+      Reveal.initialize({
+        hash: true,
+        slideNumber: true,
+      });
+    </script>
+  </body>
+</html>
