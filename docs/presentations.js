@@ -84,6 +84,13 @@ export const presentations = [
     active: true,
   },
   {
+    title: "Ejemplo JavaScript",
+    description: "Ejemplo de JavaScript",
+    path: "temas/js/example/index.html",
+    image: "temas/js/images/js.png",
+    active: true,
+  },
+  {
     title: "Apis",
     description: "Consumo de servicios web",
     path: "temas/apis/index.html",
