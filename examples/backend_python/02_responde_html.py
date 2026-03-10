@@ -4,7 +4,6 @@ import os
 ARCHIVO_HTML = "02_pagina.html"
 PUERTO = 8000
 
-
 class MiServidor(BaseHTTPRequestHandler):
 
     def do_GET(self):
@@ -19,7 +18,7 @@ class MiServidor(BaseHTTPRequestHandler):
             contenido = archivo.read()
 
         self.send_response(200)
-        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.send_header("Content-Type", "text/html; charset=utf-8")
         self.end_headers()
         self.wfile.write(contenido.encode("utf-8"))
 
