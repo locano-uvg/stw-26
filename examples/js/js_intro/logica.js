@@ -61,10 +61,10 @@ let elementos = document.getElementsByClassName("parrafo");
 // CREA UN ELEMENTO
 let nuevaImagen = document.createElement("img");
 nuevaImagen.id = "nuevaImagen";
-nuevaImagen.width = 100;
-nuevaImagen.height = 100;
+nuevaImagen.width = 400;
+nuevaImagen.height = 400;
 nuevaImagen.src =
-  "https://www.google.com/images/branding/googlelogo/1x/googlelogo_color_272x92dp.png";
+  "https://tienda.uvg.edu.gt/attach/tiendas/Logo-vertical-verde_5a8b26cb76441.jpg";
 // Agregar al body
 document.body.appendChild(nuevaImagen);
 
@@ -231,10 +231,80 @@ contarA10Arrow();
 // GET, POST, PUT, PATCH, DELETE
 // 400(ERRORES), 500(ERROR INTERNO), 200(CORRECTO)
 
-let obtenerDatosClima = fetch(
-  "https://api.openweathermap.org/data/2.5/weather?q=guatemala&appid=8c9e7b1a0c3d9f1e5b8c8c8c8c8c8c",
-);
-console.log("obtenerDatosClima", obtenerDatosClima);
+async function cargarUsuarios() {
+  // LLAMAR AL API DE MANERA SINCRONICA NO ESPERO
+  let users1 = fetch("https://api.github.com/users");
+  // DEVUELVO UNA PROMESA PENDIENTE POR RESOLVER
+  console.log("usuarios fetch1", users1);
 
-// let datosClimaJson = await obtenerDatosClima.json();
-// console.log("datosClimaJson", datosClimaJson
+  // LLMAR AL API DE MANERA ASINCRONICA ESPERO A QUE ME DEVUELVA LA RESPUESTA
+
+  // CON EL AWAIT Y EL ASYNT
+  try {
+    let users = await fetch("https://api.github.com/users");
+    console.log("users", users);
+
+    // OBTENER LOS DATOS TRANSFORMADOS A JSON DE UN READABLSTREAM
+    let userData = await users.json();
+    console.log("usuarios data", userData);
+
+    console.log("usuario en position 3", userData[2]);
+    console.log("url de usuario en position 3", userData[2].avatar_url);
+
+    let nuevoDiv = document.createElement("div");
+    nuevoDiv.style.width = "100vw";
+    nuevoDiv.style.height = "100vh";
+    nuevoDiv.style.backgroundColor = "blue";
+    nuevoDiv.style.padding = 16;
+    nuevoDiv.id = "contenedor";
+    document.body.appendChild(nuevoDiv);
+    // los arreglos tienen una fucnion para hacer for que se llama forEach y recorrere cada elemento para poder utilizarlo
+    userData.forEach((_usuario) => {
+      crearTarjetaUsuario(_usuario);
+    });
+  } catch (error) {
+    console.error("Error al cargar usuarios:", error);
+  }
+  // let users = await fetch("https://dogapi.dog/api/v2/breeds");
+  return true;
+}
+
+function crearUsuario(data) {
+  return {
+    nombre: data.login,
+    avatar: data.avatar_url,
+  };
+}
+
+// usuario = objeto con key:values
+function crearTarjetaUsuario(usuario) {
+  let contenedor = document.getElementById("contenedor");
+
+  // CREAR LA TARJETA DEL USUARI EN EL DOM
+  let _div = document.createElement("div");
+  _div.style.width = "50px";
+  _div.style.height = "50px";
+  _div.style.backgroundColor = "gray";
+  _div.style.padding = 16;
+  contenedor.appendChild(_div);
+
+  let _img = document.createElement("img");
+  _img.src = usuario.avatar_url;
+  _img.width = 10;
+  _img.height = 10;
+  _div.appendChild(_img);
+
+  let _h3 = document.createElement("h3");
+  _h3.innerText = usuario.login;
+  _div.appendChild(_h3);
+}
+
+let botonCargar = document.createElement("button");
+botonCargar.innerText = "Cargar Usuarios";
+botonCargar.style.width = "200px";
+botonCargar.style.height = "200px";
+botonCargar.addEventListener("click", () => {
+  console.log("hola");
+  cargarUsuarios();
+});
+document.body.appendChild(botonCargar);

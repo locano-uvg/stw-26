@@ -39,18 +39,21 @@ body::before {
   height: 200px;
   margin: auto;
   border-radius: 20%;
-  background: radial-gradient(
-      ellipse at bottom left ,
-      transparent 50%,
-      black 51% 55%,
-      transparent 56%
-    ) 90% 35% / 15% 15%,
+  background:
     radial-gradient(
-      ellipse at top,
-      transparent 50%,
-      black 51% 55%,
-      transparent 56%
-    ) 50% 60% / 80% 30%,
+        ellipse at bottom left,
+        transparent 50%,
+        black 51% 55%,
+        transparent 56%
+      )
+      90% 35% / 15% 15%,
+    radial-gradient(
+        ellipse at top,
+        transparent 50%,
+        black 51% 55%,
+        transparent 56%
+      )
+      50% 60% / 80% 30%,
     linear-gradient(-45deg, antiquewhite 50%, #02546a 51%) 63% 17% / 10% 10%,
     linear-gradient(#00c8ff, #00c8ff) 55% 0% / 25% 25%,
     linear-gradient(antiquewhite, antiquewhite);
