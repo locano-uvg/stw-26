@@ -102,7 +102,7 @@ export const presentations = [
     description: "Server side",
     path: "temas/apis/server.html",
     image: "temas/apis/images/server1.jpg",
-    active: false,
+    active: true,
   },
   {
     title: "Web Components",
