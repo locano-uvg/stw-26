@@ -1,0 +1,614 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React + Express: Full Stack</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/moon.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai.min.css"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <!-- Portada -->
+        <section>
+          <h1>React + Express</h1>
+          <h3>Desarrollo Full Stack</h3>
+          <p><small>Conectando frontend y backend</small></p>
+        </section>
+
+        <!-- Arquitectura Full Stack -->
+        <section>
+          <section>
+            <h2>Arquitectura Full Stack</h2>
+            <p>Cómo trabajan juntos React y Express</p>
+          </section>
+          <section>
+            <h3>El flujo completo</h3>
+            <pre><code class="text">
+  Usuario (Navegador)
+       │
+       ▼
+  React App (Frontend) ──── Puerto 5173
+       │  fetch()
+       ▼
+  Express API (Backend) ─── Puerto 3001
+       │
+       ▼
+  Base de Datos
+            </code></pre>
+          </section>
+          <section>
+            <h3>Separación de responsabilidades</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>React (Frontend)</th>
+                  <th>Express (Backend)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Interfaz de usuario</td>
+                  <td>Lógica de negocio</td>
+                </tr>
+                <tr>
+                  <td>Interactividad</td>
+                  <td>Acceso a base de datos</td>
+                </tr>
+                <tr>
+                  <td>Validación de UI</td>
+                  <td>Validación de datos</td>
+                </tr>
+                <tr>
+                  <td>Manejo de estado local</td>
+                  <td>Autenticación</td>
+                </tr>
+                <tr>
+                  <td>Se ejecuta en el navegador</td>
+                  <td>Se ejecuta en el servidor</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section>
+            <h3>Dos servidores corriendo</h3>
+            <pre><code class="bash"># Terminal 1: Backend
+cd backend
+npm start
+# → Express escuchando en http://localhost:3001
+
+# Terminal 2: Frontend
+cd frontend
+npm run dev
+# → Vite sirviendo React en http://localhost:5173</code></pre>
+          </section>
+        </section>
+
+        <!-- CORS -->
+        <section>
+          <section>
+            <h2>CORS</h2>
+            <p>Cross-Origin Resource Sharing</p>
+          </section>
+          <section>
+            <h3>El problema</h3>
+            <pre><code class="text">
+React (localhost:5173) ──fetch──▶ Express (localhost:3001)
+                                        │
+                                   ❌ BLOQUEADO
+                                   "CORS policy error"
+            </code></pre>
+            <p>El navegador bloquea peticiones entre orígenes distintos por seguridad</p>
+          </section>
+          <section>
+            <h3>La solución en Express</h3>
+            <pre><code class="javascript">// Instalar: npm install cors
+const cors = require('cors');
+const express = require('express');
+const app = express();
+
+// Permitir peticiones desde React
+app.use(cors({
+  origin: 'http://localhost:5173'
+}));
+
+// O permitir cualquier origen (solo para desarrollo)
+app.use(cors());
+
+app.use(express.json());
+// ... el resto de tus rutas</code></pre>
+          </section>
+          <section>
+            <h3>¿Cuándo ocurre CORS?</h3>
+            <ul>
+              <li>Diferente <strong>puerto</strong>: localhost:5173 → localhost:3001</li>
+              <li>Diferente <strong>dominio</strong>: mi-app.com → api.mi-app.com</li>
+              <li>Diferente <strong>protocolo</strong>: http → https</li>
+            </ul>
+            <p><small>En producción se suele resolver con un proxy o mismo dominio</small></p>
+          </section>
+        </section>
+
+        <!-- Estructura del proyecto -->
+        <section>
+          <section>
+            <h2>Estructura del Proyecto</h2>
+          </section>
+          <section>
+            <h3>Organización recomendada</h3>
+            <pre><code class="text">mi-proyecto-fullstack/
+├── backend/
+│   ├── package.json
+│   ├── server.js          ← API Express
+│   └── node_modules/
+├── frontend/
+│   ├── package.json
+│   ├── vite.config.js
+│   ├── index.html
+│   ├── src/
+│   │   ├── main.jsx       ← Punto de entrada
+│   │   ├── App.jsx        ← Componente principal
+│   │   ├── components/    ← Componentes UI
+│   │   └── hooks/         ← Custom hooks
+│   └── node_modules/
+└── README.md</code></pre>
+          </section>
+          <section>
+            <h3>Configurar el backend (Express)</h3>
+            <pre><code class="javascript">// backend/server.js
+const express = require('express');
+const cors = require('cors');
+const { uid } = require('uid');
+
+const app = express();
+app.use(cors());
+app.use(express.json());
+
+let usuarios = [
+  { id: uid(), name: 'Luis', level: 90 },
+  { id: uid(), name: 'Ana', level: 100 }
+];
+
+app.get('/usuarios', (req, res) =&gt; {
+  res.json(usuarios);
+});
+
+app.post('/usuario', (req, res) =&gt; {
+  const nuevo = { ...req.body, id: uid() };
+  usuarios.push(nuevo);
+  res.status(201).json(nuevo);
+});
+
+app.delete('/usuario/:id', (req, res) =&gt; {
+  usuarios = usuarios.filter(u =&gt; u.id !== req.params.id);
+  res.json(usuarios);
+});
+
+app.listen(3001, () =&gt; console.log('API en http://localhost:3001'));</code></pre>
+          </section>
+        </section>
+
+        <!-- Conectando React con Express -->
+        <section>
+          <section>
+            <h2>Conectando React con Express</h2>
+          </section>
+          <section>
+            <h3>GET: Obtener datos</h3>
+            <pre><code class="jsx">// components/UserList.jsx
+import { useState, useEffect } from 'react';
+
+function UserList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    fetch('http://localhost:3001/usuarios')
+      .then(res =&gt; res.json())
+      .then(data =&gt; {
+        setUsers(data);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return &lt;p&gt;Cargando usuarios...&lt;/p&gt;;
+
+  return (
+    &lt;ul&gt;
+      {users.map(user =&gt; (
+        &lt;li key={user.id}&gt;
+          {user.name} - Nivel {user.level}
+        &lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>POST: Crear datos</h3>
+            <pre><code class="jsx">// components/UserForm.jsx
+import { useState } from 'react';
+
+function UserForm({ onUserCreated }) {
+  const [name, setName] = useState('');
+  const [level, setLevel] = useState(1);
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    const res = await fetch('http://localhost:3001/usuario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, level })
+    });
+    const newUser = await res.json();
+    onUserCreated(newUser);
+    setName('');
+    setLevel(1);
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input value={name} onChange={e =&gt; setName(e.target.value)}
+        placeholder="Nombre" required /&gt;
+      &lt;input type="number" value={level}
+        onChange={e =&gt; setLevel(Number(e.target.value))} /&gt;
+      &lt;button type="submit"&gt;Crear Usuario&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>DELETE: Eliminar datos</h3>
+            <pre><code class="jsx">function UserItem({ user, onDelete }) {
+  const handleDelete = async () =&gt; {
+    await fetch(`http://localhost:3001/usuario/${user.id}`, {
+      method: 'DELETE'
+    });
+    onDelete(user.id);
+  };
+
+  return (
+    &lt;li&gt;
+      &lt;span&gt;{user.name} - Nivel {user.level}&lt;/span&gt;
+      &lt;button onClick={handleDelete}&gt;Eliminar&lt;/button&gt;
+    &lt;/li&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>App.jsx: Uniendo todo</h3>
+            <pre><code class="jsx">import { useState, useEffect } from 'react';
+import UserForm from './components/UserForm';
+import UserItem from './components/UserItem';
+
+function App() {
+  const [users, setUsers] = useState([]);
+
+  useEffect(() =&gt; {
+    fetch('http://localhost:3001/usuarios')
+      .then(res =&gt; res.json())
+      .then(setUsers);
+  }, []);
+
+  const handleCreated = (newUser) =&gt; {
+    setUsers([...users, newUser]);
+  };
+
+  const handleDelete = (id) =&gt; {
+    setUsers(users.filter(u =&gt; u.id !== id));
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Gestión de Usuarios&lt;/h1&gt;
+      &lt;UserForm onUserCreated={handleCreated} /&gt;
+      &lt;ul&gt;
+        {users.map(user =&gt; (
+          &lt;UserItem key={user.id} user={user}
+            onDelete={handleDelete} /&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- Custom Hook para API -->
+        <section>
+          <section>
+            <h2>Custom Hook para la API</h2>
+            <p>Reutilizar la lógica de conexión</p>
+          </section>
+          <section>
+            <pre><code class="jsx">// hooks/useApi.js
+import { useState, useCallback } from 'react';
+
+const API_URL = 'http://localhost:3001';
+
+function useApi() {
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
+  const request = useCallback(async (endpoint, options = {}) =&gt; {
+    setLoading(true);
+    setError(null);
+    try {
+      const res = await fetch(`${API_URL}${endpoint}`, {
+        headers: { 'Content-Type': 'application/json' },
+        ...options,
+        body: options.body ? JSON.stringify(options.body) : undefined
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      const data = await res.json();
+      return data;
+    } catch (err) {
+      setError(err.message);
+      return null;
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  return { request, loading, error };
+}</code></pre>
+          </section>
+          <section>
+            <h3>Uso del hook</h3>
+            <pre><code class="jsx">function App() {
+  const { request, loading, error } = useApi();
+  const [users, setUsers] = useState([]);
+
+  useEffect(() =&gt; {
+    request('/usuarios').then(data =&gt; {
+      if (data) setUsers(data);
+    });
+  }, []);
+
+  const createUser = async (userData) =&gt; {
+    const newUser = await request('/usuario', {
+      method: 'POST',
+      body: userData
+    });
+    if (newUser) setUsers([...users, newUser]);
+  };
+
+  if (error) return &lt;p&gt;Error: {error}&lt;/p&gt;;
+  // ...
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- Variables de entorno -->
+        <section>
+          <section>
+            <h2>Variables de Entorno</h2>
+            <p>No hardcodear URLs de la API</p>
+          </section>
+          <section>
+            <h3>En Vite: archivo .env</h3>
+            <pre><code class="bash"># frontend/.env
+VITE_API_URL=http://localhost:3001
+
+# frontend/.env.production
+VITE_API_URL=https://mi-api.com</code></pre>
+            <pre><code class="jsx">// En cualquier componente
+const API_URL = import.meta.env.VITE_API_URL;
+
+fetch(`${API_URL}/usuarios`);</code></pre>
+            <p><small>Vite solo expone variables que empiezan con VITE_</small></p>
+          </section>
+        </section>
+
+        <!-- Proxy en Vite -->
+        <section>
+          <section>
+            <h2>Proxy en Vite</h2>
+            <p>Alternativa a CORS durante desarrollo</p>
+          </section>
+          <section>
+            <pre><code class="javascript">// vite.config.js
+import { defineConfig } from 'vite';
+import react from '@vitejs/plugin-react';
+
+export default defineConfig({
+  plugins: [react()],
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:3001',
+        changeOrigin: true,
+        rewrite: (path) =&gt; path.replace(/^\/api/, '')
+      }
+    }
+  }
+});</code></pre>
+            <pre><code class="jsx">// Ahora en React puedes usar rutas relativas
+fetch('/api/usuarios'); // Vite redirige a localhost:3001/usuarios</code></pre>
+          </section>
+        </section>
+
+        <!-- Manejo de estados -->
+        <section>
+          <section>
+            <h2>Patrones de Estado</h2>
+            <p>Manejo profesional de datos del servidor</p>
+          </section>
+          <section>
+            <h3>Los 3 estados de una petición</h3>
+            <pre><code class="jsx">function UserList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);  // 1. Cargando
+  const [error, setError] = useState(null);      // 2. Error
+
+  useEffect(() =&gt; {
+    fetch('http://localhost:3001/usuarios')
+      .then(res =&gt; {
+        if (!res.ok) throw new Error('Error del servidor');
+        return res.json();
+      })
+      .then(data =&gt; setUsers(data))             // 3. Éxito
+      .catch(err =&gt; setError(err.message))
+      .finally(() =&gt; setLoading(false));
+  }, []);
+
+  if (loading) return &lt;p&gt;Cargando...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error: {error}&lt;/p&gt;;
+  if (users.length === 0) return &lt;p&gt;No hay usuarios&lt;/p&gt;;
+
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}</code></pre>
+          </section>
+          <section>
+            <h3>Actualización optimista</h3>
+            <pre><code class="jsx">const handleDelete = async (id) =&gt; {
+  // 1. Actualizar UI inmediatamente (optimista)
+  setUsers(users.filter(u =&gt; u.id !== id));
+
+  try {
+    // 2. Enviar al servidor
+    const res = await fetch(`http://localhost:3001/usuario/${id}`, {
+      method: 'DELETE'
+    });
+    if (!res.ok) throw new Error('Error al eliminar');
+  } catch (err) {
+    // 3. Si falla, revertir
+    setUsers(users); // restaurar estado anterior
+    alert('No se pudo eliminar');
+  }
+};</code></pre>
+          </section>
+        </section>
+
+        <!-- Despliegue -->
+        <section>
+          <section>
+            <h2>Despliegue</h2>
+            <p>Llevando la app a producción</p>
+          </section>
+          <section>
+            <h3>Build del frontend</h3>
+            <pre><code class="bash"># Genera archivos estáticos optimizados
+cd frontend
+npm run build
+# Resultado en frontend/dist/</code></pre>
+            <h3>Opciones de hosting</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Frontend (React)</th>
+                  <th>Backend (Express)</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Vercel</td>
+                  <td>Railway</td>
+                </tr>
+                <tr>
+                  <td>Netlify</td>
+                  <td>Render</td>
+                </tr>
+                <tr>
+                  <td>Cloudflare Pages</td>
+                  <td>Fly.io</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+          <section>
+            <h3>O servir desde Express</h3>
+            <pre><code class="javascript">// server.js - Servir React desde Express en producción
+const path = require('path');
+
+// Servir archivos estáticos de React
+app.use(express.static(path.join(__dirname, '../frontend/dist')));
+
+// Para React Router: redirigir todo al index.html
+app.get('*', (req, res) =&gt; {
+  res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+});</code></pre>
+          </section>
+        </section>
+
+        <!-- Actividad -->
+        <section>
+          <section>
+            <h2>Actividad Práctica</h2>
+          </section>
+          <section>
+            <h3>CRUD de Usuarios</h3>
+            <ol>
+              <li>Usar su API de Express existente (backend/server.js)</li>
+              <li>Crear un proyecto React con Vite (frontend)</li>
+              <li>Implementar: listar, crear y eliminar usuarios</li>
+              <li>Manejar estados de loading y error</li>
+              <li>Crear un custom hook para la API</li>
+            </ol>
+          </section>
+          <section>
+            <h3>Pasos</h3>
+            <pre><code class="bash"># 1. Agregar cors al backend
+cd backend && npm install cors
+
+# 2. Crear frontend
+npm create vite@latest frontend -- --template react
+cd frontend && npm install
+
+# 3. Correr ambos en terminales separadas
+# Terminal 1: cd backend && npm start
+# Terminal 2: cd frontend && npm run dev</code></pre>
+          </section>
+        </section>
+
+        <!-- Errores frecuentes -->
+        <section>
+          <section>
+            <h2>Errores Frecuentes</h2>
+          </section>
+          <section>
+            <h3>Checklist antes de pedir ayuda</h3>
+            <ol>
+              <li>¿El backend está corriendo? (<code>npm start</code> en terminal 1)</li>
+              <li>¿Instalaste <code>cors</code> en Express?</li>
+              <li>¿Usaste <code>app.use(express.json())</code>?</li>
+              <li>¿El fetch tiene <code>Content-Type: application/json</code>?</li>
+              <li>¿Inicializaste el estado con <code>useState([])</code> y no <code>useState()</code>?</li>
+              <li>¿Tu useEffect tiene el array de dependencias <code>[]</code>?</li>
+            </ol>
+          </section>
+        </section>
+
+        <!-- Recursos -->
+        <section>
+          <h2>Recursos</h2>
+          <ul>
+            <li><a href="https://react.dev/learn">React - Learn</a></li>
+            <li><a href="https://developer.mozilla.org/es/docs/Web/API/Fetch_API/Using_Fetch">MDN - Using Fetch</a></li>
+            <li><a href="https://vitejs.dev/config/server-options.html#server-proxy">Vite - Server Proxy</a></li>
+            <li><a href="https://www.npmjs.com/package/cors">npm - cors package</a></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script>
+      Reveal.initialize({
+        plugins: [RevealHighlight],
+      });
+    </script>
+  </body>
+</html>

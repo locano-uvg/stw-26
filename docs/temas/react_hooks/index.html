@@ -1,0 +1,646 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React Hooks</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/moon.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai.min.css"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <!-- Introducción -->
+        <section>
+          <h1>React Hooks</h1>
+          <p>Funciones que dan superpoderes a tus componentes</p>
+        </section>
+
+        <section>
+          <h3>¿Qué son los Hooks?</h3>
+          <ul>
+            <li>Funciones que permiten usar estado y efectos en componentes funcionales</li>
+            <li>Reemplazan los componentes de clase por completo</li>
+            <li>Siempre comienzan con la palabra <code>use</code></li>
+            <li>Se llaman en el nivel superior del componente (nunca dentro de if/for)</li>
+          </ul>
+        </section>
+
+        <!-- useState -->
+        <section>
+          <section>
+            <h2>useState</h2>
+            <p>Hook para manejar datos que cambian en el tiempo</p>
+          </section>
+          <section>
+            <h3>Sintaxis básica</h3>
+            <pre><code class="jsx">import { useState } from 'react';
+
+function Counter() {
+  // [valor, funcionParaCambiar] = useState(valorInicial)
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Contador: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+        +1
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>useState con objetos</h3>
+            <pre><code class="jsx">function UserProfile() {
+  const [user, setUser] = useState({
+    name: '',
+    level: 1,
+    description: ''
+  });
+
+  const updateName = (e) =&gt; {
+    setUser({ ...user, name: e.target.value });
+  };
+
+  return &lt;input value={user.name} onChange={updateName} /&gt;;
+}</code></pre>
+          </section>
+          <section>
+            <h3>useState con arrays</h3>
+            <pre><code class="jsx">function TodoList() {
+  const [items, setItems] = useState([]);
+
+  const addItem = (newItem) =&gt; {
+    setItems([...items, newItem]);
+  };
+
+  const removeItem = (id) =&gt; {
+    setItems(items.filter(item =&gt; item.id !== id));
+  };
+
+  return (
+    &lt;ul&gt;
+      {items.map(item =&gt; (
+        &lt;li key={item.id}&gt;{item.text}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>Ejemplo práctico: Formulario para crear usuario</h3>
+            <pre><code class="jsx">function CreateUser() {
+  const [name, setName] = useState('');
+  const [level, setLevel] = useState(1);
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    await fetch('http://localhost:3001/usuario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        name, level, description: 'Nuevo'
+      })
+    });
+    setName('');
+    setLevel(1);
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input
+        value={name}
+        onChange={e =&gt; setName(e.target.value)}
+        placeholder="Nombre"
+      /&gt;
+      &lt;input
+        type="number" value={level}
+        onChange={e =&gt; setLevel(Number(e.target.value))}
+      /&gt;
+      &lt;button type="submit"&gt;Crear Usuario&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <img src="./images/useState.png" alt="useState" height="500px" />
+          </section>
+        </section>
+
+        <!-- useEffect -->
+        <section>
+          <section>
+            <h2>useEffect</h2>
+            <p>Hook para efectos secundarios (side effects)</p>
+          </section>
+          <section>
+            <h3>¿Qué es un efecto secundario?</h3>
+            <ul>
+              <li>Llamar a una API (fetch)</li>
+              <li>Suscribirse a eventos (WebSocket, resize)</li>
+              <li>Manipular el DOM directamente</li>
+              <li>Configurar timers (setInterval, setTimeout)</li>
+            </ul>
+            <p><small>Similar a middleware en Express: código que se ejecuta "al lado" de la lógica principal</small></p>
+          </section>
+          <section>
+            <h3>Cargar datos al montar el componente</h3>
+            <pre><code class="jsx">import { useState, useEffect } from 'react';
+
+function UserList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    // Se ejecuta al montar el componente
+    fetch('http://localhost:3001/usuarios')
+      .then(res =&gt; res.json())
+      .then(data =&gt; {
+        setUsers(data);
+        setLoading(false);
+      });
+  }, []); // [] = solo al montar
+
+  if (loading) return &lt;p&gt;Cargando...&lt;/p&gt;;
+
+  return (
+    &lt;ul&gt;
+      {users.map(user =&gt; (
+        &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>Array de dependencias</h3>
+            <pre><code class="jsx">// Se ejecuta UNA vez al montar
+useEffect(() =&gt; { /* ... */ }, []);
+
+// Se ejecuta cuando userId cambia
+useEffect(() =&gt; {
+  fetch(`http://localhost:3001/usuario/${userId}`)
+    .then(res =&gt; res.json())
+    .then(setUser);
+}, [userId]);
+
+// Se ejecuta en CADA render (evitar si posible)
+useEffect(() =&gt; { /* ... */ });</code></pre>
+          </section>
+          <section>
+            <h3>Cleanup: Limpiar al desmontar</h3>
+            <pre><code class="jsx">useEffect(() =&gt; {
+  const interval = setInterval(() =&gt; {
+    console.log('tick');
+  }, 1000);
+
+  // Cleanup: se ejecuta al desmontar
+  return () =&gt; clearInterval(interval);
+}, []);</code></pre>
+            <p><small>Similar a cerrar una conexión de DB en Express al apagar el server</small></p>
+          </section>
+          <section>
+            <h3>useEffect con manejo de errores</h3>
+            <pre><code class="jsx">function UserList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    fetch('http://localhost:3001/usuarios')
+      .then(res =&gt; {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(data =&gt; setUsers(data))
+      .catch(err =&gt; setError(err.message))
+      .finally(() =&gt; setLoading(false));
+  }, []);
+
+  if (loading) return &lt;p&gt;Cargando...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error: {error}&lt;/p&gt;;
+  return &lt;ul&gt;{users.map(u =&gt; &lt;li key={u.id}&gt;{u.name}&lt;/li&gt;)}&lt;/ul&gt;;
+}</code></pre>
+          </section>
+          <section>
+            <img src="./images/useEffect.png" alt="useEffect" height="500px" />
+          </section>
+        </section>
+
+        <!-- useContext -->
+        <section>
+          <section>
+            <h2>useContext</h2>
+            <p>Hook para compartir datos entre componentes sin pasar props</p>
+          </section>
+          <section>
+            <h3>El problema: "Prop Drilling"</h3>
+            <pre><code class="text">App (tiene usuario)
+  └─ Layout (pasa usuario)
+      └─ Sidebar (pasa usuario)
+          └─ UserBadge (necesita usuario) 😩</code></pre>
+            <p>Pasar props por muchos niveles es tedioso</p>
+          </section>
+          <section>
+            <h3>La solución: Context</h3>
+            <pre><code class="jsx">import { createContext, useContext, useState } from 'react';
+
+const AuthContext = createContext(null);
+
+function App() {
+  const [user, setUser] = useState(null);
+
+  return (
+    &lt;AuthContext.Provider value={{ user, setUser }}&gt;
+      &lt;Layout /&gt;
+    &lt;/AuthContext.Provider&gt;
+  );
+}
+
+function UserBadge() {
+  const { user } = useContext(AuthContext);
+  if (!user) return &lt;p&gt;No autenticado&lt;/p&gt;;
+  return &lt;p&gt;Hola, {user.name}&lt;/p&gt;;
+}</code></pre>
+          </section>
+          <section>
+            <h3>Analogía con Express</h3>
+            <pre><code class="javascript">// Express: req.user disponible en cualquier ruta via middleware
+app.use((req, res, next) =&gt; {
+  req.user = getUserFromToken(req.headers.auth);
+  next();
+});
+
+// React: useContext disponible en cualquier componente
+const { user } = useContext(AuthContext);</code></pre>
+          </section>
+        </section>
+
+        <!-- useRef -->
+        <section>
+          <section>
+            <h2>useRef</h2>
+            <p>Hook para referencias que persisten entre renders</p>
+          </section>
+          <section>
+            <h3>Acceder a elementos del DOM</h3>
+            <pre><code class="jsx">import { useRef } from 'react';
+
+function SearchInput() {
+  const inputRef = useRef(null);
+
+  const handleClick = () =&gt; {
+    inputRef.current.focus();
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;input ref={inputRef} type="text" placeholder="Buscar..." /&gt;
+      &lt;button onClick={handleClick}&gt;Enfocar&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>Guardar valores sin causar re-render</h3>
+            <pre><code class="jsx">function StopWatch() {
+  const [time, setTime] = useState(0);
+  const intervalRef = useRef(null);
+
+  const start = () =&gt; {
+    intervalRef.current = setInterval(() =&gt; {
+      setTime(t =&gt; t + 1);
+    }, 1000);
+  };
+
+  const stop = () =&gt; {
+    clearInterval(intervalRef.current);
+  };
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Tiempo: {time}s&lt;/p&gt;
+      &lt;button onClick={start}&gt;Iniciar&lt;/button&gt;
+      &lt;button onClick={stop}&gt;Detener&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- useReducer -->
+        <section>
+          <section>
+            <h2>useReducer</h2>
+            <p>Hook para estado complejo con múltiples acciones</p>
+          </section>
+          <section>
+            <h3>Patrón: (state, action) → newState</h3>
+            <pre><code class="jsx">import { useReducer } from 'react';
+
+function reducer(state, action) {
+  switch (action.type) {
+    case 'increment':
+      return { count: state.count + 1 };
+    case 'decrement':
+      return { count: state.count - 1 };
+    case 'reset':
+      return { count: 0 };
+    default:
+      return state;
+  }
+}
+
+function Counter() {
+  const [state, dispatch] = useReducer(reducer, { count: 0 });
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Contador: {state.count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'increment' })}&gt;+&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'decrement' })}&gt;-&lt;/button&gt;
+      &lt;button onClick={() =&gt; dispatch({ type: 'reset' })}&gt;Reset&lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>¿Cuándo usar useReducer vs useState?</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>useState</th>
+                  <th>useReducer</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Estado simple (string, number)</td>
+                  <td>Estado complejo (objetos, arrays)</td>
+                </tr>
+                <tr>
+                  <td>1-2 formas de actualizar</td>
+                  <td>Múltiples acciones posibles</td>
+                </tr>
+                <tr>
+                  <td>Lógica simple</td>
+                  <td>Lógica con muchos casos</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+        <!-- useMemo y useCallback -->
+        <section>
+          <section>
+            <h2>useMemo y useCallback</h2>
+            <p>Hooks de optimización de rendimiento</p>
+          </section>
+          <section>
+            <h3>useMemo: memorizar valores costosos</h3>
+            <pre><code class="jsx">import { useMemo, useState } from 'react';
+
+function UserStats({ users }) {
+  const [filter, setFilter] = useState('');
+
+  // Solo recalcula cuando users cambia
+  const avgLevel = useMemo(() =&gt; {
+    console.log('Calculando promedio...');
+    return users.reduce((sum, u) =&gt; sum + u.level, 0) / users.length;
+  }, [users]);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Nivel promedio: {avgLevel}&lt;/p&gt;
+      &lt;input
+        value={filter}
+        onChange={e =&gt; setFilter(e.target.value)}
+        placeholder="Filtrar..."
+      /&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>useCallback: memorizar funciones</h3>
+            <pre><code class="jsx">import { useCallback, useState } from 'react';
+
+function UserManager() {
+  const [users, setUsers] = useState([]);
+
+  // Función memorizada: no se re-crea en cada render
+  const deleteUser = useCallback(async (id) =&gt; {
+    await fetch(`http://localhost:3001/usuario/${id}`, {
+      method: 'DELETE'
+    });
+    setUsers(prev =&gt; prev.filter(u =&gt; u.id !== id));
+  }, []);
+
+  return (
+    &lt;ul&gt;
+      {users.map(user =&gt; (
+        &lt;UserItem
+          key={user.id}
+          user={user}
+          onDelete={deleteUser}
+        /&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- Custom Hooks -->
+        <section>
+          <section>
+            <h2>Custom Hooks</h2>
+            <p>Reutilizar lógica entre componentes</p>
+          </section>
+          <section>
+            <h3>Hook para consumir la API de Express</h3>
+            <pre><code class="jsx">// hooks/useUsers.js
+import { useState, useEffect } from 'react';
+
+function useUsers() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const fetchUsers = () =&gt; {
+    setLoading(true);
+    fetch('http://localhost:3001/usuarios')
+      .then(res =&gt; res.json())
+      .then(data =&gt; setUsers(data))
+      .catch(err =&gt; setError(err.message))
+      .finally(() =&gt; setLoading(false));
+  };
+
+  useEffect(() =&gt; { fetchUsers(); }, []);
+
+  return { users, loading, error, refetch: fetchUsers };
+}</code></pre>
+          </section>
+          <section>
+            <h3>Usando el custom hook</h3>
+            <pre><code class="jsx">function App() {
+  const { users, loading, error, refetch } = useUsers();
+
+  if (loading) return &lt;p&gt;Cargando...&lt;/p&gt;;
+  if (error) return &lt;p&gt;Error: {error}&lt;/p&gt;;
+
+  return (
+    &lt;div&gt;
+      &lt;button onClick={refetch}&gt;Actualizar&lt;/button&gt;
+      &lt;ul&gt;
+        {users.map(user =&gt; (
+          &lt;li key={user.id}&gt;
+            {user.name} - Nivel {user.level}
+          &lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>Hook genérico para cualquier API</h3>
+            <pre><code class="jsx">// hooks/useFetch.js
+function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() =&gt; {
+    fetch(url)
+      .then(res =&gt; {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return res.json();
+      })
+      .then(setData)
+      .catch(err =&gt; setError(err.message))
+      .finally(() =&gt; setLoading(false));
+  }, [url]);
+
+  return { data, loading, error };
+}
+
+// Uso
+const { data: users, loading } = useFetch('http://localhost:3001/usuarios');
+const { data: posts } = useFetch('http://localhost:3001/posts');</code></pre>
+          </section>
+        </section>
+
+        <!-- Reglas de los Hooks -->
+        <section>
+          <section>
+            <h2>Reglas de los Hooks</h2>
+          </section>
+          <section>
+            <h3>Las 3 reglas que no puedes romper</h3>
+            <ol>
+              <li>Solo llamar Hooks en el <strong>nivel superior</strong> (no dentro de if, for, funciones anidadas)</li>
+              <li>Solo llamar Hooks en <strong>componentes de React</strong> o en custom hooks</li>
+              <li>Los nombres siempre empiezan con <code>use</code></li>
+            </ol>
+          </section>
+          <section>
+            <h3>Correcto vs Incorrecto</h3>
+            <pre><code class="jsx">// ✅ CORRECTO
+function UserList() {
+  const [users, setUsers] = useState([]);
+  useEffect(() =&gt; { /* ... */ }, []);
+  return &lt;div&gt;...&lt;/div&gt;;
+}
+
+// ❌ INCORRECTO - hook dentro de condicional
+function UserList({ loggedIn }) {
+  if (loggedIn) {
+    const [users, setUsers] = useState([]); // ERROR
+  }
+  return &lt;div&gt;...&lt;/div&gt;;
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- Resumen -->
+        <section>
+          <section>
+            <h2>Resumen de Hooks</h2>
+          </section>
+          <section>
+            <table>
+              <thead>
+                <tr>
+                  <th>Hook</th>
+                  <th>Propósito</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><code>useState</code></td>
+                  <td>Estado local del componente</td>
+                </tr>
+                <tr>
+                  <td><code>useEffect</code></td>
+                  <td>Efectos secundarios (fetch, timers)</td>
+                </tr>
+                <tr>
+                  <td><code>useContext</code></td>
+                  <td>Estado global compartido</td>
+                </tr>
+                <tr>
+                  <td><code>useRef</code></td>
+                  <td>Referencias al DOM, valores persistentes</td>
+                </tr>
+                <tr>
+                  <td><code>useReducer</code></td>
+                  <td>Estado complejo con acciones</td>
+                </tr>
+                <tr>
+                  <td><code>useMemo</code></td>
+                  <td>Cachear valores costosos</td>
+                </tr>
+                <tr>
+                  <td><code>useCallback</code></td>
+                  <td>Cachear funciones</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+        <!-- Recursos -->
+        <section>
+          <h2>Recursos adicionales</h2>
+          <ul>
+            <li><a href="https://react.dev/reference/react/hooks">Documentación oficial de Hooks</a></li>
+            <li><a href="https://react.dev/learn/state-a-components-memory">State: A Component's Memory</a></li>
+            <li><a href="https://react.dev/learn/synchronizing-with-effects">Synchronizing with Effects</a></li>
+            <li><a href="https://react.dev/learn/reusing-logic-with-custom-hooks">Custom Hooks</a></li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script>
+      Reveal.initialize({
+        plugins: [RevealHighlight],
+      });
+    </script>
+  </body>
+</html>

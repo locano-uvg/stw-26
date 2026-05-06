@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>React - Introducción</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/moon.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/monokai.min.css"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <!-- Portada -->
+        <section>
+          <h1>React</h1>
+          <h3>Biblioteca JavaScript para interfaces de usuario</h3>
+          <p><small>Creado por Meta (Facebook) en 2013</small></p>
+        </section>
+
+        <!-- Contexto: De Express a React -->
+        <section>
+          <section>
+            <h2>De Express a React</h2>
+            <p>El siguiente paso en su desarrollo como full stack developers</p>
+          </section>
+          <section>
+            <h3>Lo que ya saben</h3>
+            <ul>
+              <li>Node.js y npm</li>
+              <li>APIs REST con Express</li>
+              <li>Rutas, métodos HTTP (GET, POST, PUT, DELETE)</li>
+              <li>JSON como formato de datos</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Lo que van a aprender</h3>
+            <ul>
+              <li>Crear interfaces de usuario interactivas</li>
+              <li>Conectar un frontend con sus APIs de Express</li>
+              <li>Manejar estado y datos en el navegador</li>
+              <li>Construir aplicaciones full stack completas</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Arquitectura Full Stack</h3>
+            <pre><code class="text">
+  React App (Frontend)         Express API (Backend)
+  Puerto 5173                  Puerto 3001
+ ┌──────────────────┐        ┌──────────────────┐
+ │  Componentes     │        │  GET /usuarios   │
+ │  useState()      │──────▶ │  POST /usuario   │
+ │  useEffect()     │◀────── │  PUT /usuario/:id│
+ │  fetch()         │        │  DELETE /usuario  │
+ └──────────────────┘        └──────────────────┘
+   Lo que el usuario ve        Lo que ya construyeron
+            </code></pre>
+          </section>
+        </section>
+
+        <!-- ¿Qué es React? -->
+        <section>
+          <section>
+            <h2>¿Qué es React?</h2>
+          </section>
+          <section>
+            <ul>
+              <li>Biblioteca JavaScript para construir interfaces de usuario</li>
+              <li>Basado en componentes reutilizables</li>
+              <li>Utiliza un DOM virtual para mejor rendimiento</li>
+              <li>Mantiene un flujo de datos unidireccional</li>
+              <li>Usa componentes funcionales (funciones de JS)</li>
+            </ul>
+          </section>
+          <section>
+            <h3>¿Por qué React?</h3>
+            <ul>
+              <li>Biblioteca más popular para frontend (2024-2026)</li>
+              <li>Usado por Meta, Netflix, Airbnb, Uber</li>
+              <li>Gran ecosistema y comunidad</li>
+              <li>Se integra directamente con sus APIs de Express</li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- DOM Virtual -->
+        <section>
+          <section>
+            <h2>DOM Virtual</h2>
+            <p>La clave del rendimiento de React</p>
+          </section>
+          <section>
+            <ul>
+              <li>React mantiene una copia ligera del DOM en memoria</li>
+              <li>Cuando el estado cambia, compara el DOM virtual con el real</li>
+              <li>Solo actualiza los nodos que realmente cambiaron</li>
+              <li>Mucho más rápido que manipular el DOM directamente</li>
+            </ul>
+          </section>
+          <section>
+            <img src="./images/virtualdom.png" alt="Virtual DOM" height="500px" />
+          </section>
+        </section>
+
+        <!-- Componentes Funcionales -->
+        <section>
+          <section>
+            <h2>Componentes Funcionales</h2>
+            <p>La forma moderna de escribir React</p>
+          </section>
+          <section>
+            <h3>Un componente = Una función</h3>
+            <pre><code class="jsx">function Saludo({ nombre }) {
+  return (
+    &lt;div&gt;
+      &lt;h1&gt;Hola, {nombre}!&lt;/h1&gt;
+      &lt;p&gt;Bienvenido a React&lt;/p&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>Comparación con Express</h3>
+            <pre><code class="javascript">// Express: una ruta es una función que responde
+app.get('/saludo/:nombre', (req, res) =&gt; {
+  res.json({ mensaje: `Hola, ${req.params.nombre}` });
+});
+
+// React: un componente es una función que retorna UI
+function Saludo({ nombre }) {
+  return &lt;h1&gt;Hola, {nombre}!&lt;/h1&gt;;
+}</code></pre>
+            <p><small>En ambos casos: reciben datos → retornan algo</small></p>
+          </section>
+          <section>
+            <img src="./images/componente1.png" alt="Componente" height="500px" />
+          </section>
+          <section>
+            <img src="./images/componente2.png" alt="Componentes" height="500px" />
+          </section>
+        </section>
+
+        <!-- Props -->
+        <section>
+          <section>
+            <h2>Props</h2>
+            <p>Datos que un componente padre pasa a un hijo</p>
+          </section>
+          <section>
+            <pre><code class="jsx">// Props = parámetros del componente
+function UserCard({ name, level, description }) {
+  return (
+    &lt;div className="card"&gt;
+      &lt;h3&gt;{name}&lt;/h3&gt;
+      &lt;p&gt;{description}&lt;/p&gt;
+      &lt;span&gt;Nivel: {level}&lt;/span&gt;
+    &lt;/div&gt;
+  );
+}
+
+// Uso del componente
+&lt;UserCard name="Luis" level={90} description="Jugador" /&gt;</code></pre>
+          </section>
+          <section>
+            <h3>Analogía con Express</h3>
+            <pre><code class="javascript">// En Express, req.body son los "props" de una ruta
+app.post('/usuario', (req, res) =&gt; {
+  const { name, level, description } = req.body;
+  // ...
+});
+
+// En React, props son los datos que recibe el componente
+function UserCard({ name, level, description }) {
+  // ...
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- Estado -->
+        <section>
+          <section>
+            <h2>Estado (State)</h2>
+            <p>Datos internos que el componente puede cambiar</p>
+          </section>
+          <section>
+            <h3>useState: el hook básico de estado</h3>
+            <pre><code class="jsx">import { useState } from 'react';
+
+function Counter() {
+  const [count, setCount] = useState(0);
+
+  return (
+    &lt;div&gt;
+      &lt;p&gt;Contador: {count}&lt;/p&gt;
+      &lt;button onClick={() =&gt; setCount(count + 1)}&gt;
+        Incrementar
+      &lt;/button&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>Props vs Estado</h3>
+            <table>
+              <thead>
+                <tr>
+                  <th>Props</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Vienen del padre</td>
+                  <td>Son internos</td>
+                </tr>
+                <tr>
+                  <td>Son de solo lectura</td>
+                  <td>Se pueden modificar</td>
+                </tr>
+                <tr>
+                  <td>El hijo NO los cambia</td>
+                  <td>El componente los actualiza</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+        <!-- JSX -->
+        <section>
+          <section>
+            <h2>JSX</h2>
+            <p>Sintaxis que combina JavaScript y HTML</p>
+          </section>
+          <section>
+            <ul>
+              <li>Permite escribir HTML dentro de JavaScript</li>
+              <li>Se compila a JavaScript normal con Vite/Babel</li>
+              <li>Las expresiones JS van entre llaves <code>{}</code></li>
+              <li>Usa <code>className</code> en vez de <code>class</code></li>
+            </ul>
+          </section>
+          <section>
+            <pre><code class="jsx">function UserList({ users }) {
+  return (
+    &lt;div className="user-list"&gt;
+      &lt;h2&gt;Usuarios ({users.length})&lt;/h2&gt;
+      &lt;ul&gt;
+        {users.map(user =&gt; (
+          &lt;li key={user.id}&gt;
+            {user.name} - Nivel {user.level}
+          &lt;/li&gt;
+        ))}
+      &lt;/ul&gt;
+    &lt;/div&gt;
+  );
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- Conectando con Express -->
+        <section>
+          <section>
+            <h2>React + Express</h2>
+            <p>Consumiendo sus APIs desde React</p>
+          </section>
+          <section>
+            <h3>fetch() para conectar con el backend</h3>
+            <pre><code class="jsx">import { useState, useEffect } from 'react';
+
+function UserList() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() =&gt; {
+    fetch('http://localhost:3001/usuarios')
+      .then(res =&gt; res.json())
+      .then(data =&gt; {
+        setUsers(data);
+        setLoading(false);
+      });
+  }, []);
+
+  if (loading) return &lt;p&gt;Cargando...&lt;/p&gt;;
+
+  return (
+    &lt;ul&gt;
+      {users.map(user =&gt; (
+        &lt;li key={user.id}&gt;{user.name}&lt;/li&gt;
+      ))}
+    &lt;/ul&gt;
+  );
+}</code></pre>
+          </section>
+          <section>
+            <h3>Crear usuarios desde React</h3>
+            <pre><code class="jsx">function CreateUser() {
+  const [name, setName] = useState('');
+  const [level, setLevel] = useState(1);
+
+  const handleSubmit = async (e) =&gt; {
+    e.preventDefault();
+    await fetch('http://localhost:3001/usuario', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ name, level })
+    });
+  };
+
+  return (
+    &lt;form onSubmit={handleSubmit}&gt;
+      &lt;input
+        value={name}
+        onChange={e =&gt; setName(e.target.value)}
+        placeholder="Nombre"
+      /&gt;
+      &lt;button type="submit"&gt;Crear&lt;/button&gt;
+    &lt;/form&gt;
+  );
+}</code></pre>
+          </section>
+        </section>
+
+        <!-- Requisitos -->
+        <section>
+          <h2>Requisitos para comenzar</h2>
+          <ul>
+            <li>Node.js y npm instalados (ya lo tienen)</li>
+            <li>Editor de código (VS Code recomendado)</li>
+            <li>
+              Conocimientos que ya poseen:
+              <ul>
+                <li>JavaScript moderno (ES6+)</li>
+                <li>Node.js y Express</li>
+                <li>APIs REST y JSON</li>
+              </ul>
+            </li>
+          </ul>
+        </section>
+
+        <!-- Crear proyecto -->
+        <section>
+          <section>
+            <h2>Crear un proyecto React</h2>
+          </section>
+          <section>
+            <pre><code class="bash"># Crear proyecto con Vite (herramienta moderna)
+npm create vite@latest mi-app -- --template react
+
+# Entrar al proyecto
+cd mi-app
+
+# Instalar dependencias
+npm install
+
+# Iniciar servidor de desarrollo
+npm run dev</code></pre>
+          </section>
+          <section>
+            <h3>Estructura del proyecto</h3>
+            <pre><code class="text">mi-app/
+├── index.html          ← Punto de entrada HTML
+├── package.json        ← Dependencias (como en Express)
+├── vite.config.js      ← Configuración de Vite
+└── src/
+    ├── main.jsx        ← Punto de entrada JS
+    ├── App.jsx         ← Componente principal
+    └── App.css         ← Estilos</code></pre>
+          </section>
+        </section>
+
+        <!-- Errores Comunes -->
+        <section>
+          <section>
+            <h2>Errores Comunes</h2>
+            <p>Lo que van a encontrar al conectar React con Express</p>
+          </section>
+          <section>
+            <h3>1. CORS Error</h3>
+            <pre><code class="text">Access to fetch at 'http://localhost:3001/usuarios'
+from origin 'http://localhost:5173' has been blocked
+by CORS policy</code></pre>
+            <p><strong>Solución:</strong> Instalar y usar cors en Express</p>
+            <pre><code class="javascript">// En el backend
+const cors = require('cors');
+app.use(cors());</code></pre>
+          </section>
+          <section>
+            <h3>2. Cannot read properties of undefined</h3>
+            <pre><code class="jsx">// ❌ Error: users es undefined antes de que cargue
+function App() {
+  const [users, setUsers] = useState(); // sin valor inicial
+  return &lt;p&gt;{users.length}&lt;/p&gt;; // 💥 crash
+}
+
+// ✅ Solución: siempre inicializar con valor correcto
+function App() {
+  const [users, setUsers] = useState([]); // array vacío
+  return &lt;p&gt;{users.length}&lt;/p&gt;; // 0, sin crash
+}</code></pre>
+          </section>
+          <section>
+            <h3>3. useEffect loop infinito</h3>
+            <pre><code class="jsx">// ❌ Error: se ejecuta infinitamente
+useEffect(() =&gt; {
+  fetch('/api/users').then(r =&gt; r.json()).then(setUsers);
+}); // ← Falta el array de dependencias!
+
+// ✅ Solución: agregar [] para ejecutar solo al montar
+useEffect(() =&gt; {
+  fetch('/api/users').then(r =&gt; r.json()).then(setUsers);
+}, []); // ← Se ejecuta UNA vez</code></pre>
+          </section>
+          <section>
+            <h3>4. No manejar loading state</h3>
+            <pre><code class="jsx">// ❌ El usuario ve una página vacía mientras carga
+function App() {
+  const [users, setUsers] = useState([]);
+  useEffect(() =&gt; { /* fetch... */ }, []);
+  return &lt;ul&gt;{users.map(...)}&lt;/ul&gt;; // vacío 1-2 seg
+}
+
+// ✅ Mostrar indicador de carga
+function App() {
+  const [users, setUsers] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // ...
+  if (loading) return &lt;p&gt;Cargando...&lt;/p&gt;;
+  return &lt;ul&gt;{users.map(...)}&lt;/ul&gt;;
+}</code></pre>
+          </section>
+          <section>
+            <h3>5. Olvidar Content-Type en POST</h3>
+            <pre><code class="jsx">// ❌ Express recibe req.body = undefined
+await fetch('/api/usuario', {
+  method: 'POST',
+  body: JSON.stringify({ name: 'Luis' })
+});
+
+// ✅ Agregar el header Content-Type
+await fetch('/api/usuario', {
+  method: 'POST',
+  headers: { 'Content-Type': 'application/json' },
+  body: JSON.stringify({ name: 'Luis' })
+});</code></pre>
+          </section>
+        </section>
+
+        <!-- Herramientas -->
+        <section>
+          <h2>Herramientas útiles</h2>
+          <ul>
+            <li>React Developer Tools (extensión del navegador)</li>
+            <li>Vite (bundler y dev server)</li>
+            <li>React Router (para navegación entre páginas)</li>
+            <li>Tailwind CSS (para estilos rápidos)</li>
+            <li>TanStack Query (para manejo avanzado de datos)</li>
+          </ul>
+        </section>
+
+        <!-- Recursos -->
+        <section>
+          <h2>Recursos adicionales</h2>
+          <ul>
+            <li>
+              <a href="https://react.dev/learn">Documentación oficial - Learn React</a>
+            </li>
+            <li>
+              <a href="https://react.dev/reference/react">Referencia de API</a>
+            </li>
+            <li>
+              <a href="https://developer.mozilla.org/es/docs/Web/API/Fetch_API">MDN - Fetch API</a>
+            </li>
+            <li>
+              <a href="https://github.com/facebook/react">GitHub de React</a>
+            </li>
+          </ul>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/plugin/highlight/highlight.min.js"></script>
+    <script>
+      Reveal.initialize({
+        plugins: [RevealHighlight],
+      });
+    </script>
+  </body>
+</html>
