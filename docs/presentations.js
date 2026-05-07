@@ -119,10 +119,24 @@ export const presentations = [
     active: true,
   },
   {
+    title: "React Config ",
+    description: "Instalación de React",
+    path: "temas/react/example/index.html",
+    image: "temas/react/images/install.webp",
+    active: true,
+  },
+  {
     title: "React Hooks",
     description: "Hooks de React",
     path: "temas/react_hooks/index.html",
     image: "temas/react_hooks/images/hooks.png",
+    active: true,
+  },
+  {
+    title: "React Hooks Examples ",
+    description: "Como usar los hooks de React",
+    path: "temas/react_hooks/example/index.html",
+    image: "temas/react_hooks/images/hooks2.png",
     active: true,
   },
   {
