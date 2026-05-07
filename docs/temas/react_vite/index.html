@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <title>Vite vs Webpack</title>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.css"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/theme/moon.min.css"
+    />
+  </head>
+  <body>
+    <div class="reveal">
+      <div class="slides">
+        <section>
+          <h1>Vite</h1>
+          <h3>El bundler moderno para React</h3>
+          <p><small>¿Por qué Vite y no Webpack?</small></p>
+        </section>
+
+        <!-- Contexto histórico -->
+        <section>
+          <section>
+            <h2>Un poco de contexto</h2>
+          </section>
+          <section>
+            <h3>Antes existía Create React App (CRA)</h3>
+            <ul>
+              <li>Era la forma "oficial" de iniciar un proyecto React</li>
+              <li>Usaba <strong>Webpack</strong> + <strong>Babel</strong> tras bambalinas</li>
+              <li>Empaquetaba todo el proyecto antes de servirlo</li>
+              <li>
+                <strong>Deprecado oficialmente en 2025</strong> por el equipo de React
+              </li>
+            </ul>
+            <p><small>La pregunta importante: ¿qué lo reemplazó y por qué?</small></p>
+          </section>
+        </section>
+
+        <!-- ¿Qué hace un bundler? -->
+        <section>
+          <section>
+            <h2>¿Qué problema resuelve un bundler?</h2>
+          </section>
+          <section>
+            <h3>El navegador no entendía nuestro código</h3>
+            <ul>
+              <li>JSX, TypeScript, SCSS → el navegador no los ejecuta</li>
+              <li>Históricamente, <code>import / export</code> tampoco funcionaba en el navegador</li>
+              <li>Cientos de archivos pequeños = cientos de requests HTTP</li>
+            </ul>
+          </section>
+          <section>
+            <h3>El rol del bundler</h3>
+            <ul>
+              <li><strong>Transformar</strong>: JSX/TS → JavaScript que el navegador entiende</li>
+              <li><strong>Empaquetar</strong>: muchos archivos en pocos bundles optimizados</li>
+              <li><strong>Servir en desarrollo</strong>: dev server con recarga automática</li>
+              <li><strong>Construir para producción</strong>: minificar, tree-shake, optimizar</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Dos modos distintos</h3>
+            <p><strong>Dev</strong>: rápido, con HMR, sin optimizar</p>
+            <p><strong>Build</strong>: lento, optimizado al máximo, listo para deploy</p>
+            <p><small>La gran diferencia entre Webpack y Vite está sobre todo en el modo <em>dev</em></small></p>
+          </section>
+        </section>
+
+        <!-- Webpack tras bambalinas -->
+        <section>
+          <section>
+            <h2>Webpack tras bambalinas</h2>
+          </section>
+          <section>
+            <h3>Estrategia: <em>bundle-first</em></h3>
+            <ol>
+              <li>Lee tu archivo de entrada (ej. <code>index.js</code>)</li>
+              <li>Sigue <strong>todos</strong> los <code>import</code> recursivamente</li>
+              <li>Construye un <strong>grafo completo</strong> de dependencias</li>
+              <li>Genera un bundle único (o varios chunks)</li>
+              <li>Recién ahí levanta el dev server</li>
+            </ol>
+          </section>
+          <section>
+            <h3>Diagrama mental</h3>
+            <pre><code>[ archivos del proyecto ]
+        ↓
+[ grafo completo de deps ]
+        ↓
+[ bundle empaquetado ]
+        ↓
+[ servidor lo entrega ]</code></pre>
+            <p><small>En proyectos grandes esto puede tardar 10-30 segundos en cada arranque.</small></p>
+          </section>
+          <section>
+            <h3>Cuando cambias un archivo...</h3>
+            <ul>
+              <li>Webpack tiene que <strong>re-bundlear</strong> partes del grafo</li>
+              <li>HMR existe, pero re-procesa más de lo necesario</li>
+              <li>Mientras más crece el proyecto, más lento se siente</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Y la configuración...</h3>
+            <ul>
+              <li><code>webpack.config.js</code> con loaders, plugins, reglas, alias</li>
+              <li>Babel aparte, ESLint aparte, PostCSS aparte</li>
+              <li>CRA escondía todo esto, pero al "ejectarlo" aparecía el monstruo</li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- Vite tras bambalinas -->
+        <section>
+          <section>
+            <h2>Vite tras bambalinas</h2>
+            <p><small>(Vite = "rápido" en francés)</small></p>
+          </section>
+          <section>
+            <h3>La idea clave: ESM nativo</h3>
+            <p>
+              Hoy <strong>todos los navegadores modernos</strong> entienden
+              <code>import</code> y <code>export</code> de forma nativa.
+            </p>
+            <p>
+              Vite aprovecha esto: <strong>en desarrollo no bundlea</strong>.
+            </p>
+          </section>
+          <section>
+            <h3>¿Cómo funciona en dev?</h3>
+            <ol>
+              <li>Vite levanta un servidor en menos de 1 segundo</li>
+              <li>El navegador pide <code>main.jsx</code></li>
+              <li>Vite lo transforma <strong>al vuelo</strong> y lo devuelve</li>
+              <li>Ese archivo importa otros → el navegador los pide uno por uno</li>
+              <li>Vite solo procesa lo que el navegador realmente necesita</li>
+            </ol>
+          </section>
+          <section>
+            <h3>Diagrama mental</h3>
+            <pre><code>[ navegador ]  ──pide module.js──→  [ Vite ]
+[ navegador ]  ←─transformado─────  [ Vite ]
+
+Solo se transforma lo que se pide.
+No hay grafo completo. No hay bundle.</code></pre>
+          </section>
+          <section>
+            <h3>Pre-bundling con esbuild</h3>
+            <ul>
+              <li>Las dependencias de <code>node_modules</code> sí se pre-empacan</li>
+              <li>Lo hace <strong>esbuild</strong>, escrito en <strong>Go</strong></li>
+              <li>10-100x más rápido que herramientas en JavaScript</li>
+              <li>Se hace una sola vez y se cachea</li>
+            </ul>
+          </section>
+          <section>
+            <h3>HMR granular</h3>
+            <ul>
+              <li>Cambias un componente → Vite invalida <strong>solo ese módulo</strong></li>
+              <li>El estado de la app se preserva</li>
+              <li>Se siente <strong>instantáneo</strong>, sin importar el tamaño del proyecto</li>
+            </ul>
+          </section>
+          <section>
+            <h3>¿Y para producción?</h3>
+            <ul>
+              <li>Vite usa <strong>Rollup</strong> para el build final</li>
+              <li>Mejor tree-shaking que Webpack</li>
+              <li>Output más pequeño y limpio</li>
+              <li><code>npm run build</code> → carpeta <code>/dist</code> lista para deploy</li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- Comparación -->
+        <section>
+          <section>
+            <h2>Webpack vs Vite</h2>
+          </section>
+          <section>
+            <table>
+              <thead>
+                <tr>
+                  <th>Aspecto</th>
+                  <th>Webpack</th>
+                  <th>Vite</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Estrategia en dev</td>
+                  <td>Bundle completo antes de servir</td>
+                  <td>ESM nativo, transforma bajo demanda</td>
+                </tr>
+                <tr>
+                  <td>Tiempo de arranque</td>
+                  <td>5-30s en proyectos grandes</td>
+                  <td>&lt; 1s</td>
+                </tr>
+                <tr>
+                  <td>HMR</td>
+                  <td>Re-bundle parcial</td>
+                  <td>Módulo aislado, instantáneo</td>
+                </tr>
+                <tr>
+                  <td>Pre-bundle deps</td>
+                  <td>Babel / JS</td>
+                  <td>esbuild (Go)</td>
+                </tr>
+                <tr>
+                  <td>Build producción</td>
+                  <td>Webpack</td>
+                  <td>Rollup</td>
+                </tr>
+                <tr>
+                  <td>Configuración</td>
+                  <td>Extensa, muchos plugins</td>
+                  <td>Mínima, defaults sensatos</td>
+                </tr>
+              </tbody>
+            </table>
+          </section>
+        </section>
+
+        <!-- Por qué importa -->
+        <section>
+          <section>
+            <h2>¿Por qué les importa esto a ustedes?</h2>
+          </section>
+          <section>
+            <h3>Ciclo de feedback</h3>
+            <p>
+              Builds más rápidos = ven el cambio antes = aprenden y prototipan más rápido.
+            </p>
+            <p>
+              Lo que en Webpack tardaba 10s, en Vite es instantáneo. Multiplicado por cientos de cambios al día.
+            </p>
+          </section>
+          <section>
+            <h3>Menos config, más código</h3>
+            <p>
+              No pelean con <code>webpack.config.js</code>. Se enfocan en aprender React, no en domar el bundler.
+            </p>
+          </section>
+          <section>
+            <h3>Es el estándar actual</h3>
+            <ul>
+              <li><strong>Vite</strong> lo recomienda hoy la documentación oficial de React</li>
+              <li><strong>Astro</strong>, <strong>SvelteKit</strong>, <strong>Nuxt</strong> usan Vite por debajo</li>
+              <li><strong>Next.js</strong> y <strong>Remix</strong> usan herramientas también basadas en ESM</li>
+              <li>Aprender Vite = entender hacia dónde va el ecosistema</li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- Crear proyecto -->
+        <section>
+          <section>
+            <h2>Creando un proyecto con Vite</h2>
+          </section>
+          <section>
+            <h3>Comandos</h3>
+            <pre><code>npm create vite@latest mi-proyecto -- --template react
+cd mi-proyecto
+npm install
+npm run dev</code></pre>
+            <ul>
+              <li>Listo en segundos</li>
+              <li>Configuración mínima inicial</li>
+              <li>Estructura moderna y limpia</li>
+            </ul>
+          </section>
+          <section>
+            <h3>Scripts disponibles</h3>
+            <ul>
+              <li>
+                <code>npm run dev</code> — servidor de desarrollo
+                <ul>
+                  <li>ESM nativo + transformación bajo demanda</li>
+                  <li>HMR instantáneo</li>
+                </ul>
+              </li>
+              <li>
+                <code>npm run build</code> — build de producción
+                <ul>
+                  <li>Rollup optimiza el bundle final</li>
+                  <li>Genera <code>/dist</code></li>
+                </ul>
+              </li>
+              <li>
+                <code>npm run preview</code> — sirve el build localmente para probar
+              </li>
+            </ul>
+          </section>
+        </section>
+
+        <!-- Actividad -->
+        <section>
+          <h2>Actividad en clase</h2>
+          <ol>
+            <li>Crear un proyecto con Vite + React</li>
+            <li>Abrir las <strong>DevTools → Network</strong> y ver cómo el navegador pide cada módulo individualmente en dev</li>
+            <li>Modificar un componente y observar el HMR instantáneo</li>
+            <li>Ejecutar <code>npm run build</code> y explorar la carpeta <code>/dist</code></li>
+            <li>Comparar: cantidad de archivos en dev vs en build</li>
+          </ol>
+        </section>
+
+        <!-- Final -->
+        <section>
+          <h2>Conclusión</h2>
+          <p>Vite es el estándar moderno para React.</p>
+          <p>
+            No es magia: es el resultado de aprovechar ESM nativo y herramientas
+            más rápidas (esbuild, Rollup) en vez de bundlear todo desde el principio.
+          </p>
+          <p><small>Menos configuración, más productividad.</small></p>
+        </section>
+      </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/4.5.0/reveal.min.js"></script>
+    <script>
+      Reveal.initialize();
+    </script>
+  </body>
+</html>

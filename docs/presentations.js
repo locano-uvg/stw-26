@@ -128,8 +128,8 @@ export const presentations = [
   {
     title: "React Scripts vs Vite",
     description: "Comparación de React Scripts y Vite",
-    path: "temas/react_scripts_vite/index.html",
-    image: "temas/react_scripts_vite/images/vite.png",
+    path: "temas/react_vite/index.html",
+    image: "temas/react_vite/images/vite.png",
     active: true,
   },
   {
