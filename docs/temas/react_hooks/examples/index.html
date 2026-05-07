@@ -1,0 +1,1786 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Guía Interactiva de React Hooks — STW 2026</title>
+  <style>
+    /* ═══════════════════════════════════════════
+       DESIGN TOKENS
+    ═══════════════════════════════════════════ */
+    :root {
+      --bg:      #0d1117;
+      --surface: #161b22;
+      --card:    #1c2230;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --accent:  #61dafb;
+      --accent2: #58a6ff;
+      --green:   #3fb950;
+      --yellow:  #d29922;
+      --red:     #f85149;
+      --purple:  #bc8cff;
+      --orange:  #ffa657;
+      --pink:    #f778ba;
+      --radius:  10px;
+      --mono:    "Fira Code","Cascadia Code","Consolas",monospace;
+      --nav-h:   56px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    code, pre { font-family: var(--mono); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    /* PROGRESS BAR */
+    #progress {
+      position: fixed; top: var(--nav-h); left: 0;
+      height: 2px; background: var(--accent);
+      width: 0%; z-index: 400; transition: width 0.1s;
+    }
+
+    /* NAV */
+    nav {
+      position: sticky; top: 0; z-index: 300;
+      background: rgba(13,17,23,0.93);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 1.25rem;
+      height: var(--nav-h); padding: 0 1.5rem;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 0.9rem;
+      white-space: nowrap; color: var(--text);
+      flex-shrink: 0;
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links {
+      display: flex; gap: 0.1rem;
+      list-style: none; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      color: var(--muted); font-size: 0.775rem;
+      white-space: nowrap; padding: 0.3rem 0.6rem;
+      border-radius: 5px; transition: color 0.15s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); text-decoration: none; background: var(--surface); }
+
+    /* PAGE LAYOUT */
+    .page-layout {
+      display: grid;
+      grid-template-columns: 230px 1fr;
+      max-width: 1340px;
+      margin: 0 auto;
+    }
+
+    /* SIDEBAR */
+    .sidebar {
+      position: sticky; top: var(--nav-h);
+      height: calc(100vh - var(--nav-h));
+      overflow-y: auto; padding: 1.5rem 0.75rem;
+      border-right: 1px solid var(--border);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .sidebar-title {
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted); margin-bottom: 0.6rem;
+      padding-left: 0.5rem;
+    }
+    .sidebar-nav { list-style: none; display: flex; flex-direction: column; gap: 1px; }
+    .sidebar-nav a {
+      display: block; padding: 0.4rem 0.65rem;
+      border-radius: 6px; color: var(--muted);
+      font-size: 0.82rem; transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+    .sidebar-nav a:hover { color: var(--text); text-decoration: none; background: var(--surface); }
+    .sidebar-nav a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: rgba(97,218,251,0.07);
+    }
+
+    /* MAIN */
+    main { padding: 0 2rem 5rem; min-width: 0; }
+
+    /* HERO */
+    .hero {
+      padding: 4rem 0 3rem; text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%,
+        rgba(97,218,251,0.12) 0%, transparent 60%);
+    }
+    .hero-label {
+      color: var(--muted); font-size: 0.75rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem,5vw,3rem); font-weight: 800;
+      background: linear-gradient(135deg, #e6edf3 30%, #61dafb 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 1rem;
+    }
+    .hero p { color: var(--muted); max-width: 600px; margin: 0 auto 2rem; }
+    .hero-chips { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; }
+    .chip {
+      padding: 0.3rem 0.85rem; border-radius: 20px;
+      font-size: 0.72rem; font-weight: 600;
+      border: 1px solid var(--border); color: var(--muted);
+      transition: all 0.2s; font-family: var(--mono);
+    }
+    .chip:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+    /* TOPIC SECTIONS */
+    .topic { padding: 3rem 0; border-top: 1px solid var(--border); }
+    .topic-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+    .topic-num {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; color: var(--accent);
+      flex-shrink: 0; margin-top: 4px; font-family: var(--mono);
+    }
+    .topic-title { font-size: 1.55rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .topic-title code {
+      background: rgba(97,218,251,0.1); color: var(--accent);
+      padding: 0.05em 0.35em; border-radius: 5px;
+      font-size: 0.85em;
+    }
+    .topic-desc { color: var(--muted); font-size: 0.92rem; }
+
+    /* STEPS */
+    .steps {
+      display: flex; gap: 0.5rem;
+      margin: 1rem 0 1.5rem; flex-wrap: wrap;
+    }
+    .step {
+      display: flex; align-items: center; gap: 0.5rem;
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: 20px; padding: 0.3rem 0.85rem;
+      font-size: 0.78rem; color: var(--muted);
+    }
+    .step-num {
+      width: 20px; height: 20px; border-radius: 50%;
+      background: var(--accent); color: #0d1117;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.7rem; font-weight: 700; flex-shrink: 0;
+    }
+
+    /* TABS */
+    .tabs {
+      display: flex; gap: 0;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 1.25rem; flex-wrap: wrap;
+    }
+    .tab-btn {
+      padding: 0.5rem 1.1rem; background: none; border: none;
+      border-bottom: 2px solid transparent;
+      color: var(--muted); font-size: 0.85rem;
+      cursor: pointer; transition: all 0.15s;
+      font-family: inherit;
+    }
+    .tab-btn:hover { color: var(--text); }
+    .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+    .tab-panel { display: none; }
+    .tab-panel.active { display: block; }
+
+    /* DEMO BOX */
+    .demo-box {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1.5rem;
+      margin-bottom: 1rem; position: relative;
+    }
+    .demo-label {
+      position: absolute; top: -0.55rem; left: 1rem;
+      background: var(--surface); padding: 0 0.5rem;
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--accent);
+    }
+
+    /* CODE BLOCKS */
+    .code-wrap { position: relative; margin-bottom: 1rem; }
+    .code-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      background: var(--card); border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 0.45rem 0.85rem;
+    }
+    .code-lang {
+      font-size: 0.7rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.08em;
+      color: var(--muted); display: flex; align-items: center; gap: 0.4rem;
+    }
+    .code-lang::before {
+      content: ''; width: 8px; height: 8px;
+      border-radius: 50%; background: var(--accent);
+    }
+    .copy-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 5px; color: var(--muted);
+      font-size: 0.72rem; padding: 0.2rem 0.65rem;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.3rem;
+      font-family: inherit;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+    pre.code {
+      background: #0d1117; border: 1px solid var(--border);
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 1rem 1.2rem; overflow-x: auto;
+      font-size: 0.82rem; line-height: 1.65;
+      color: #e6edf3; tab-size: 2;
+      white-space: pre;
+    }
+    /* Syntax highlight */
+    .k  { color: #ff7b72; }            /* keyword */
+    .s  { color: #a5d6ff; }            /* string */
+    .c  { color: #8b949e; font-style: italic; }
+    .f  { color: #d2a8ff; }            /* function */
+    .v  { color: #79c0ff; }            /* variable / prop */
+    .n  { color: #ffa657; }            /* number */
+    .t  { color: #7ee787; }            /* JSX tag */
+    .a  { color: #ffa657; }            /* attribute */
+    .o  { color: #ff7b72; }            /* operator */
+
+    /* CALLOUTS */
+    .callout {
+      border-radius: 8px; padding: 0.85rem 1rem;
+      border-left: 3px solid; margin: 1rem 0;
+      font-size: 0.875rem;
+    }
+    .callout strong { display: block; margin-bottom: 0.25rem; font-size: 0.92rem; }
+    .ci { background: rgba(97,218,251,0.07); border-color: var(--accent); }
+    .cw { background: rgba(210,153,34,0.08); border-color: var(--yellow); }
+    .ct { background: rgba(63,185,80,0.07);  border-color: var(--green); }
+    .cr { background: rgba(248,81,73,0.07);  border-color: var(--red); }
+
+    /* TABLES */
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+    .data-table th {
+      background: var(--card); padding: 0.6rem 0.8rem;
+      text-align: left; border-bottom: 1px solid var(--border);
+      color: var(--accent); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;
+    }
+    .data-table td { padding: 0.55rem 0.8rem; border-bottom: 1px solid rgba(48,54,61,0.5); vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--surface); }
+
+    /* BADGES */
+    .badge {
+      display: inline-block; padding: 0.15em 0.65em;
+      border-radius: 20px; font-size: 0.7rem; font-weight: 600;
+      font-family: var(--mono);
+    }
+    .bb { background: rgba(97,218,251,0.12);  color: var(--accent);  border: 1px solid rgba(97,218,251,0.3); }
+    .bg { background: rgba(63,185,80,0.12);   color: var(--green);   border: 1px solid rgba(63,185,80,0.3); }
+    .bo { background: rgba(255,166,87,0.12);  color: var(--orange);  border: 1px solid rgba(255,166,87,0.3); }
+    .bp { background: rgba(188,140,255,0.12); color: var(--purple);  border: 1px solid rgba(188,140,255,0.3); }
+    .br { background: rgba(248,81,73,0.12);   color: var(--red);     border: 1px solid rgba(248,81,73,0.3); }
+    .by { background: rgba(210,153,34,0.12);  color: var(--yellow);  border: 1px solid rgba(210,153,34,0.3); }
+
+    /* LIVE DEMO containers */
+    .live-demo {
+      background: linear-gradient(180deg, #fff 0%, #f6f8fa 100%);
+      color: #24292f;
+      border-radius: 8px;
+      padding: 1.5rem;
+      min-height: 80px;
+      font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    .live-demo h1, .live-demo h2, .live-demo h3, .live-demo h4 { color: #24292f; }
+    .live-demo button {
+      background: #61dafb; color: #0d1117;
+      border: none; padding: 0.5rem 1rem;
+      border-radius: 6px; cursor: pointer;
+      font-weight: 600; font-size: 0.875rem;
+      transition: all 0.15s;
+      margin: 0.2rem;
+    }
+    .live-demo button:hover { background: #4cc7eb; transform: translateY(-1px); }
+    .live-demo button:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .live-demo button.danger { background: #f85149; color: white; }
+    .live-demo button.danger:hover { background: #d73a3a; }
+    .live-demo button.success { background: #3fb950; color: white; }
+    .live-demo button.success:hover { background: #2ea043; }
+    .live-demo input, .live-demo select {
+      padding: 0.5rem 0.75rem;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      font-size: 0.875rem;
+      margin: 0.2rem;
+      background: white; color: #24292f;
+    }
+    .live-demo input:focus, .live-demo select:focus {
+      outline: none; border-color: #61dafb;
+      box-shadow: 0 0 0 3px rgba(97,218,251,0.25);
+    }
+    .live-demo ul { list-style: none; padding: 0; margin: 0.5rem 0; }
+    .live-demo li {
+      padding: 0.5rem 0.75rem;
+      background: white;
+      border: 1px solid #d0d7de;
+      border-radius: 6px;
+      margin-bottom: 0.4rem;
+      display: flex; justify-content: space-between; align-items: center;
+    }
+    .live-demo .counter-display {
+      font-size: 2.5rem; font-weight: 700;
+      color: #0969da; text-align: center;
+      margin: 0.5rem 0;
+    }
+    .live-demo .badge-info {
+      display: inline-block; background: #ddf4ff;
+      color: #0969da; padding: 0.15rem 0.55rem;
+      border-radius: 20px; font-size: 0.75rem;
+      font-weight: 600;
+    }
+    .live-demo small { color: #57606a; }
+    .live-demo .grid-2 {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; align-items: start;
+    }
+    .live-demo .card-w {
+      background: white; padding: 1rem;
+      border: 1px solid #d0d7de; border-radius: 8px;
+    }
+
+    /* FILE LINKS */
+    .file-links { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: 1.25rem; }
+    .flink {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.35rem 0.85rem; border: 1px solid var(--border);
+      border-radius: 6px; color: var(--muted); font-size: 0.78rem;
+      transition: all 0.2s;
+    }
+    .flink:hover { color: var(--accent); border-color: var(--accent); text-decoration: none; }
+
+    /* RESPONSIVE */
+    @media (max-width: 860px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .live-demo .grid-2 { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      main { padding: 0 1rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-brand">React Hooks<span> · </span>STW 2026</div>
+  <ul class="nav-links" role="list">
+    <li><a href="#intro">Intro</a></li>
+    <li><a href="#useState">useState</a></li>
+    <li><a href="#useEffect">useEffect</a></li>
+    <li><a href="#useContext">useContext</a></li>
+    <li><a href="#useRef">useRef</a></li>
+    <li><a href="#useReducer">useReducer</a></li>
+    <li><a href="#useMemo">useMemo / useCallback</a></li>
+    <li><a href="#custom">Custom Hooks</a></li>
+    <li><a href="#reglas">Reglas</a></li>
+  </ul>
+</nav>
+
+<div class="page-layout">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar">
+    <div class="sidebar-title">Hooks de React</div>
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li><a href="#intro"      data-s="intro">00 · ¿Qué son los Hooks?</a></li>
+      <li><a href="#useState"   data-s="useState">01 · useState</a></li>
+      <li><a href="#useEffect"  data-s="useEffect">02 · useEffect</a></li>
+      <li><a href="#useContext" data-s="useContext">03 · useContext</a></li>
+      <li><a href="#useRef"     data-s="useRef">04 · useRef</a></li>
+      <li><a href="#useReducer" data-s="useReducer">05 · useReducer</a></li>
+      <li><a href="#useMemo"    data-s="useMemo">06 · useMemo / useCallback</a></li>
+      <li><a href="#custom"     data-s="custom">07 · Custom Hooks</a></li>
+      <li><a href="#reglas"     data-s="reglas">08 · Reglas de los Hooks</a></li>
+    </ul>
+  </aside>
+
+  <!-- MAIN -->
+  <main>
+
+    <!-- HERO -->
+    <div class="hero">
+      <div class="hero-label">STW 2026 · Universidad del Valle de Guatemala</div>
+      <h1>Guía Interactiva de React Hooks</h1>
+      <p>Aprende paso a paso cada Hook con demos en vivo y código copiable. Cada sección tiene un ejemplo funcional que puedes ejecutar y modificar para practicar.</p>
+      <div class="hero-chips">
+        <a class="chip" href="#useState">useState</a>
+        <a class="chip" href="#useEffect">useEffect</a>
+        <a class="chip" href="#useContext">useContext</a>
+        <a class="chip" href="#useRef">useRef</a>
+        <a class="chip" href="#useReducer">useReducer</a>
+        <a class="chip" href="#useMemo">useMemo</a>
+        <a class="chip" href="#useMemo">useCallback</a>
+        <a class="chip" href="#custom">Custom Hooks</a>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════════════════════════════
+         00 · INTRO
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="intro">
+      <div class="topic-header">
+        <div class="topic-num">00</div>
+        <div>
+          <div class="topic-title">¿Qué son los Hooks?</div>
+          <div class="topic-desc">Funciones especiales que permiten usar <strong>estado</strong> y <strong>ciclo de vida</strong> dentro de componentes funcionales. Reemplazan completamente a los componentes de clase.</div>
+        </div>
+      </div>
+
+      <div class="demo-box">
+        <span class="demo-label">Idea clave</span>
+        <p style="margin-bottom:0.75rem">Antes, los componentes funcionales eran "tontos": solo recibían props y devolvían JSX. Con los Hooks, tienen <strong>memoria</strong> (estado) y pueden <strong>reaccionar</strong> a cambios (efectos).</p>
+        <div class="grid-2" style="display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:1rem">
+          <div style="background:var(--card);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+            <div style="color:var(--red);font-weight:700;margin-bottom:0.4rem">❌ Antes (clases)</div>
+            <code style="font-size:0.78rem;color:var(--muted)">class Counter extends React.Component {<br>&nbsp;&nbsp;state = { count: 0 };<br>&nbsp;&nbsp;render() { ... }<br>}</code>
+          </div>
+          <div style="background:var(--card);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+            <div style="color:var(--green);font-weight:700;margin-bottom:0.4rem">✅ Ahora (hooks)</div>
+            <code style="font-size:0.78rem;color:var(--muted)">function Counter() {<br>&nbsp;&nbsp;const [count, setCount] = useState(0);<br>&nbsp;&nbsp;return ...;<br>}</code>
+          </div>
+        </div>
+      </div>
+
+      <div class="callout ci">
+        <strong>📌 3 cosas que recordar siempre</strong>
+        1) Los hooks empiezan con <code>use</code>. 2) Solo se llaman en el nivel superior del componente. 3) Solo dentro de componentes o de otros custom hooks.
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         01 · useState
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="useState">
+      <div class="topic-header">
+        <div class="topic-num">01</div>
+        <div>
+          <div class="topic-title"><code>useState</code> — Estado local</div>
+          <div class="topic-desc">El hook más fundamental. Permite a un componente "recordar" valores entre renders y volver a renderizar cuando esos valores cambian.</div>
+        </div>
+      </div>
+
+      <div class="steps">
+        <div class="step"><span class="step-num">1</span> Importa <code>useState</code></div>
+        <div class="step"><span class="step-num">2</span> Declara <code>[valor, setValor]</code></div>
+        <div class="step"><span class="step-num">3</span> Lee <code>valor</code> en JSX</div>
+        <div class="step"><span class="step-num">4</span> Llama <code>setValor</code> para actualizar</div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'us','contador')">Contador</button>
+        <button class="tab-btn" onclick="switchTab(this,'us','formulario')">Formulario</button>
+        <button class="tab-btn" onclick="switchTab(this,'us','objeto')">Objeto</button>
+        <button class="tab-btn" onclick="switchTab(this,'us','array')">Array (lista)</button>
+      </div>
+
+      <!-- TAB: CONTADOR -->
+      <div class="tab-panel active" data-tab="us-contador">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo</span>
+          <div id="demo-counter" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · Counter.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">useState</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="k">function</span> <span class="f">Counter</span>() {
+  <span class="c">// [valor actual, función para cambiarlo] = useState(valor inicial)</span>
+  <span class="k">const</span> [count, setCount] = <span class="f">useState</span>(<span class="n">0</span>);
+
+  <span class="k">return</span> (
+    <span class="t">&lt;div&gt;</span>
+      <span class="t">&lt;h2&gt;</span>Contador: {count}<span class="t">&lt;/h2&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">setCount</span>(count + <span class="n">1</span>)}<span class="t">&gt;</span>+1<span class="t">&lt;/button&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">setCount</span>(count - <span class="n">1</span>)}<span class="t">&gt;</span>-1<span class="t">&lt;/button&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">setCount</span>(<span class="n">0</span>)}<span class="t">&gt;</span>Reset<span class="t">&lt;/button&gt;</span>
+    <span class="t">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+        <div class="callout ci">
+          <strong>💡 Cómo funciona</strong>
+          Cuando llamas a <code>setCount</code>, React vuelve a ejecutar tu función componente. La línea <code>useState(0)</code> ya no devuelve <code>0</code>, sino el último valor guardado.
+        </div>
+      </div>
+
+      <!-- TAB: FORMULARIO -->
+      <div class="tab-panel" data-tab="us-formulario">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo</span>
+          <div id="demo-form" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · Saludo.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">function</span> <span class="f">Saludo</span>() {
+  <span class="k">const</span> [nombre, setNombre] = <span class="f">useState</span>(<span class="s">''</span>);
+
+  <span class="k">return</span> (
+    <span class="t">&lt;div&gt;</span>
+      <span class="t">&lt;input</span>
+        <span class="a">value</span>={nombre}
+        <span class="a">onChange</span>={(e) =&gt; <span class="f">setNombre</span>(e.target.value)}
+        <span class="a">placeholder</span>=<span class="s">"Tu nombre"</span>
+      <span class="t">/&gt;</span>
+      <span class="t">&lt;p&gt;</span>Hola, <span class="t">&lt;strong&gt;</span>{nombre || <span class="s">'desconocido'</span>}<span class="t">&lt;/strong&gt;</span> 👋<span class="t">&lt;/p&gt;</span>
+    <span class="t">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+        <div class="callout ct">
+          <strong>📝 Inputs controlados</strong>
+          El <code>value</code> del input lo controla React. Cada tecla dispara <code>onChange</code> → <code>setNombre</code> → re-render.
+        </div>
+      </div>
+
+      <!-- TAB: OBJETO -->
+      <div class="tab-panel" data-tab="us-objeto">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo</span>
+          <div id="demo-objeto" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · UserProfile.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">function</span> <span class="f">UserProfile</span>() {
+  <span class="k">const</span> [user, setUser] = <span class="f">useState</span>({
+    name: <span class="s">''</span>,
+    level: <span class="n">1</span>,
+    description: <span class="s">''</span>
+  });
+
+  <span class="c">// IMPORTANTE: nunca mutes el objeto. Crea uno nuevo con spread (...)</span>
+  <span class="k">const</span> updateName = (e) =&gt; {
+    <span class="f">setUser</span>({ ...user, name: e.target.value });
+  };
+
+  <span class="k">return</span> (
+    <span class="t">&lt;div&gt;</span>
+      <span class="t">&lt;input</span> <span class="a">value</span>={user.name} <span class="a">onChange</span>={updateName} <span class="t">/&gt;</span>
+      <span class="t">&lt;input</span>
+        <span class="a">type</span>=<span class="s">"number"</span> <span class="a">value</span>={user.level}
+        <span class="a">onChange</span>={(e) =&gt; <span class="f">setUser</span>({ ...user, level: <span class="f">Number</span>(e.target.value) })}
+      <span class="t">/&gt;</span>
+      <span class="t">&lt;pre&gt;</span>{<span class="f">JSON.stringify</span>(user, <span class="k">null</span>, <span class="n">2</span>)}<span class="t">&lt;/pre&gt;</span>
+    <span class="t">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+        <div class="callout cw">
+          <strong>⚠️ Inmutabilidad</strong>
+          React compara por <em>referencia</em>. Si haces <code>user.name = 'x'</code>, React no detecta el cambio. Usa siempre <code>{ ...user, name: 'x' }</code>.
+        </div>
+      </div>
+
+      <!-- TAB: ARRAY -->
+      <div class="tab-panel" data-tab="us-array">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · Lista de tareas</span>
+          <div id="demo-todo" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · TodoList.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">function</span> <span class="f">TodoList</span>() {
+  <span class="k">const</span> [items, setItems] = <span class="f">useState</span>([]);
+  <span class="k">const</span> [text, setText] = <span class="f">useState</span>(<span class="s">''</span>);
+
+  <span class="k">const</span> addItem = () =&gt; {
+    <span class="k">if</span> (!text.trim()) <span class="k">return</span>;
+    <span class="f">setItems</span>([...items, { id: <span class="f">Date.now</span>(), text }]);
+    <span class="f">setText</span>(<span class="s">''</span>);
+  };
+
+  <span class="k">const</span> removeItem = (id) =&gt;
+    <span class="f">setItems</span>(items.<span class="f">filter</span>(item =&gt; item.id !== id));
+
+  <span class="k">return</span> (
+    <span class="t">&lt;div&gt;</span>
+      <span class="t">&lt;input</span> <span class="a">value</span>={text} <span class="a">onChange</span>={e =&gt; <span class="f">setText</span>(e.target.value)} <span class="t">/&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={addItem}<span class="t">&gt;</span>Agregar<span class="t">&lt;/button&gt;</span>
+      <span class="t">&lt;ul&gt;</span>
+        {items.<span class="f">map</span>(item =&gt; (
+          <span class="t">&lt;li</span> <span class="a">key</span>={item.id}<span class="t">&gt;</span>
+            {item.text}
+            <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">removeItem</span>(item.id)}<span class="t">&gt;</span>✕<span class="t">&lt;/button&gt;</span>
+          <span class="t">&lt;/li&gt;</span>
+        ))}
+      <span class="t">&lt;/ul&gt;</span>
+    <span class="t">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+        <div class="callout ci">
+          <strong>🔑 La prop <code>key</code></strong>
+          Cada elemento de una lista necesita una <code>key</code> única y estable. React la usa para identificar qué cambió, se agregó o se eliminó.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         02 · useEffect
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="useEffect">
+      <div class="topic-header">
+        <div class="topic-num">02</div>
+        <div>
+          <div class="topic-title"><code>useEffect</code> — Efectos secundarios</div>
+          <div class="topic-desc">Para todo lo que sucede "fuera" del render: llamadas a APIs, suscripciones, timers, manipulación del DOM. Se ejecuta DESPUÉS de que React pinta el componente.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'ue','basico')">Básico</button>
+        <button class="tab-btn" onclick="switchTab(this,'ue','deps')">Dependencias</button>
+        <button class="tab-btn" onclick="switchTab(this,'ue','fetch')">Fetch / API</button>
+        <button class="tab-btn" onclick="switchTab(this,'ue','cleanup')">Cleanup</button>
+      </div>
+
+      <!-- BASICO -->
+      <div class="tab-panel active" data-tab="ue-basico">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · El título de la pestaña cambia</span>
+          <div id="demo-title" class="live-demo"></div>
+          <small style="color:var(--muted);display:block;margin-top:0.5rem">👆 Mira la pestaña del navegador mientras presionas los botones.</small>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · TitleEffect.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">useState</span>, <span class="v">useEffect</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="k">function</span> <span class="f">TitleEffect</span>() {
+  <span class="k">const</span> [count, setCount] = <span class="f">useState</span>(<span class="n">0</span>);
+
+  <span class="f">useEffect</span>(() =&gt; {
+    document.title = <span class="s">`Clicks: </span>${count}<span class="s">`</span>;
+  }, [count]); <span class="c">// se ejecuta cada vez que count cambia</span>
+
+  <span class="k">return</span> <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">setCount</span>(count + <span class="n">1</span>)}<span class="t">&gt;</span>+1<span class="t">&lt;/button&gt;</span>;
+}</pre>
+        </div>
+      </div>
+
+      <!-- DEPS -->
+      <div class="tab-panel" data-tab="ue-deps">
+        <div class="demo-box">
+          <span class="demo-label">Las 3 formas del array de dependencias</span>
+          <table class="data-table">
+            <thead>
+              <tr><th>Sintaxis</th><th>¿Cuándo se ejecuta?</th><th>Uso típico</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td><span class="badge bg">[ ]</span></td>
+                <td>UNA vez, al montar el componente</td>
+                <td>Cargar datos iniciales, suscribirse a eventos</td>
+              </tr>
+              <tr>
+                <td><span class="badge bb">[var]</span></td>
+                <td>Cada vez que <code>var</code> cambia</td>
+                <td>Refetch cuando cambia un id, sincronizar</td>
+              </tr>
+              <tr>
+                <td><span class="badge br">(sin array)</span></td>
+                <td>En CADA render</td>
+                <td>Casi nunca — suele causar bugs</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · Ejemplos de dependencias</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="c">// 1) Solo al montar</span>
+<span class="f">useEffect</span>(() =&gt; {
+  <span class="f">console.log</span>(<span class="s">'Componente montado'</span>);
+}, []);
+
+<span class="c">// 2) Cuando userId cambia</span>
+<span class="f">useEffect</span>(() =&gt; {
+  <span class="f">fetch</span>(<span class="s">`/api/usuario/</span>${userId}<span class="s">`</span>)
+    .<span class="f">then</span>(r =&gt; r.<span class="f">json</span>())
+    .<span class="f">then</span>(setUser);
+}, [userId]);
+
+<span class="c">// 3) En cada render (¡cuidado!)</span>
+<span class="f">useEffect</span>(() =&gt; {
+  <span class="f">console.log</span>(<span class="s">'Render'</span>);
+});</pre>
+        </div>
+      </div>
+
+      <!-- FETCH -->
+      <div class="tab-panel" data-tab="ue-fetch">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · Carga datos de una API real</span>
+          <div id="demo-fetch" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · UserList.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">function</span> <span class="f">UserList</span>() {
+  <span class="k">const</span> [users, setUsers] = <span class="f">useState</span>([]);
+  <span class="k">const</span> [loading, setLoading] = <span class="f">useState</span>(<span class="k">true</span>);
+  <span class="k">const</span> [error, setError] = <span class="f">useState</span>(<span class="k">null</span>);
+
+  <span class="f">useEffect</span>(() =&gt; {
+    <span class="f">fetch</span>(<span class="s">'https://jsonplaceholder.typicode.com/users'</span>)
+      .<span class="f">then</span>(res =&gt; {
+        <span class="k">if</span> (!res.ok) <span class="k">throw new</span> <span class="f">Error</span>(<span class="s">`HTTP </span>${res.status}<span class="s">`</span>);
+        <span class="k">return</span> res.<span class="f">json</span>();
+      })
+      .<span class="f">then</span>(data =&gt; <span class="f">setUsers</span>(data))
+      .<span class="f">catch</span>(err =&gt; <span class="f">setError</span>(err.message))
+      .<span class="f">finally</span>(() =&gt; <span class="f">setLoading</span>(<span class="k">false</span>));
+  }, []); <span class="c">// [] = solo al montar</span>
+
+  <span class="k">if</span> (loading) <span class="k">return</span> <span class="t">&lt;p&gt;</span>Cargando...<span class="t">&lt;/p&gt;</span>;
+  <span class="k">if</span> (error)   <span class="k">return</span> <span class="t">&lt;p&gt;</span>Error: {error}<span class="t">&lt;/p&gt;</span>;
+
+  <span class="k">return</span> (
+    <span class="t">&lt;ul&gt;</span>
+      {users.<span class="f">map</span>(u =&gt; <span class="t">&lt;li</span> <span class="a">key</span>={u.id}<span class="t">&gt;</span>{u.name}<span class="t">&lt;/li&gt;</span>)}
+    <span class="t">&lt;/ul&gt;</span>
+  );
+}</pre>
+        </div>
+        <div class="callout cw">
+          <strong>⚠️ Patrón clásico: 3 estados</strong>
+          Casi todo fetch necesita <code>data</code>, <code>loading</code> y <code>error</code>. Maneja siempre los 3 para una mejor UX.
+        </div>
+      </div>
+
+      <!-- CLEANUP -->
+      <div class="tab-panel" data-tab="ue-cleanup">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · Cronómetro con limpieza</span>
+          <div id="demo-clock" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · Clock.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">function</span> <span class="f">Clock</span>() {
+  <span class="k">const</span> [time, setTime] = <span class="f">useState</span>(<span class="k">new</span> <span class="f">Date</span>());
+
+  <span class="f">useEffect</span>(() =&gt; {
+    <span class="k">const</span> id = <span class="f">setInterval</span>(() =&gt; {
+      <span class="f">setTime</span>(<span class="k">new</span> <span class="f">Date</span>());
+    }, <span class="n">1000</span>);
+
+    <span class="c">// 🧹 CLEANUP: se ejecuta al desmontar</span>
+    <span class="c">// (o antes del próximo efecto)</span>
+    <span class="k">return</span> () =&gt; <span class="f">clearInterval</span>(id);
+  }, []);
+
+  <span class="k">return</span> <span class="t">&lt;h2&gt;</span>{time.<span class="f">toLocaleTimeString</span>()}<span class="t">&lt;/h2&gt;</span>;
+}</pre>
+        </div>
+        <div class="callout cr">
+          <strong>🚨 Sin cleanup = memory leak</strong>
+          Si no limpias intervalos, suscripciones o listeners, seguirán ejecutándose después de que el componente desaparezca. Siempre devuelve una función de limpieza.
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         03 · useContext
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="useContext">
+      <div class="topic-header">
+        <div class="topic-num">03</div>
+        <div>
+          <div class="topic-title"><code>useContext</code> — Estado compartido</div>
+          <div class="topic-desc">Comparte datos entre componentes sin pasar props por cada nivel ("prop drilling"). Ideal para temas, autenticación, idioma, etc.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'uc','problema')">El problema</button>
+        <button class="tab-btn" onclick="switchTab(this,'uc','solucion')">La solución</button>
+        <button class="tab-btn" onclick="switchTab(this,'uc','demo')">Demo: Tema oscuro</button>
+      </div>
+
+      <!-- PROBLEMA -->
+      <div class="tab-panel active" data-tab="uc-problema">
+        <div class="demo-box">
+          <span class="demo-label">Prop drilling: pasar props por muchos niveles</span>
+<pre style="color:var(--muted);font-family:var(--mono);font-size:0.85rem;line-height:1.8;background:var(--card);padding:1rem;border-radius:8px;border:1px solid var(--border)">
+App (tiene <span style="color:var(--accent)">user</span>)
+  └─ Layout (recibe <span style="color:var(--accent)">user</span>, lo pasa)
+      └─ Sidebar (recibe <span style="color:var(--accent)">user</span>, lo pasa)
+          └─ UserBadge (¡por fin lo usa!)  😩</pre>
+          <p style="color:var(--muted);margin-top:0.75rem">Layout y Sidebar no necesitan <code>user</code>, solo lo pasan. Es código repetitivo y frágil.</p>
+        </div>
+      </div>
+
+      <!-- SOLUCION -->
+      <div class="tab-panel" data-tab="uc-solucion">
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · 3 pasos para usar Context</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">createContext</span>, <span class="v">useContext</span>, <span class="v">useState</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="c">// 1️⃣ Crear el contexto (puede vivir en su propio archivo)</span>
+<span class="k">const</span> AuthContext = <span class="f">createContext</span>(<span class="k">null</span>);
+
+<span class="c">// 2️⃣ Proveer el valor desde un componente padre</span>
+<span class="k">function</span> <span class="f">App</span>() {
+  <span class="k">const</span> [user, setUser] = <span class="f">useState</span>({ name: <span class="s">'Ana'</span> });
+
+  <span class="k">return</span> (
+    <span class="t">&lt;AuthContext.Provider</span> <span class="a">value</span>={{ user, setUser }}<span class="t">&gt;</span>
+      <span class="t">&lt;Layout /&gt;</span>
+    <span class="t">&lt;/AuthContext.Provider&gt;</span>
+  );
+}
+
+<span class="c">// 3️⃣ Consumir el valor en CUALQUIER hijo (sin props)</span>
+<span class="k">function</span> <span class="f">UserBadge</span>() {
+  <span class="k">const</span> { user } = <span class="f">useContext</span>(AuthContext);
+  <span class="k">return</span> <span class="t">&lt;p&gt;</span>Hola, {user.name}<span class="t">&lt;/p&gt;</span>;
+}</pre>
+        </div>
+        <div class="callout ci">
+          <strong>🔌 Analogía con Express</strong>
+          Es como un middleware <code>req.user</code>: el dato está disponible "en el aire" para cualquier ruta/componente, sin tener que pasarlo manualmente.
+        </div>
+      </div>
+
+      <!-- DEMO -->
+      <div class="tab-panel" data-tab="uc-demo">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · Compartir tema entre componentes</span>
+          <div id="demo-context" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · ThemeApp.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">const</span> ThemeContext = <span class="f">createContext</span>();
+
+<span class="k">function</span> <span class="f">ThemeApp</span>() {
+  <span class="k">const</span> [theme, setTheme] = <span class="f">useState</span>(<span class="s">'light'</span>);
+  <span class="k">return</span> (
+    <span class="t">&lt;ThemeContext.Provider</span> <span class="a">value</span>={{ theme, setTheme }}<span class="t">&gt;</span>
+      <span class="t">&lt;Toolbar /&gt;</span>
+      <span class="t">&lt;Content /&gt;</span>
+    <span class="t">&lt;/ThemeContext.Provider&gt;</span>
+  );
+}
+
+<span class="k">function</span> <span class="f">Toolbar</span>() {
+  <span class="k">const</span> { theme, setTheme } = <span class="f">useContext</span>(ThemeContext);
+  <span class="k">return</span> (
+    <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">setTheme</span>(theme === <span class="s">'light'</span> ? <span class="s">'dark'</span> : <span class="s">'light'</span>)}<span class="t">&gt;</span>
+      Cambiar a {theme === <span class="s">'light'</span> ? <span class="s">'oscuro'</span> : <span class="s">'claro'</span>}
+    <span class="t">&lt;/button&gt;</span>
+  );
+}
+
+<span class="k">function</span> <span class="f">Content</span>() {
+  <span class="k">const</span> { theme } = <span class="f">useContext</span>(ThemeContext);
+  <span class="k">return</span> <span class="t">&lt;div</span> <span class="a">className</span>={<span class="s">`box-</span>${theme}<span class="s">`</span>}<span class="t">&gt;</span>Tema actual: {theme}<span class="t">&lt;/div&gt;</span>;
+}</pre>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         04 · useRef
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="useRef">
+      <div class="topic-header">
+        <div class="topic-num">04</div>
+        <div>
+          <div class="topic-title"><code>useRef</code> — Referencias persistentes</div>
+          <div class="topic-desc">Caja mutable que persiste entre renders pero <strong>NO causa re-render</strong> al cambiar. Dos usos principales: acceder al DOM y guardar valores "en silencio".</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'ur','dom')">Acceso al DOM</button>
+        <button class="tab-btn" onclick="switchTab(this,'ur','valor')">Guardar valores</button>
+        <button class="tab-btn" onclick="switchTab(this,'ur','vs')">useRef vs useState</button>
+      </div>
+
+      <!-- DOM -->
+      <div class="tab-panel active" data-tab="ur-dom">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · Enfocar input al hacer click</span>
+          <div id="demo-ref" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · SearchInput.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">useRef</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="k">function</span> <span class="f">SearchInput</span>() {
+  <span class="c">// 1) Crear la referencia</span>
+  <span class="k">const</span> inputRef = <span class="f">useRef</span>(<span class="k">null</span>);
+
+  <span class="k">const</span> handleClick = () =&gt; {
+    <span class="c">// 3) Acceder al DOM con .current</span>
+    inputRef.current.<span class="f">focus</span>();
+  };
+
+  <span class="k">return</span> (
+    <span class="t">&lt;div&gt;</span>
+      {<span class="c">/* 2) Conectar la ref al elemento */</span>}
+      <span class="t">&lt;input</span> <span class="a">ref</span>={inputRef} <span class="a">placeholder</span>=<span class="s">"Buscar..."</span> <span class="t">/&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={handleClick}<span class="t">&gt;</span>Enfocar<span class="t">&lt;/button&gt;</span>
+    <span class="t">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+
+      <!-- VALOR -->
+      <div class="tab-panel" data-tab="ur-valor">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · Cronómetro con interval guardado en ref</span>
+          <div id="demo-stopwatch" class="live-demo"></div>
+        </div>
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · StopWatch.jsx</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">function</span> <span class="f">StopWatch</span>() {
+  <span class="k">const</span> [time, setTime] = <span class="f">useState</span>(<span class="n">0</span>);
+  <span class="k">const</span> intervalRef = <span class="f">useRef</span>(<span class="k">null</span>);
+
+  <span class="k">const</span> start = () =&gt; {
+    <span class="k">if</span> (intervalRef.current) <span class="k">return</span>;
+    intervalRef.current = <span class="f">setInterval</span>(() =&gt; {
+      <span class="f">setTime</span>(t =&gt; t + <span class="n">1</span>);
+    }, <span class="n">1000</span>);
+  };
+
+  <span class="k">const</span> stop = () =&gt; {
+    <span class="f">clearInterval</span>(intervalRef.current);
+    intervalRef.current = <span class="k">null</span>;
+  };
+
+  <span class="k">return</span> (
+    <span class="t">&lt;div&gt;</span>
+      <span class="t">&lt;p&gt;</span>Tiempo: {time}s<span class="t">&lt;/p&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={start}<span class="t">&gt;</span>Iniciar<span class="t">&lt;/button&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={stop}<span class="t">&gt;</span>Detener<span class="t">&lt;/button&gt;</span>
+    <span class="t">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+
+      <!-- VS -->
+      <div class="tab-panel" data-tab="ur-vs">
+        <table class="data-table">
+          <thead>
+            <tr><th></th><th>useState</th><th>useRef</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>¿Causa re-render?</td><td><span class="badge bg">Sí</span></td><td><span class="badge br">No</span></td></tr>
+            <tr><td>¿Cómo se accede?</td><td><code>count</code></td><td><code>ref.current</code></td></tr>
+            <tr><td>¿Cómo se cambia?</td><td><code>setCount(5)</code></td><td><code>ref.current = 5</code></td></tr>
+            <tr><td>Uso típico</td><td>Datos visibles en UI</td><td>DOM, timers, valores "internos"</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         05 · useReducer
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="useReducer">
+      <div class="topic-header">
+        <div class="topic-num">05</div>
+        <div>
+          <div class="topic-title"><code>useReducer</code> — Estado complejo</div>
+          <div class="topic-desc">Alternativa a <code>useState</code> para estado con muchas formas de actualización. Inspirado en Redux: <code>(state, action) → newState</code>.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'urd','demo')">Demo</button>
+        <button class="tab-btn" onclick="switchTab(this,'urd','codigo')">Código completo</button>
+        <button class="tab-btn" onclick="switchTab(this,'urd','vs')">¿Cuándo usarlo?</button>
+      </div>
+
+      <!-- DEMO -->
+      <div class="tab-panel active" data-tab="urd-demo">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · Contador con múltiples acciones</span>
+          <div id="demo-reducer" class="live-demo"></div>
+        </div>
+      </div>
+
+      <!-- CODIGO -->
+      <div class="tab-panel" data-tab="urd-codigo">
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · Counter con useReducer</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">useReducer</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="c">// 1) Función reductora: recibe estado y acción, devuelve nuevo estado</span>
+<span class="k">function</span> <span class="f">reducer</span>(state, action) {
+  <span class="k">switch</span> (action.type) {
+    <span class="k">case</span> <span class="s">'increment'</span>: <span class="k">return</span> { count: state.count + <span class="n">1</span> };
+    <span class="k">case</span> <span class="s">'decrement'</span>: <span class="k">return</span> { count: state.count - <span class="n">1</span> };
+    <span class="k">case</span> <span class="s">'add'</span>:       <span class="k">return</span> { count: state.count + action.payload };
+    <span class="k">case</span> <span class="s">'reset'</span>:     <span class="k">return</span> { count: <span class="n">0</span> };
+    <span class="k">default</span>:           <span class="k">return</span> state;
+  }
+}
+
+<span class="k">function</span> <span class="f">Counter</span>() {
+  <span class="c">// 2) useReducer(reductor, estado inicial)</span>
+  <span class="k">const</span> [state, dispatch] = <span class="f">useReducer</span>(reducer, { count: <span class="n">0</span> });
+
+  <span class="k">return</span> (
+    <span class="t">&lt;div&gt;</span>
+      <span class="t">&lt;h2&gt;</span>{state.count}<span class="t">&lt;/h2&gt;</span>
+      {<span class="c">/* 3) dispatch envía una "acción" al reducer */</span>}
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">dispatch</span>({ type: <span class="s">'increment'</span> })}<span class="t">&gt;</span>+1<span class="t">&lt;/button&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">dispatch</span>({ type: <span class="s">'decrement'</span> })}<span class="t">&gt;</span>-1<span class="t">&lt;/button&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">dispatch</span>({ type: <span class="s">'add'</span>, payload: <span class="n">10</span> })}<span class="t">&gt;</span>+10<span class="t">&lt;/button&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={() =&gt; <span class="f">dispatch</span>({ type: <span class="s">'reset'</span> })}<span class="t">&gt;</span>Reset<span class="t">&lt;/button&gt;</span>
+    <span class="t">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+
+      <!-- VS -->
+      <div class="tab-panel" data-tab="urd-vs">
+        <table class="data-table">
+          <thead>
+            <tr><th>Usa <code>useState</code> cuando...</th><th>Usa <code>useReducer</code> cuando...</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>Estado simple (string, number, boolean)</td><td>Estado complejo (objeto con muchos campos)</td></tr>
+            <tr><td>1-2 formas de actualizar</td><td>Muchas acciones distintas</td></tr>
+            <tr><td>Lógica de actualización trivial</td><td>Lógica con condiciones, validaciones</td></tr>
+            <tr><td>El siguiente estado no depende del anterior</td><td>El siguiente estado depende del actual + acción</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         06 · useMemo / useCallback
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="useMemo">
+      <div class="topic-header">
+        <div class="topic-num">06</div>
+        <div>
+          <div class="topic-title"><code>useMemo</code> y <code>useCallback</code> — Optimización</div>
+          <div class="topic-desc">Hooks de "memorización". Evitan recalcular valores costosos o re-crear funciones en cada render. <strong>No los uses por defecto</strong>: solo cuando hay un problema medible de rendimiento.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'um','memo')">useMemo</button>
+        <button class="tab-btn" onclick="switchTab(this,'um','callback')">useCallback</button>
+        <button class="tab-btn" onclick="switchTab(this,'um','demo')">Demo en vivo</button>
+      </div>
+
+      <!-- MEMO -->
+      <div class="tab-panel active" data-tab="um-memo">
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · useMemo memoriza VALORES</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">useMemo</span>, <span class="v">useState</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="k">function</span> <span class="f">UserStats</span>({ users }) {
+  <span class="k">const</span> [filter, setFilter] = <span class="f">useState</span>(<span class="s">''</span>);
+
+  <span class="c">// Sin useMemo: este cálculo corre en CADA render (también al escribir el filtro)</span>
+  <span class="c">// Con useMemo: solo se recalcula si `users` cambia</span>
+  <span class="k">const</span> avgLevel = <span class="f">useMemo</span>(() =&gt; {
+    <span class="f">console.log</span>(<span class="s">'Calculando promedio...'</span>);
+    <span class="k">return</span> users.<span class="f">reduce</span>((sum, u) =&gt; sum + u.level, <span class="n">0</span>) / users.length;
+  }, [users]); <span class="c">// 👈 array de dependencias</span>
+
+  <span class="k">return</span> (
+    <span class="t">&lt;div&gt;</span>
+      <span class="t">&lt;p&gt;</span>Nivel promedio: {avgLevel}<span class="t">&lt;/p&gt;</span>
+      <span class="t">&lt;input</span> <span class="a">value</span>={filter} <span class="a">onChange</span>={e =&gt; <span class="f">setFilter</span>(e.target.value)} <span class="t">/&gt;</span>
+    <span class="t">&lt;/div&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+
+      <!-- CALLBACK -->
+      <div class="tab-panel" data-tab="um-callback">
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · useCallback memoriza FUNCIONES</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">useCallback</span>, <span class="v">useState</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="k">function</span> <span class="f">UserManager</span>() {
+  <span class="k">const</span> [users, setUsers] = <span class="f">useState</span>([]);
+
+  <span class="c">// Sin useCallback: se crea una NUEVA función en cada render</span>
+  <span class="c">// → los hijos memoizados se re-renderizan innecesariamente</span>
+  <span class="k">const</span> deleteUser = <span class="f">useCallback</span>((id) =&gt; {
+    <span class="f">setUsers</span>(prev =&gt; prev.<span class="f">filter</span>(u =&gt; u.id !== id));
+  }, []); <span class="c">// 👈 sin deps → la misma función para siempre</span>
+
+  <span class="k">return</span> (
+    <span class="t">&lt;ul&gt;</span>
+      {users.<span class="f">map</span>(user =&gt; (
+        <span class="t">&lt;UserItem</span> <span class="a">key</span>={user.id} <span class="a">user</span>={user} <span class="a">onDelete</span>={deleteUser} <span class="t">/&gt;</span>
+      ))}
+    <span class="t">&lt;/ul&gt;</span>
+  );
+}</pre>
+        </div>
+        <div class="callout cw">
+          <strong>🤔 Regla práctica</strong>
+          <code>useMemo(() => fn(), deps)</code> ≈ <code>useCallback(fn, deps)</code>. El primero memoriza el resultado; el segundo memoriza la función misma.
+        </div>
+      </div>
+
+      <!-- DEMO -->
+      <div class="tab-panel" data-tab="um-demo">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · Cálculo costoso memorizado</span>
+          <div id="demo-memo" class="live-demo"></div>
+          <small style="color:var(--muted);display:block;margin-top:0.5rem">Abre la consola del navegador (F12) para ver cuándo se recalcula.</small>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         07 · CUSTOM HOOKS
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="custom">
+      <div class="topic-header">
+        <div class="topic-num">07</div>
+        <div>
+          <div class="topic-title">Custom Hooks — Reutilizar lógica</div>
+          <div class="topic-desc">Una función JavaScript cuyo nombre empieza con <code>use</code> y que usa otros hooks dentro. Permite extraer lógica con estado para compartirla entre componentes.</div>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <button class="tab-btn active" onclick="switchTab(this,'ch','useFetch')">useFetch</button>
+        <button class="tab-btn" onclick="switchTab(this,'ch','useToggle')">useToggle</button>
+        <button class="tab-btn" onclick="switchTab(this,'ch','demo')">Demo: useFetch</button>
+      </div>
+
+      <!-- USEFETCH -->
+      <div class="tab-panel active" data-tab="ch-useFetch">
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · hooks/useFetch.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">useState</span>, <span class="v">useEffect</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="k">function</span> <span class="f">useFetch</span>(url) {
+  <span class="k">const</span> [data, setData] = <span class="f">useState</span>(<span class="k">null</span>);
+  <span class="k">const</span> [loading, setLoading] = <span class="f">useState</span>(<span class="k">true</span>);
+  <span class="k">const</span> [error, setError] = <span class="f">useState</span>(<span class="k">null</span>);
+
+  <span class="f">useEffect</span>(() =&gt; {
+    <span class="f">setLoading</span>(<span class="k">true</span>);
+    <span class="f">fetch</span>(url)
+      .<span class="f">then</span>(res =&gt; {
+        <span class="k">if</span> (!res.ok) <span class="k">throw new</span> <span class="f">Error</span>(<span class="s">`HTTP </span>${res.status}<span class="s">`</span>);
+        <span class="k">return</span> res.<span class="f">json</span>();
+      })
+      .<span class="f">then</span>(setData)
+      .<span class="f">catch</span>(err =&gt; <span class="f">setError</span>(err.message))
+      .<span class="f">finally</span>(() =&gt; <span class="f">setLoading</span>(<span class="k">false</span>));
+  }, [url]);
+
+  <span class="k">return</span> { data, loading, error };
+}
+
+<span class="k">export default</span> useFetch;
+
+<span class="c">// ✨ Uso en cualquier componente:</span>
+<span class="c">// const { data, loading, error } = useFetch('/api/usuarios');</span></pre>
+        </div>
+        <div class="callout ct">
+          <strong>♻️ Reutilización limpia</strong>
+          Toda la lógica de fetch + loading + error queda en una sola función. Cualquier componente la usa con una línea.
+        </div>
+      </div>
+
+      <!-- USETOGGLE -->
+      <div class="tab-panel" data-tab="ch-useToggle">
+        <div class="code-wrap">
+          <div class="code-header">
+            <span class="code-lang">JSX · hooks/useToggle.js</span>
+            <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+          </div>
+          <pre class="code"><span class="k">import</span> { <span class="v">useState</span>, <span class="v">useCallback</span> } <span class="k">from</span> <span class="s">'react'</span>;
+
+<span class="k">function</span> <span class="f">useToggle</span>(initial = <span class="k">false</span>) {
+  <span class="k">const</span> [value, setValue] = <span class="f">useState</span>(initial);
+  <span class="k">const</span> toggle = <span class="f">useCallback</span>(() =&gt; <span class="f">setValue</span>(v =&gt; !v), []);
+  <span class="k">return</span> [value, toggle];
+}
+
+<span class="c">// Uso:</span>
+<span class="k">function</span> <span class="f">Modal</span>() {
+  <span class="k">const</span> [isOpen, toggle] = <span class="f">useToggle</span>(<span class="k">false</span>);
+
+  <span class="k">return</span> (
+    <span class="t">&lt;&gt;</span>
+      <span class="t">&lt;button</span> <span class="a">onClick</span>={toggle}<span class="t">&gt;</span>{isOpen ? <span class="s">'Cerrar'</span> : <span class="s">'Abrir'</span>}<span class="t">&lt;/button&gt;</span>
+      {isOpen &amp;&amp; <span class="t">&lt;div&gt;</span>Modal abierto<span class="t">&lt;/div&gt;</span>}
+    <span class="t">&lt;/&gt;</span>
+  );
+}</pre>
+        </div>
+      </div>
+
+      <!-- DEMO -->
+      <div class="tab-panel" data-tab="ch-demo">
+        <div class="demo-box">
+          <span class="demo-label">Demo en vivo · useFetch consumiendo JSONPlaceholder</span>
+          <div id="demo-customhook" class="live-demo"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════════════════════════════
+         08 · REGLAS
+    ══════════════════════════════════════════════════ -->
+    <section class="topic" id="reglas">
+      <div class="topic-header">
+        <div class="topic-num">08</div>
+        <div>
+          <div class="topic-title">Reglas de los Hooks</div>
+          <div class="topic-desc">React garantiza el orden y el estado de los hooks gracias a estas 3 reglas. Romperlas causa bugs muy difíciles de detectar.</div>
+        </div>
+      </div>
+
+      <div class="callout ct">
+        <strong>✅ Regla 1 — Solo en el nivel superior</strong>
+        Nunca llames hooks dentro de <code>if</code>, <code>for</code>, funciones anidadas o después de un <code>return</code> condicional.
+      </div>
+      <div class="callout ct">
+        <strong>✅ Regla 2 — Solo desde React</strong>
+        Llama hooks dentro de componentes funcionales o de otros custom hooks. Nunca desde funciones normales de JavaScript.
+      </div>
+      <div class="callout ct">
+        <strong>✅ Regla 3 — El nombre empieza con <code>use</code></strong>
+        Esta convención permite que las herramientas (ESLint, React DevTools) detecten violaciones automáticamente.
+      </div>
+
+      <div class="code-wrap" style="margin-top:1.5rem">
+        <div class="code-header">
+          <span class="code-lang">JSX · Correcto vs Incorrecto</span>
+          <button class="copy-btn" onclick="copyCode(this)">⧉ Copiar</button>
+        </div>
+        <pre class="code"><span class="c">// ✅ CORRECTO — todos los hooks en el nivel superior</span>
+<span class="k">function</span> <span class="f">UserList</span>({ loggedIn }) {
+  <span class="k">const</span> [users, setUsers] = <span class="f">useState</span>([]);
+  <span class="f">useEffect</span>(() =&gt; { <span class="c">/* ... */</span> }, []);
+
+  <span class="k">if</span> (!loggedIn) <span class="k">return</span> <span class="t">&lt;p&gt;</span>Inicia sesión<span class="t">&lt;/p&gt;</span>;
+  <span class="k">return</span> <span class="t">&lt;ul&gt;</span>...<span class="t">&lt;/ul&gt;</span>;
+}
+
+<span class="c">// ❌ INCORRECTO — hook dentro de un if</span>
+<span class="k">function</span> <span class="f">UserList</span>({ loggedIn }) {
+  <span class="k">if</span> (loggedIn) {
+    <span class="k">const</span> [users, setUsers] = <span class="f">useState</span>([]); <span class="c">// 💥 ERROR</span>
+  }
+  <span class="k">return</span> <span class="t">&lt;ul&gt;</span>...<span class="t">&lt;/ul&gt;</span>;
+}
+
+<span class="c">// ❌ INCORRECTO — hook después de un return</span>
+<span class="k">function</span> <span class="f">UserList</span>({ loggedIn }) {
+  <span class="k">if</span> (!loggedIn) <span class="k">return</span> <span class="k">null</span>;
+  <span class="k">const</span> [users, setUsers] = <span class="f">useState</span>([]); <span class="c">// 💥 ERROR</span>
+  <span class="k">return</span> <span class="t">&lt;ul&gt;</span>...<span class="t">&lt;/ul&gt;</span>;
+}</pre>
+      </div>
+
+      <div class="callout ci">
+        <strong>🛠️ Tip: instala el plugin de ESLint</strong>
+        <code>eslint-plugin-react-hooks</code> detecta automáticamente estas violaciones. Viene preconfigurado en Vite y Create React App.
+      </div>
+    </section>
+
+    <!-- RESUMEN -->
+    <section class="topic" id="resumen">
+      <div class="topic-header">
+        <div class="topic-num">★</div>
+        <div>
+          <div class="topic-title">Cheat Sheet</div>
+          <div class="topic-desc">Tabla resumen de todos los hooks vistos.</div>
+        </div>
+      </div>
+      <table class="data-table">
+        <thead>
+          <tr><th>Hook</th><th>Para qué sirve</th><th>Devuelve</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><code>useState</code></td><td>Estado local del componente</td><td><code>[valor, setValor]</code></td></tr>
+          <tr><td><code>useEffect</code></td><td>Efectos secundarios (fetch, timers, DOM)</td><td>Nada (puede devolver cleanup)</td></tr>
+          <tr><td><code>useContext</code></td><td>Leer un valor compartido sin props</td><td>El valor del Provider</td></tr>
+          <tr><td><code>useRef</code></td><td>Acceder al DOM o guardar valores sin re-render</td><td><code>{ current: ... }</code></td></tr>
+          <tr><td><code>useReducer</code></td><td>Estado complejo con múltiples acciones</td><td><code>[state, dispatch]</code></td></tr>
+          <tr><td><code>useMemo</code></td><td>Memorizar un valor calculado</td><td>El valor cacheado</td></tr>
+          <tr><td><code>useCallback</code></td><td>Memorizar una función</td><td>La función cacheada</td></tr>
+        </tbody>
+      </table>
+
+      <div class="file-links">
+        <a class="flink" href="https://react.dev/reference/react/hooks" target="_blank">📚 Documentación oficial</a>
+        <a class="flink" href="../index.html" target="_blank">🎬 Volver a la presentación</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- React via CDN para los demos en vivo -->
+<script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+<script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+
+<!-- Lógica de la página -->
+<script>
+  /* ── Tabs ── */
+  function switchTab(btn, group, name) {
+    document.querySelectorAll(`[data-tab^="${group}-"]`)
+      .forEach(p => p.classList.remove('active'));
+    btn.closest('.tabs').querySelectorAll('.tab-btn')
+      .forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    const panel = document.querySelector(`[data-tab="${group}-${name}"]`);
+    if (panel) panel.classList.add('active');
+  }
+
+  /* ── Copy ── */
+  async function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre.code');
+    try {
+      await navigator.clipboard.writeText(pre.innerText);
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 2000);
+    } catch(e) { console.warn('Clipboard error', e); }
+  }
+
+  /* ── Scroll spy ── */
+  const topics = document.querySelectorAll('.topic');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id = e.target.id;
+      document.querySelectorAll('.sidebar-nav a').forEach(a =>
+        a.classList.toggle('active', a.dataset.s === id));
+      document.querySelectorAll('.nav-links a').forEach(a =>
+        a.classList.toggle('active', a.getAttribute('href') === '#' + id));
+    });
+  }, { rootMargin: '-20% 0% -70% 0%' });
+  topics.forEach(s => io.observe(s));
+
+  /* ── Progress ── */
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY /
+      (document.documentElement.scrollHeight - window.innerHeight);
+    document.getElementById('progress').style.width = (pct * 100) + '%';
+  });
+</script>
+
+<!-- DEMOS REACT -->
+<script type="text/babel" data-type="module">
+  const { useState, useEffect, useRef, useReducer, useMemo, useCallback,
+          createContext, useContext } = React;
+
+  /* ─────────── 01 · CONTADOR ─────────── */
+  function CounterDemo() {
+    const [count, setCount] = useState(0);
+    return (
+      <div style={{textAlign:'center'}}>
+        <div className="counter-display">{count}</div>
+        <button onClick={() => setCount(count + 1)}>+1</button>
+        <button onClick={() => setCount(count - 1)}>-1</button>
+        <button className="danger" onClick={() => setCount(0)}>Reset</button>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-counter')).render(<CounterDemo />);
+
+  /* ─────────── 01 · FORMULARIO ─────────── */
+  function FormDemo() {
+    const [nombre, setNombre] = useState('');
+    return (
+      <div>
+        <input
+          value={nombre}
+          onChange={e => setNombre(e.target.value)}
+          placeholder="Escribe tu nombre"
+        />
+        <p style={{marginTop:'0.5rem'}}>Hola, <strong>{nombre || 'desconocido'}</strong> 👋</p>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-form')).render(<FormDemo />);
+
+  /* ─────────── 01 · OBJETO ─────────── */
+  function ObjetoDemo() {
+    const [user, setUser] = useState({ name: 'Ana', level: 1, description: 'Estudiante' });
+    return (
+      <div className="grid-2">
+        <div>
+          <label style={{display:'block',marginBottom:'0.3rem',fontSize:'0.8rem'}}>Nombre</label>
+          <input value={user.name} onChange={e => setUser({...user, name: e.target.value})} />
+          <label style={{display:'block',marginTop:'0.5rem',marginBottom:'0.3rem',fontSize:'0.8rem'}}>Nivel</label>
+          <input type="number" value={user.level}
+            onChange={e => setUser({...user, level: Number(e.target.value)})} />
+        </div>
+        <div className="card-w">
+          <small>Estado actual:</small>
+          <pre style={{fontSize:'0.78rem',marginTop:'0.4rem',color:'#0969da'}}>
+{JSON.stringify(user, null, 2)}
+          </pre>
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-objeto')).render(<ObjetoDemo />);
+
+  /* ─────────── 01 · TODO LIST ─────────── */
+  function TodoDemo() {
+    const [items, setItems] = useState([
+      { id: 1, text: 'Aprender useState' },
+      { id: 2, text: 'Aprender useEffect' }
+    ]);
+    const [text, setText] = useState('');
+    const add = () => {
+      if (!text.trim()) return;
+      setItems([...items, { id: Date.now(), text }]);
+      setText('');
+    };
+    return (
+      <div>
+        <div style={{display:'flex',gap:'0.4rem'}}>
+          <input value={text} onChange={e => setText(e.target.value)}
+            onKeyDown={e => e.key === 'Enter' && add()}
+            placeholder="Nueva tarea..." style={{flex:1}} />
+          <button onClick={add}>Agregar</button>
+        </div>
+        <ul>
+          {items.map(item => (
+            <li key={item.id}>
+              <span>{item.text}</span>
+              <button className="danger" onClick={() => setItems(items.filter(i => i.id !== item.id))}>✕</button>
+            </li>
+          ))}
+        </ul>
+        {items.length === 0 && <small>No hay tareas. ¡Agrega una!</small>}
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-todo')).render(<TodoDemo />);
+
+  /* ─────────── 02 · TITLE ─────────── */
+  function TitleDemo() {
+    const [count, setCount] = useState(0);
+    useEffect(() => {
+      document.title = `Clicks: ${count} · React Hooks`;
+    }, [count]);
+    return (
+      <div style={{textAlign:'center'}}>
+        <div className="counter-display">{count}</div>
+        <button onClick={() => setCount(count + 1)}>Sumar y cambiar título</button>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-title')).render(<TitleDemo />);
+
+  /* ─────────── 02 · FETCH ─────────── */
+  function FetchDemo() {
+    const [users, setUsers] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    useEffect(() => {
+      fetch('https://jsonplaceholder.typicode.com/users')
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(d => setUsers(d.slice(0, 5)))
+        .catch(e => setError(e.message))
+        .finally(() => setLoading(false));
+    }, []);
+    if (loading) return <p>⏳ Cargando usuarios...</p>;
+    if (error) return <p style={{color:'#f85149'}}>Error: {error}</p>;
+    return (
+      <ul>
+        {users.map(u => (
+          <li key={u.id}>
+            <span><strong>{u.name}</strong> <small>· {u.email}</small></span>
+            <span className="badge-info">#{u.id}</span>
+          </li>
+        ))}
+      </ul>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-fetch')).render(<FetchDemo />);
+
+  /* ─────────── 02 · CLOCK ─────────── */
+  function ClockDemo() {
+    const [time, setTime] = useState(new Date());
+    const [running, setRunning] = useState(true);
+    useEffect(() => {
+      if (!running) return;
+      const id = setInterval(() => setTime(new Date()), 1000);
+      return () => clearInterval(id);
+    }, [running]);
+    return (
+      <div style={{textAlign:'center'}}>
+        <div style={{fontSize:'2rem',fontFamily:'monospace',color:'#0969da',margin:'0.5rem 0'}}>
+          {time.toLocaleTimeString()}
+        </div>
+        <button onClick={() => setRunning(r => !r)}>
+          {running ? '⏸ Pausar' : '▶ Reanudar'}
+        </button>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-clock')).render(<ClockDemo />);
+
+  /* ─────────── 03 · CONTEXT ─────────── */
+  const ThemeContext = createContext();
+  function ThemeProviderDemo() {
+    const [theme, setTheme] = useState('light');
+    return (
+      <ThemeContext.Provider value={{ theme, setTheme }}>
+        <div style={{display:'flex',gap:'0.5rem',flexWrap:'wrap',alignItems:'center'}}>
+          <ToolbarDemo />
+          <ContentBoxDemo />
+          <DeepNestedDemo />
+        </div>
+      </ThemeContext.Provider>
+    );
+  }
+  function ToolbarDemo() {
+    const { theme, setTheme } = useContext(ThemeContext);
+    return (
+      <button onClick={() => setTheme(theme === 'light' ? 'dark' : 'light')}>
+        {theme === 'light' ? '🌙' : '☀️'} Cambiar tema
+      </button>
+    );
+  }
+  function ContentBoxDemo() {
+    const { theme } = useContext(ThemeContext);
+    const styles = theme === 'light'
+      ? { background:'#fff', color:'#24292f', border:'1px solid #d0d7de' }
+      : { background:'#0d1117', color:'#e6edf3', border:'1px solid #30363d' };
+    return (
+      <div style={{...styles, padding:'0.6rem 1rem', borderRadius:6}}>
+        Caja: tema <strong>{theme}</strong>
+      </div>
+    );
+  }
+  function DeepNestedDemo() {
+    return <div style={{padding:'0.4rem 0.8rem'}}><InnerDemo /></div>;
+  }
+  function InnerDemo() {
+    const { theme } = useContext(ThemeContext);
+    return <span className="badge-info">Componente anidado lee: {theme}</span>;
+  }
+  ReactDOM.createRoot(document.getElementById('demo-context')).render(<ThemeProviderDemo />);
+
+  /* ─────────── 04 · REF DOM ─────────── */
+  function RefDemo() {
+    const inputRef = useRef(null);
+    return (
+      <div>
+        <input ref={inputRef} placeholder="Click en el botón →" />
+        <button onClick={() => inputRef.current.focus()}>Enfocar input</button>
+        <button className="success" onClick={() => { inputRef.current.value = '¡Hola!'; inputRef.current.focus(); }}>
+          Llenar y enfocar
+        </button>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-ref')).render(<RefDemo />);
+
+  /* ─────────── 04 · STOPWATCH ─────────── */
+  function StopWatchDemo() {
+    const [time, setTime] = useState(0);
+    const intervalRef = useRef(null);
+    const start = () => {
+      if (intervalRef.current) return;
+      intervalRef.current = setInterval(() => setTime(t => t + 1), 1000);
+    };
+    const stop = () => {
+      clearInterval(intervalRef.current);
+      intervalRef.current = null;
+    };
+    const reset = () => { stop(); setTime(0); };
+    return (
+      <div style={{textAlign:'center'}}>
+        <div className="counter-display">{time}s</div>
+        <button className="success" onClick={start}>▶ Iniciar</button>
+        <button onClick={stop}>⏸ Detener</button>
+        <button className="danger" onClick={reset}>↻ Reset</button>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-stopwatch')).render(<StopWatchDemo />);
+
+  /* ─────────── 05 · REDUCER ─────────── */
+  function reducer(state, action) {
+    switch (action.type) {
+      case 'increment': return { count: state.count + 1 };
+      case 'decrement': return { count: state.count - 1 };
+      case 'add':       return { count: state.count + action.payload };
+      case 'reset':     return { count: 0 };
+      default:          return state;
+    }
+  }
+  function ReducerDemo() {
+    const [state, dispatch] = useReducer(reducer, { count: 0 });
+    return (
+      <div style={{textAlign:'center'}}>
+        <div className="counter-display">{state.count}</div>
+        <button onClick={() => dispatch({ type: 'increment' })}>+1</button>
+        <button onClick={() => dispatch({ type: 'decrement' })}>-1</button>
+        <button className="success" onClick={() => dispatch({ type: 'add', payload: 10 })}>+10</button>
+        <button className="success" onClick={() => dispatch({ type: 'add', payload: 100 })}>+100</button>
+        <button className="danger" onClick={() => dispatch({ type: 'reset' })}>Reset</button>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-reducer')).render(<ReducerDemo />);
+
+  /* ─────────── 06 · MEMO ─────────── */
+  function MemoDemo() {
+    const [count, setCount] = useState(0);
+    const [text, setText] = useState('');
+
+    const expensive = useMemo(() => {
+      console.log('🔥 Recalculando suma costosa con count =', count);
+      let sum = 0;
+      for (let i = 0; i < 1000000; i++) sum += i;
+      return sum + count;
+    }, [count]);
+
+    return (
+      <div>
+        <p><strong>Resultado costoso:</strong> {expensive.toLocaleString()}</p>
+        <p style={{marginTop:'0.5rem'}}><small>Solo se recalcula cuando cambia <code>count</code>:</small></p>
+        <button onClick={() => setCount(c => c + 1)}>Incrementar count ({count})</button>
+        <div style={{marginTop:'0.75rem'}}>
+          <small>Escribir aquí <strong>NO</strong> recalcula (gracias a useMemo):</small><br/>
+          <input value={text} onChange={e => setText(e.target.value)} placeholder="escribe..." />
+        </div>
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-memo')).render(<MemoDemo />);
+
+  /* ─────────── 07 · CUSTOM HOOK ─────────── */
+  function useFetch(url) {
+    const [data, setData] = useState(null);
+    const [loading, setLoading] = useState(true);
+    const [error, setError] = useState(null);
+    useEffect(() => {
+      setLoading(true); setError(null);
+      fetch(url)
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(setData)
+        .catch(e => setError(e.message))
+        .finally(() => setLoading(false));
+    }, [url]);
+    return { data, loading, error };
+  }
+  function CustomHookDemo() {
+    const [resource, setResource] = useState('posts');
+    const { data, loading, error } = useFetch(`https://jsonplaceholder.typicode.com/${resource}?_limit=3`);
+    return (
+      <div>
+        <div style={{marginBottom:'0.75rem'}}>
+          <button onClick={() => setResource('posts')} className={resource==='posts'?'success':''}>Posts</button>
+          <button onClick={() => setResource('users')} className={resource==='users'?'success':''}>Users</button>
+          <button onClick={() => setResource('comments')} className={resource==='comments'?'success':''}>Comments</button>
+        </div>
+        {loading && <p>⏳ Cargando {resource}...</p>}
+        {error && <p style={{color:'#f85149'}}>Error: {error}</p>}
+        {data && (
+          <ul>
+            {data.map(item => (
+              <li key={item.id}>
+                <span>{item.title || item.name || item.body?.slice(0, 60)}</span>
+                <span className="badge-info">#{item.id}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    );
+  }
+  ReactDOM.createRoot(document.getElementById('demo-customhook')).render(<CustomHookDemo />);
+</script>
+
+</body>
+</html>

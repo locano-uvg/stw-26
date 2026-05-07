@@ -1,0 +1,809 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Instalar React desde 0 — STW 2026</title>
+  <style>
+    :root {
+      --bg:      #0d1117;
+      --surface: #161b22;
+      --card:    #1c2230;
+      --border:  #30363d;
+      --text:    #e6edf3;
+      --muted:   #8b949e;
+      --accent:  #58a6ff;
+      --green:   #3fb950;
+      --yellow:  #d29922;
+      --red:     #f85149;
+      --purple:  #bc8cff;
+      --orange:  #ffa657;
+      --pink:    #f778ba;
+      --radius:  10px;
+      --mono:    "Fira Code","Cascadia Code","Consolas",monospace;
+      --nav-h:   56px;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      font-size: 16px;
+    }
+    code, pre { font-family: var(--mono); }
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+
+    #progress {
+      position: fixed; top: var(--nav-h); left: 0;
+      height: 2px; background: var(--accent);
+      width: 0%; z-index: 400; transition: width 0.1s;
+    }
+
+    nav {
+      position: sticky; top: 0; z-index: 300;
+      background: rgba(13,17,23,0.93);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      display: flex; align-items: center; gap: 1.25rem;
+      height: var(--nav-h); padding: 0 1.5rem;
+    }
+    .nav-brand {
+      font-weight: 700; font-size: 0.9rem;
+      white-space: nowrap; color: var(--text);
+      flex-shrink: 0;
+    }
+    .nav-brand span { color: var(--accent); }
+    .nav-links {
+      display: flex; gap: 0.1rem;
+      list-style: none; overflow-x: auto;
+      scrollbar-width: none;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-links a {
+      color: var(--muted); font-size: 0.775rem;
+      white-space: nowrap; padding: 0.3rem 0.5rem;
+      border-radius: 5px; transition: color 0.15s;
+    }
+    .nav-links a:hover,
+    .nav-links a.active { color: var(--text); text-decoration: none; background: var(--surface); }
+
+    .page-layout {
+      display: grid;
+      grid-template-columns: 240px 1fr;
+      max-width: 1340px;
+      margin: 0 auto;
+    }
+
+    .sidebar {
+      position: sticky; top: var(--nav-h);
+      height: calc(100vh - var(--nav-h));
+      overflow-y: auto; padding: 1.5rem 0.75rem;
+      border-right: 1px solid var(--border);
+      scrollbar-width: thin;
+      scrollbar-color: var(--border) transparent;
+    }
+    .sidebar-title {
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--muted); margin: 1rem 0 0.5rem;
+      padding-left: 0.5rem;
+    }
+    .sidebar-title:first-child { margin-top: 0; }
+    .sidebar-nav { list-style: none; display: flex; flex-direction: column; gap: 1px; }
+    .sidebar-nav a {
+      display: block; padding: 0.32rem 0.65rem;
+      border-radius: 6px; color: var(--muted);
+      font-size: 0.8rem; transition: all 0.15s;
+      border-left: 2px solid transparent;
+    }
+    .sidebar-nav a:hover { color: var(--text); text-decoration: none; background: var(--surface); }
+    .sidebar-nav a.active {
+      color: var(--accent);
+      border-left-color: var(--accent);
+      background: rgba(88,166,255,0.07);
+    }
+    .sidebar-nav a.sub { padding-left: 1.4rem; font-size: 0.76rem; }
+
+    main { padding: 0 2rem 5rem; min-width: 0; }
+
+    .hero {
+      padding: 4rem 0 3rem; text-align: center;
+      background: radial-gradient(ellipse 80% 60% at 50% -10%,
+        rgba(88,166,255,0.1) 0%, transparent 60%);
+    }
+    .hero-label {
+      color: var(--muted); font-size: 0.75rem;
+      letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 0.75rem;
+    }
+    .hero h1 {
+      font-size: clamp(2rem,5vw,3rem); font-weight: 800;
+      background: linear-gradient(135deg, #e6edf3 30%, #58a6ff 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text; margin-bottom: 1rem;
+    }
+    .hero p { color: var(--muted); max-width: 620px; margin: 0 auto 2rem; }
+    .hero-chips { display: flex; gap: 0.5rem; justify-content: center; flex-wrap: wrap; }
+
+    .topic { padding: 3rem 0; border-top: 1px solid var(--border); }
+    .topic-header { display: flex; align-items: flex-start; gap: 1rem; margin-bottom: 1.5rem; }
+    .topic-num {
+      width: 38px; height: 38px; border-radius: 8px;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.8rem; font-weight: 700; color: var(--accent);
+      flex-shrink: 0; margin-top: 4px;
+    }
+    .topic-num.tn-orange { color: var(--orange); border-color: rgba(255,166,87,0.4); background: rgba(255,166,87,0.08); }
+    .topic-num.tn-purple { color: var(--purple); border-color: rgba(188,140,255,0.4); background: rgba(188,140,255,0.08); }
+    .topic-num.tn-green  { color: var(--green);  border-color: rgba(63,185,80,0.4);   background: rgba(63,185,80,0.08); }
+    .topic-title { font-size: 1.55rem; font-weight: 700; margin-bottom: 0.25rem; }
+    .topic-desc { color: var(--muted); font-size: 0.9rem; max-width: 720px; }
+
+    .step {
+      margin: 1.75rem 0;
+      padding-left: 1rem;
+      border-left: 2px solid var(--border);
+    }
+    .step-title {
+      font-size: 1rem; font-weight: 600;
+      color: var(--text); margin-bottom: 0.4rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .step-num {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 22px; height: 22px; border-radius: 50%;
+      background: var(--card); border: 1px solid var(--border);
+      font-size: 0.7rem; color: var(--muted); font-weight: 700;
+    }
+    .step-text { color: var(--muted); font-size: 0.88rem; margin-bottom: 0.7rem; }
+
+    .code-wrap { position: relative; margin-bottom: 1rem; }
+    .code-header {
+      display: flex; align-items: center;
+      justify-content: space-between;
+      background: var(--card); border: 1px solid var(--border);
+      border-bottom: none;
+      border-radius: var(--radius) var(--radius) 0 0;
+      padding: 0.4rem 0.8rem;
+    }
+    .code-lang {
+      font-size: 0.65rem; font-weight: 700;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      color: var(--muted);
+    }
+    .copy-btn {
+      background: none; border: 1px solid var(--border);
+      border-radius: 5px; color: var(--muted);
+      font-size: 0.72rem; padding: 0.18rem 0.6rem;
+      cursor: pointer; transition: all 0.2s;
+      display: flex; align-items: center; gap: 0.3rem;
+      font-family: inherit;
+    }
+    .copy-btn:hover { color: var(--text); border-color: var(--accent); }
+    .copy-btn.copied { color: var(--green); border-color: var(--green); }
+    pre.code {
+      background: #0d1117; border: 1px solid var(--border);
+      border-radius: 0 0 var(--radius) var(--radius);
+      padding: 1rem 1.2rem; overflow-x: auto;
+      font-size: 0.82rem; line-height: 1.65;
+      color: #e6edf3; tab-size: 2;
+    }
+    .k  { color: #ff7b72; }
+    .p  { color: #79c0ff; }
+    .v  { color: #a5d6ff; }
+    .s  { color: #a5d6ff; }
+    .c  { color: #8b949e; font-style: italic; }
+    .t  { color: #7ee787; }
+    .a  { color: #ffa657; }
+    .u  { color: #d2a8ff; }
+    .n  { color: #ffa657; }
+    .f  { color: #d2a8ff; }
+
+    .callout {
+      border-radius: 8px; padding: 0.85rem 1rem;
+      border-left: 3px solid; margin: 1rem 0;
+      font-size: 0.875rem;
+    }
+    .callout strong { display: block; margin-bottom: 0.2rem; }
+    .ci { background: rgba(88,166,255,0.07);  border-color: var(--accent); }
+    .cw { background: rgba(210,153,34,0.08);  border-color: var(--yellow); }
+    .ct { background: rgba(63,185,80,0.07);   border-color: var(--green); }
+    .cr { background: rgba(248,81,73,0.07);   border-color: var(--red); }
+
+    .data-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; margin: 1rem 0; }
+    .data-table th {
+      background: var(--card); padding: 0.6rem 0.75rem;
+      text-align: left; border-bottom: 1px solid var(--border);
+      color: var(--accent); font-size: 0.7rem;
+      text-transform: uppercase; letter-spacing: 0.06em; font-weight: 700;
+    }
+    .data-table td { padding: 0.55rem 0.75rem; border-bottom: 1px solid rgba(48,54,61,0.5); vertical-align: top; }
+    .data-table tr:last-child td { border-bottom: none; }
+    .data-table tr:hover td { background: var(--surface); }
+
+    .badge {
+      display: inline-block; padding: 0.18em 0.7em;
+      border-radius: 20px; font-size: 0.7rem; font-weight: 600;
+    }
+    .bb { background: rgba(88,166,255,0.12);  color: var(--accent);  border: 1px solid rgba(88,166,255,0.3); }
+    .bg { background: rgba(63,185,80,0.12);   color: var(--green);   border: 1px solid rgba(63,185,80,0.3); }
+    .bo { background: rgba(255,166,87,0.12);  color: var(--orange);  border: 1px solid rgba(255,166,87,0.3); }
+    .bp { background: rgba(188,140,255,0.12); color: var(--purple);  border: 1px solid rgba(188,140,255,0.3); }
+    .br { background: rgba(248,81,73,0.12);   color: var(--red);     border: 1px solid rgba(248,81,73,0.3); }
+
+    .pros-cons { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 1.5rem; }
+    .pc-card {
+      background: var(--surface); border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.25rem;
+    }
+    .pc-card h4 {
+      font-size: 0.8rem; text-transform: uppercase;
+      letter-spacing: 0.1em; margin-bottom: 0.6rem;
+    }
+    .pc-card.pros h4 { color: var(--green); }
+    .pc-card.cons h4 { color: var(--red); }
+    .pc-card ul { list-style: none; display: flex; flex-direction: column; gap: 0.4rem; }
+    .pc-card li {
+      font-size: 0.85rem; color: var(--muted);
+      padding-left: 1.2rem; position: relative;
+    }
+    .pc-card.pros li::before { content: "✓"; position: absolute; left: 0; color: var(--green); font-weight: 700; }
+    .pc-card.cons li::before { content: "✗"; position: absolute; left: 0; color: var(--red); font-weight: 700; }
+
+    .file-tree {
+      background: #0d1117; border: 1px solid var(--border);
+      border-radius: var(--radius); padding: 1rem 1.2rem;
+      font-family: var(--mono); font-size: 0.82rem;
+      color: var(--muted); white-space: pre; overflow-x: auto;
+      margin-bottom: 1rem;
+    }
+    .file-tree .dir { color: var(--accent); }
+    .file-tree .file { color: var(--text); }
+
+    @media (max-width: 980px) {
+      .page-layout { grid-template-columns: 1fr; }
+      .sidebar { display: none; }
+      .pros-cons { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 640px) {
+      main { padding: 0 1rem 4rem; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="progress"></div>
+
+<nav>
+  <div class="nav-brand">React<span> · </span>STW 2026</div>
+  <ul class="nav-links" role="list">
+    <li><a href="#intro">Introducción</a></li>
+    <li><a href="#requisitos">Requisitos</a></li>
+    <li><a href="#cdn">CDN</a></li>
+    <li><a href="#npm">npm</a></li>
+    <li><a href="#vite">Vite</a></li>
+    <li><a href="#comparacion">Comparación</a></li>
+  </ul>
+</nav>
+
+<div class="page-layout">
+
+  <aside class="sidebar">
+    <div class="sidebar-title">Inicio</div>
+    <ul class="sidebar-nav" id="sidebar-nav">
+      <li><a href="#intro"      data-s="intro">Introducción</a></li>
+      <li><a href="#requisitos" data-s="requisitos">Requisitos previos</a></li>
+    </ul>
+
+    <div class="sidebar-title">Forma 1 · CDN</div>
+    <ul class="sidebar-nav">
+      <li><a href="#cdn"          data-s="cdn">Resumen</a></li>
+      <li><a href="#cdn-archivos" class="sub" data-s="cdn-archivos">Crear archivos</a></li>
+      <li><a href="#cdn-html"     class="sub" data-s="cdn-html">HTML con scripts</a></li>
+      <li><a href="#cdn-jsx"      class="sub" data-s="cdn-jsx">Componente JSX</a></li>
+      <li><a href="#cdn-probar"   class="sub" data-s="cdn-probar">Probar</a></li>
+    </ul>
+
+    <div class="sidebar-title">Forma 2 · npm</div>
+    <ul class="sidebar-nav">
+      <li><a href="#npm"           data-s="npm">Resumen</a></li>
+      <li><a href="#npm-init"      class="sub" data-s="npm-init">npm init</a></li>
+      <li><a href="#npm-install"   class="sub" data-s="npm-install">Instalar React</a></li>
+      <li><a href="#npm-bundler"   class="sub" data-s="npm-bundler">Bundler</a></li>
+      <li><a href="#npm-config"    class="sub" data-s="npm-config">vite.config.js</a></li>
+      <li><a href="#npm-archivos"  class="sub" data-s="npm-archivos">index + main.jsx</a></li>
+      <li><a href="#npm-scripts"   class="sub" data-s="npm-scripts">Scripts</a></li>
+      <li><a href="#npm-run"       class="sub" data-s="npm-run">npm run dev</a></li>
+    </ul>
+
+    <div class="sidebar-title">Forma 3 · Vite</div>
+    <ul class="sidebar-nav">
+      <li><a href="#vite"            data-s="vite">Resumen</a></li>
+      <li><a href="#vite-create"     class="sub" data-s="vite-create">Crear proyecto</a></li>
+      <li><a href="#vite-install"    class="sub" data-s="vite-install">Instalar deps</a></li>
+      <li><a href="#vite-run"        class="sub" data-s="vite-run">Ejecutar</a></li>
+      <li><a href="#vite-estructura" class="sub" data-s="vite-estructura">Estructura</a></li>
+    </ul>
+
+    <div class="sidebar-title">Final</div>
+    <ul class="sidebar-nav">
+      <li><a href="#comparacion" data-s="comparacion">Comparación</a></li>
+    </ul>
+  </aside>
+
+  <main>
+
+    <div class="hero">
+      <div class="hero-label">STW 2026 · Universidad del Valle de Guatemala</div>
+      <h1>Instalar React desde 0</h1>
+      <p>Tres formas de configurar un proyecto React paso a paso. El objetivo es que veas las diferencias entre cada enfoque y puedas copiar el código para probarlo tú mismo.</p>
+      <div class="hero-chips">
+        <span class="badge bo">Forma 1 · CDN</span>
+        <span class="badge bp">Forma 2 · npm</span>
+        <span class="badge bg">Forma 3 · Vite</span>
+      </div>
+    </div>
+
+    <!-- ══════════════════════════ INTRO ══════════════════════════ -->
+    <section class="topic" id="intro">
+      <div class="topic-header">
+        <div class="topic-num">00</div>
+        <div>
+          <h2 class="topic-title">¿Qué vamos a ver?</h2>
+          <p class="topic-desc">Una misma aplicación React (un componente que muestra "¡Hola React!") configurada de tres maneras distintas. Cada forma agrega más herramientas y complejidad, pero también más poder.</p>
+        </div>
+      </div>
+
+      <div class="callout ci">
+        <strong>Recuerda:</strong>
+        React es solo una librería de JavaScript. No es un framework completo ni necesita herramientas mágicas. Las "tres formas" son simplemente distintas maneras de cargar esa librería en el navegador.
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr><th>Forma</th><th>Resumen</th><th>Ideal para</th></tr>
+        </thead>
+        <tbody>
+          <tr><td><span class="badge bo">CDN</span></td><td>Cargar React desde una URL en un HTML simple.</td><td>Demos, aprender lo básico.</td></tr>
+          <tr><td><span class="badge bp">npm</span></td><td>Instalar React como dependencia y configurar todo a mano.</td><td>Entender qué hace cada pieza.</td></tr>
+          <tr><td><span class="badge bg">Vite</span></td><td>Plantilla oficial que prepara todo en un solo comando.</td><td>Proyectos reales.</td></tr>
+        </tbody>
+      </table>
+    </section>
+
+    <!-- ══════════════════════════ REQUISITOS ══════════════════════════ -->
+    <section class="topic" id="requisitos">
+      <div class="topic-header">
+        <div class="topic-num">01</div>
+        <div>
+          <h2 class="topic-title">Requisitos previos</h2>
+          <p class="topic-desc">Para las formas 2 y 3 necesitas Node.js y npm instalados. Para la forma 1 (CDN), basta con un navegador.</p>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-title"><span class="step-num">1</span> Verifica que tengas Node.js y npm</div>
+        <div class="step-text">Abre la terminal y ejecuta:</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">node</span> -v
+<span class="f">npm</span> -v</pre>
+        </div>
+        <div class="step-text">Deberías ver versiones tipo <span class="badge bb">v18+</span> o superior. Si no, descarga Node desde <a href="https://nodejs.org/" target="_blank">nodejs.org</a>.</div>
+      </div>
+
+      <div class="callout ct">
+        <strong>Tip:</strong>
+        Recomendamos VS Code como editor y la extensión <em>Live Server</em> para abrir el HTML de la forma 1 con recarga automática.
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FORMA 1 · CDN ══════════════════════════ -->
+    <section class="topic" id="cdn">
+      <div class="topic-header">
+        <div class="topic-num tn-orange">02</div>
+        <div>
+          <h2 class="topic-title">Forma 1 · Instalación con CDN <span class="badge bo">sin instalar nada</span></h2>
+          <p class="topic-desc">La forma más rápida de ver React funcionando. Cargamos la librería desde una URL pública (unpkg) y opcionalmente Babel para poder escribir JSX directamente en el navegador.</p>
+        </div>
+      </div>
+
+      <div class="step" id="cdn-archivos">
+        <div class="step-title"><span class="step-num">1</span> Crear los archivos</div>
+        <div class="step-text">Crea una carpeta nueva con dos archivos vacíos:</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">mkdir</span> react-cdn
+<span class="f">cd</span> react-cdn
+<span class="f">touch</span> index.html main.js</pre>
+        </div>
+      </div>
+
+      <div class="step" id="cdn-html">
+        <div class="step-title"><span class="step-num">2</span> Configurar el <code>index.html</code></div>
+        <div class="step-text">Carga React, ReactDOM y Babel desde unpkg. El <code>div#root</code> es donde React montará la aplicación.</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">html</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="c">&lt;!doctype html&gt;</span>
+<span class="t">&lt;html</span> <span class="a">lang</span>=<span class="s">"es"</span><span class="t">&gt;</span>
+  <span class="t">&lt;head&gt;</span>
+    <span class="t">&lt;meta</span> <span class="a">charset</span>=<span class="s">"UTF-8"</span> <span class="t">/&gt;</span>
+    <span class="t">&lt;title&gt;</span>React con CDN<span class="t">&lt;/title&gt;</span>
+  <span class="t">&lt;/head&gt;</span>
+  <span class="t">&lt;body&gt;</span>
+    <span class="t">&lt;div</span> <span class="a">id</span>=<span class="s">"root"</span><span class="t">&gt;&lt;/div&gt;</span>
+
+    <span class="c">&lt;!-- React desde CDN --&gt;</span>
+    <span class="t">&lt;script</span> <span class="a">crossorigin</span> <span class="a">src</span>=<span class="s">"https://unpkg.com/react@18/umd/react.development.js"</span><span class="t">&gt;&lt;/script&gt;</span>
+    <span class="t">&lt;script</span> <span class="a">crossorigin</span> <span class="a">src</span>=<span class="s">"https://unpkg.com/react-dom@18/umd/react-dom.development.js"</span><span class="t">&gt;&lt;/script&gt;</span>
+
+    <span class="c">&lt;!-- Babel para usar JSX en el navegador --&gt;</span>
+    <span class="t">&lt;script</span> <span class="a">src</span>=<span class="s">"https://unpkg.com/@babel/standalone/babel.min.js"</span><span class="t">&gt;&lt;/script&gt;</span>
+
+    <span class="c">&lt;!-- Nuestro código (type="text/babel" para que Babel lo procese) --&gt;</span>
+    <span class="t">&lt;script</span> <span class="a">type</span>=<span class="s">"text/babel"</span> <span class="a">src</span>=<span class="s">"main.js"</span><span class="t">&gt;&lt;/script&gt;</span>
+  <span class="t">&lt;/body&gt;</span>
+<span class="t">&lt;/html&gt;</span></pre>
+        </div>
+      </div>
+
+      <div class="step" id="cdn-jsx">
+        <div class="step-title"><span class="step-num">3</span> Escribir el componente en <code>main.js</code></div>
+        <div class="step-text">React no se importa porque ya está disponible globalmente gracias a los scripts del CDN.</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">jsx</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="k">const</span> <span class="f">App</span> = () =&gt; {
+  <span class="k">return</span> <span class="t">&lt;h1</span> <span class="a">style</span>={{ <span class="p">color</span>: <span class="s">"steelblue"</span> }}<span class="t">&gt;</span>¡Hola React con CDN!<span class="t">&lt;/h1&gt;</span>;
+};
+
+<span class="k">const</span> root = ReactDOM.<span class="f">createRoot</span>(document.<span class="f">getElementById</span>(<span class="s">"root"</span>));
+root.<span class="f">render</span>(<span class="t">&lt;App /&gt;</span>);</pre>
+        </div>
+      </div>
+
+      <div class="step" id="cdn-probar">
+        <div class="step-title"><span class="step-num">4</span> Abrir en el navegador</div>
+        <div class="step-text">Solo abre <code>index.html</code> directamente con doble click, o usa <em>Live Server</em> en VS Code.</div>
+      </div>
+
+      <div class="callout cw">
+        <strong>Advertencia:</strong>
+        Babel en el navegador es <strong>muy lento</strong> y nunca debe usarse en producción. Esta forma sirve para aprender y demos, no para apps reales.
+      </div>
+
+      <div class="pros-cons">
+        <div class="pc-card pros">
+          <h4>Ventajas</h4>
+          <ul>
+            <li>No requiere instalación</li>
+            <li>Bueno para demos rápidos</li>
+            <li>Útil para enseñar conceptos</li>
+            <li>Funciona en cualquier servidor estático</li>
+          </ul>
+        </div>
+        <div class="pc-card cons">
+          <h4>Desventajas</h4>
+          <ul>
+            <li>Babel en navegador es muy lento</li>
+            <li>No hay módulos ni imports</li>
+            <li>No optimiza para producción</li>
+            <li>No hay hot reload</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FORMA 2 · NPM ══════════════════════════ -->
+    <section class="topic" id="npm">
+      <div class="topic-header">
+        <div class="topic-num tn-purple">03</div>
+        <div>
+          <h2 class="topic-title">Forma 2 · Instalación con npm <span class="badge bp">configuración manual</span></h2>
+          <p class="topic-desc">Instalamos React como dependencia real y configuramos un bundler (Vite) a mano para entender qué hace cada pieza. Esta es la forma "educativa" — en proyectos reales usarás la Forma 3.</p>
+        </div>
+      </div>
+
+      <div class="step" id="npm-init">
+        <div class="step-title"><span class="step-num">1</span> Crear el proyecto y <code>package.json</code></div>
+        <div class="step-text">Inicializa npm en una carpeta nueva:</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">mkdir</span> react-npm
+<span class="f">cd</span> react-npm
+<span class="f">npm</span> init -y</pre>
+        </div>
+        <div class="step-text">Esto genera un <code>package.json</code> con la configuración base.</div>
+      </div>
+
+      <div class="step" id="npm-install">
+        <div class="step-title"><span class="step-num">2</span> Instalar React y ReactDOM</div>
+        <div class="step-text">Estas son las dos librerías que componen React:</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">npm</span> install react react-dom</pre>
+        </div>
+        <div class="step-text">Aparecerá la carpeta <code>node_modules/</code>, un <code>package-lock.json</code>, y las dependencias en <code>package.json</code>.</div>
+      </div>
+
+      <div class="step" id="npm-bundler">
+        <div class="step-title"><span class="step-num">3</span> Instalar el bundler (Vite como dev dependency)</div>
+        <div class="step-text">React no se ejecuta solo en el navegador: necesita un <strong>bundler</strong> que empaquete los módulos y compile JSX. Vamos a usar Vite, pero instalado a mano.</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">npm</span> install --save-dev vite @vitejs/plugin-react</pre>
+        </div>
+      </div>
+
+      <div class="step" id="npm-config">
+        <div class="step-title"><span class="step-num">4</span> Configurar Vite</div>
+        <div class="step-text">Crea <code>vite.config.js</code> en la raíz:</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">javascript</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="k">import</span> { <span class="f">defineConfig</span> } <span class="k">from</span> <span class="s">"vite"</span>;
+<span class="k">import</span> react <span class="k">from</span> <span class="s">"@vitejs/plugin-react"</span>;
+
+<span class="k">export default</span> <span class="f">defineConfig</span>({
+  <span class="p">plugins</span>: [<span class="f">react</span>()],
+});</pre>
+        </div>
+      </div>
+
+      <div class="step" id="npm-archivos">
+        <div class="step-title"><span class="step-num">5</span> Crear <code>index.html</code> y <code>main.jsx</code></div>
+        <div class="step-text">Vite usa <code>index.html</code> como punto de entrada (en la raíz, no dentro de <code>public/</code>):</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">html</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="c">&lt;!doctype html&gt;</span>
+<span class="t">&lt;html</span> <span class="a">lang</span>=<span class="s">"es"</span><span class="t">&gt;</span>
+  <span class="t">&lt;head&gt;</span>
+    <span class="t">&lt;meta</span> <span class="a">charset</span>=<span class="s">"UTF-8"</span> <span class="t">/&gt;</span>
+    <span class="t">&lt;title&gt;</span>React con npm<span class="t">&lt;/title&gt;</span>
+  <span class="t">&lt;/head&gt;</span>
+  <span class="t">&lt;body&gt;</span>
+    <span class="t">&lt;div</span> <span class="a">id</span>=<span class="s">"root"</span><span class="t">&gt;&lt;/div&gt;</span>
+    <span class="t">&lt;script</span> <span class="a">type</span>=<span class="s">"module"</span> <span class="a">src</span>=<span class="s">"/main.jsx"</span><span class="t">&gt;&lt;/script&gt;</span>
+  <span class="t">&lt;/body&gt;</span>
+<span class="t">&lt;/html&gt;</span></pre>
+        </div>
+        <div class="step-text">Y <code>main.jsx</code> con el componente:</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">jsx</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="k">import</span> React <span class="k">from</span> <span class="s">"react"</span>;
+<span class="k">import</span> ReactDOM <span class="k">from</span> <span class="s">"react-dom/client"</span>;
+
+<span class="k">const</span> <span class="f">App</span> = () =&gt; {
+  <span class="k">return</span> <span class="t">&lt;h1</span> <span class="a">style</span>={{ <span class="p">color</span>: <span class="s">"steelblue"</span> }}<span class="t">&gt;</span>¡Hola React con npm!<span class="t">&lt;/h1&gt;</span>;
+};
+
+<span class="k">const</span> root = ReactDOM.<span class="f">createRoot</span>(document.<span class="f">getElementById</span>(<span class="s">"root"</span>));
+root.<span class="f">render</span>(<span class="t">&lt;App /&gt;</span>);</pre>
+        </div>
+      </div>
+
+      <div class="step" id="npm-scripts">
+        <div class="step-title"><span class="step-num">6</span> Agregar scripts en <code>package.json</code></div>
+        <div class="step-text">Edita la sección <code>"scripts"</code>:</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">json</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="p">"scripts"</span>: {
+  <span class="p">"dev"</span>: <span class="s">"vite"</span>,
+  <span class="p">"build"</span>: <span class="s">"vite build"</span>,
+  <span class="p">"preview"</span>: <span class="s">"vite preview"</span>
+}</pre>
+        </div>
+      </div>
+
+      <div class="step" id="npm-run">
+        <div class="step-title"><span class="step-num">7</span> Levantar el servidor de desarrollo</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">npm</span> run dev</pre>
+        </div>
+        <div class="step-text">Abre la URL que aparezca (por defecto <a href="http://localhost:5173" target="_blank">http://localhost:5173</a>).</div>
+      </div>
+
+      <div class="callout ci">
+        <strong>¿Por qué hicimos todo esto a mano?</strong>
+        Para que veas que un proyecto React real necesita: la librería (<code>react</code>), un renderer (<code>react-dom</code>), y un bundler (<code>vite</code>) que sepa cómo procesar JSX y módulos. La Forma 3 hace exactamente lo mismo en un solo comando.
+      </div>
+
+      <div class="pros-cons">
+        <div class="pc-card pros">
+          <h4>Ventajas</h4>
+          <ul>
+            <li>Entiendes qué hace cada dependencia</li>
+            <li>Control total de la configuración</li>
+            <li>JSX, módulos y hot reload</li>
+            <li>Listo para producción</li>
+          </ul>
+        </div>
+        <div class="pc-card cons">
+          <h4>Desventajas</h4>
+          <ul>
+            <li>Más pasos manuales</li>
+            <li>Más fácil equivocarse</li>
+            <li>Hay que crear los archivos uno por uno</li>
+            <li>Reinventas lo que la Forma 3 ya hace</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ FORMA 3 · VITE ══════════════════════════ -->
+    <section class="topic" id="vite">
+      <div class="topic-header">
+        <div class="topic-num tn-green">04</div>
+        <div>
+          <h2 class="topic-title">Forma 3 · Instalación con Vite <span class="badge bg">recomendado</span></h2>
+          <p class="topic-desc">La forma estándar para proyectos reales. La plantilla oficial de Vite hace todos los pasos de la Forma 2 automáticamente, en un solo comando.</p>
+        </div>
+      </div>
+
+      <div class="step" id="vite-create">
+        <div class="step-title"><span class="step-num">1</span> Crear el proyecto</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">npm</span> create vite@latest mi-app -- --template react</pre>
+        </div>
+        <div class="step-text">Si te lo pide de forma interactiva, elige:</div>
+        <ul style="color: var(--muted); font-size: 0.88rem; padding-left: 1.5rem; margin-bottom: 1rem;">
+          <li><strong>Project name:</strong> mi-app</li>
+          <li><strong>Framework:</strong> React</li>
+          <li><strong>Variant:</strong> JavaScript (o TypeScript)</li>
+        </ul>
+      </div>
+
+      <div class="step" id="vite-install">
+        <div class="step-title"><span class="step-num">2</span> Instalar dependencias</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">cd</span> mi-app
+<span class="f">npm</span> install</pre>
+        </div>
+      </div>
+
+      <div class="step" id="vite-run">
+        <div class="step-title"><span class="step-num">3</span> Ejecutar el proyecto</div>
+        <div class="code-wrap">
+          <div class="code-header"><span class="code-lang">bash</span><button class="copy-btn" onclick="copyCode(this)">Copiar</button></div>
+<pre class="code"><span class="f">npm</span> run dev       <span class="c"># Servidor de desarrollo</span>
+<span class="f">npm</span> run build     <span class="c"># Build de producción en /dist</span>
+<span class="f">npm</span> run preview   <span class="c"># Previsualizar la build</span></pre>
+        </div>
+      </div>
+
+      <div class="step" id="vite-estructura">
+        <div class="step-title"><span class="step-num">4</span> Estructura típica del proyecto</div>
+        <div class="step-text">Esto es lo que Vite genera por ti:</div>
+<div class="file-tree"><span class="dir">mi-app/</span>
+├── <span class="dir">node_modules/</span>
+├── <span class="dir">public/</span>
+├── <span class="dir">src/</span>
+│   ├── <span class="file">App.jsx</span>
+│   ├── <span class="file">main.jsx</span>
+│   └── <span class="file">index.css</span>
+├── <span class="file">index.html</span>
+├── <span class="file">package.json</span>
+└── <span class="file">vite.config.js</span></div>
+      </div>
+
+      <div class="callout ct">
+        <strong>Tip:</strong>
+        Compara esta estructura con lo que armaste a mano en la Forma 2: ¡es exactamente lo mismo! Vite solo automatiza los pasos.
+      </div>
+
+      <div class="pros-cons">
+        <div class="pc-card pros">
+          <h4>Ventajas</h4>
+          <ul>
+            <li>Todo configurado en un comando</li>
+            <li>Estructura estándar lista</li>
+            <li>Hot reload instantáneo</li>
+            <li>Optimizado para producción</li>
+            <li>Es el estándar actual</li>
+          </ul>
+        </div>
+        <div class="pc-card cons">
+          <h4>Desventajas</h4>
+          <ul>
+            <li>"Caja negra" si no entiendes lo previo</li>
+            <li>Trae archivos de ejemplo que hay que limpiar</li>
+            <li>Requiere Node y npm instalados</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════════════════════════ COMPARACIÓN ══════════════════════════ -->
+    <section class="topic" id="comparacion">
+      <div class="topic-header">
+        <div class="topic-num">05</div>
+        <div>
+          <h2 class="topic-title">Comparación lado a lado</h2>
+          <p class="topic-desc">Las tres formas hacen funcionar React, pero con distintas capacidades y propósitos.</p>
+        </div>
+      </div>
+
+      <table class="data-table">
+        <thead>
+          <tr>
+            <th>Característica</th>
+            <th><span class="badge bo">CDN</span></th>
+            <th><span class="badge bp">npm</span></th>
+            <th><span class="badge bg">Vite</span></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr><td>Instalación</td><td>Ninguna</td><td>Manual</td><td>Plantilla automática</td></tr>
+          <tr><td>JSX</td><td>Con Babel (lento)</td><td>Sí, vía bundler</td><td>Sí, listo</td></tr>
+          <tr><td>Hot reload</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+          <tr><td>Módulos / imports</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+          <tr><td>Optimizado para producción</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+          <tr><td>Requiere Node</td><td>No</td><td>Sí</td><td>Sí</td></tr>
+          <tr><td>Tiempo de setup</td><td>~1 min</td><td>~10 min</td><td>~30 seg</td></tr>
+          <tr><td><strong>Ideal para</strong></td><td>Demos / aprender</td><td>Entender configuración</td><td>Proyectos reales</td></tr>
+        </tbody>
+      </table>
+
+      <div class="callout ci">
+        <strong>Conclusión:</strong>
+        En clase usaremos las tres formas para entender la evolución. En tus proyectos reales, <strong>siempre usa Vite</strong> (Forma 3). Las otras dos te ayudan a entender qué pasa por debajo.
+      </div>
+
+      <div class="callout ct" style="margin-top: 1.5rem;">
+        <strong>📚 Recursos oficiales:</strong>
+        <a href="https://react.dev/" target="_blank">react.dev</a> ·
+        <a href="https://vitejs.dev/" target="_blank">vitejs.dev</a> ·
+        <a href="https://react.dev/learn/writing-markup-with-jsx" target="_blank">Guía de JSX</a>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<script>
+  /* ── Copiar código al portapapeles ── */
+  async function copyCode(btn) {
+    const pre = btn.closest('.code-wrap').querySelector('pre.code');
+    try {
+      await navigator.clipboard.writeText(pre.innerText);
+      const original = btn.textContent;
+      btn.textContent = '✓ Copiado';
+      btn.classList.add('copied');
+      setTimeout(() => { btn.textContent = original; btn.classList.remove('copied'); }, 2000);
+    } catch(e) { console.warn('Clipboard error', e); }
+  }
+
+  /* ── Scroll spy (sidebar + nav superior) ── */
+  const topics = document.querySelectorAll('.topic, .step[id]');
+  const io = new IntersectionObserver(entries => {
+    entries.forEach(e => {
+      if (!e.isIntersecting) return;
+      const id = e.target.id;
+      document.querySelectorAll('.sidebar-nav a').forEach(a =>
+        a.classList.toggle('active', a.dataset.s === id));
+      document.querySelectorAll('.nav-links a').forEach(a => {
+        const href = a.getAttribute('href');
+        const sectionId = e.target.closest('.topic')?.id || id;
+        a.classList.toggle('active', href === '#' + sectionId);
+      });
+    });
+  }, { rootMargin: '-20% 0% -70% 0%' });
+  topics.forEach(s => io.observe(s));
+
+  /* ── Barra de progreso ── */
+  window.addEventListener('scroll', () => {
+    const pct = window.scrollY /
+      (document.documentElement.scrollHeight - window.innerHeight);
+    document.getElementById('progress').style.width = (pct * 100) + '%';
+  });
+</script>
+
+</body>
+</html>
