@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ClimaGuate — Dashboard</title>
+    <link rel="stylesheet" href="css/styles.css" />
+  </head>
+  <body>
+    <header>
+      <h1>🌤️ ClimaGuate</h1>
+      <p>Consulta el clima de cualquier ciudad en tiempo real</p>
+    </header>
+
+    <main>
+      <!-- Formulario de búsqueda -->
+      <section class="buscador">
+        <input
+          type="text"
+          id="inputCiudad"
+          placeholder="Ej: Guatemala City, Antigua, Quetzaltenango"
+          autocomplete="off"
+        />
+        <button id="btnBuscar">Consultar Clima</button>
+      </section>
+
+      <!-- Estado de carga -->
+      <div id="cargando" class="oculto">
+        <p>⏳ Consultando datos meteorológicos...</p>
+      </div>
+
+      <!-- Tarjeta de resultado -->
+      <section id="resultado" class="oculto">
+        <div class="tarjeta-clima">
+          <h2 id="nombreCiudad"></h2>
+          <div class="temperatura-principal">
+            <span id="tempActual"></span>
+            <span class="unidad">°C</span>
+          </div>
+          <p id="descripcion"></p>
+          <div class="detalles">
+            <div class="detalle">
+              <span class="icono">💧</span>
+              <span id="humedad"></span>
+              <label>Humedad</label>
+            </div>
+            <div class="detalle">
+              <span class="icono">🌬️</span>
+              <span id="viento"></span>
+              <label>Viento km/h</label>
+            </div>
+            <div class="detalle">
+              <span class="icono">👁️</span>
+              <span id="visibilidad"></span>
+              <label>Visibilidad km</label>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- Sección de error -->
+      <div id="error" class="oculto">
+        <p>❌ No se pudo obtener el clima. Verifica el nombre de la ciudad.</p>
+      </div>
+
+      <!-- Historial de búsquedas -->
+      <section id="historial">
+        <h3>🕐 Búsquedas recientes</h3>
+        <ul id="listaHistorial"></ul>
+      </section>
+    </main>
+
+    <footer>
+      <p>Datos provistos por wttr.in | ClimaGuate © 2025</p>
+    </footer>
+
+    <!-- IMPORTANTE: script al final del body, no en el head -->
+    <script src="js/app.js"></script>
+  </body>
+</html>

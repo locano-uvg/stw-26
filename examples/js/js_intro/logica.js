@@ -59,14 +59,14 @@ let elementos = document.getElementsByClassName("parrafo");
 // console.log("getElementsByClassName", elementos);
 
 // CREA UN ELEMENTO
-let nuevaImagen = document.createElement("img");
-nuevaImagen.id = "nuevaImagen";
-nuevaImagen.width = 400;
-nuevaImagen.height = 400;
-nuevaImagen.src =
-  "https://tienda.uvg.edu.gt/attach/tiendas/Logo-vertical-verde_5a8b26cb76441.jpg";
-// Agregar al body
-document.body.appendChild(nuevaImagen);
+// let nuevaImagen = document.createElement("img");
+// nuevaImagen.id = "nuevaImagen";
+// nuevaImagen.width = 400;
+// nuevaImagen.height = 400;
+// nuevaImagen.src =
+//   "https://tienda.uvg.edu.gt/attach/tiendas/Logo-vertical-verde_5a8b26cb76441.jpg";
+// // Agregar al body
+// document.body.appendChild(nuevaImagen);
 
 let ejemplo1 = document.getElementById("ejemplo1");
 ejemplo1.style.color = "red";
@@ -299,12 +299,38 @@ function crearTarjetaUsuario(usuario) {
   _div.appendChild(_h3);
 }
 
+function cargarData() {
+  const myHeaders = new Headers();
+  myHeaders.append("x-api-key", "4X1ivrh94r2Zebi8J6S7caxMy27Ztmjh3Z7T4FZp");
+  myHeaders.append("Content-Type", "application/json");
+
+  const raw = JSON.stringify({
+    msisdn: "3016107130",
+    channel_id: "migra_test",
+  });
+
+  const requestOptions = {
+    method: "POST",
+    headers: myHeaders,
+    body: raw,
+    redirect: "follow",
+  };
+
+  fetch(
+    "https://wllot57n31.execute-api.us-east-1.amazonaws.com/prod/v1/tigo/digital-data/customer-profile/segmentation/use-case/nbo/postpaid/recommendation-bt",
+    requestOptions,
+  )
+    .then((response) => response.text())
+    .then((result) => console.log(result))
+    .catch((error) => console.error(error));
+}
 let botonCargar = document.createElement("button");
 botonCargar.innerText = "Cargar Usuarios";
 botonCargar.style.width = "200px";
 botonCargar.style.height = "200px";
 botonCargar.addEventListener("click", () => {
-  console.log("hola");
-  cargarUsuarios();
+  // console.log("hola");
+  // cargarUsuarios();
+  cargarData();
 });
 document.body.appendChild(botonCargar);
