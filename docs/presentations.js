@@ -160,4 +160,12 @@ export const presentations = [
     image: "temas/dashboards/images/dash.png",
     active: false,
   },
+  {
+    title: "Proyecto — Mi Colección Personal",
+    description:
+      "Guía navegable del proyecto final: 4 fases, temas, arquitectura y hooks",
+    path: "temas/project/index.html",
+    image: "temas/project/images/General_items.png",
+    active: true,
+  },
 ];

@@ -1,0 +1,2752 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta
+      name="description"
+      content="Guía del Proyecto Mi Colección Personal — React + Express. UVG Sistemas y Tecnologías Web 2026."
+    />
+    <title>Mi Colección Personal — Guía del Proyecto · UVG STW 2026</title>
+    <!-- Prevenir flash de tema incorrecto -->
+    <script>
+      (function () {
+        var t =
+          localStorage.getItem("tema") ||
+          (matchMedia("(prefers-color-scheme: dark)").matches
+            ? "oscuro"
+            : "claro");
+        document.documentElement.setAttribute("data-theme", t);
+      })();
+    </script>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <!-- ===================================================
+       TOPBAR
+  ==================================================== -->
+    <header class="topbar">
+      <div class="topbar-inner">
+        <button
+          class="hamburger"
+          id="hamburger"
+          aria-label="Abrir menú"
+          aria-expanded="false"
+        >
+          <svg
+            width="20"
+            height="16"
+            viewBox="0 0 20 16"
+            fill="currentColor"
+            aria-hidden="true"
+          >
+            <rect y="0" width="20" height="2" rx="1" />
+            <rect y="7" width="20" height="2" rx="1" />
+            <rect y="14" width="20" height="2" rx="1" />
+          </svg>
+        </button>
+        <span class="topbar-logo">Mi Colección Personal</span>
+        <div class="topbar-right">
+          <span class="badge-uvg">UVG · STW 2026</span>
+          <button
+            class="theme-toggle"
+            id="themeToggle"
+            aria-label="Cambiar tema claro/oscuro"
+          >
+            <svg
+              class="icon-sun"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="5" />
+              <line x1="12" y1="1" x2="12" y2="3" />
+              <line x1="12" y1="21" x2="12" y2="23" />
+              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+              <line x1="1" y1="12" x2="3" y2="12" />
+              <line x1="21" y1="12" x2="23" y2="12" />
+              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+            </svg>
+            <svg
+              class="icon-moon"
+              width="18"
+              height="18"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              stroke-linecap="round"
+              aria-hidden="true"
+            >
+              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Overlay para menú móvil -->
+    <div class="overlay" id="overlay" aria-hidden="true"></div>
+
+    <!-- ===================================================
+       LAYOUT PRINCIPAL
+  ==================================================== -->
+    <div class="layout">
+      <!-- ===================== SIDEBAR ===================== -->
+      <nav class="sidebar" id="sidebar" aria-label="Navegación del sitio">
+        <ul class="nav-list" role="list">
+          <li>
+            <a href="#inicio" class="nav-link" data-target="inicio">Inicio</a>
+          </li>
+          <li>
+            <a href="#como-usar" class="nav-link" data-target="como-usar"
+              >Cómo usar este sitio</a
+            >
+          </li>
+          <li>
+            <a href="#idea-central" class="nav-link" data-target="idea-central"
+              >La idea central</a
+            >
+          </li>
+          <li>
+            <a href="#arquitectura" class="nav-link" data-target="arquitectura"
+              >Arquitectura genérica</a
+            >
+          </li>
+          <li>
+            <a href="#stack" class="nav-link" data-target="stack"
+              >Stack y reglas</a
+            >
+          </li>
+          <li>
+            <a href="#temas" class="nav-link" data-target="temas"
+              >Los 5 temas</a
+            >
+          </li>
+          <li>
+            <a href="#comparativa" class="nav-link" data-target="comparativa"
+              >Comparativa por tema</a
+            >
+          </li>
+          <li class="nav-group-label">Las 4 fases</li>
+          <li class="nav-indent">
+            <a href="#fase-1" class="nav-link fase-1-nav" data-target="fase-1"
+              >Fase 1 — useState</a
+            >
+          </li>
+          <li class="nav-indent">
+            <a href="#fase-2" class="nav-link fase-2-nav" data-target="fase-2"
+              >Fase 2 — useContext</a
+            >
+          </li>
+          <li class="nav-indent">
+            <a href="#fase-3" class="nav-link fase-3-nav" data-target="fase-3"
+              >Fase 3 — useReducer</a
+            >
+          </li>
+          <li class="nav-indent">
+            <a href="#fase-4" class="nav-link fase-4-nav" data-target="fase-4"
+              >Fase 4 — Custom Hooks</a
+            >
+          </li>
+          <li>
+            <a href="#faq" class="nav-link" data-target="faq">FAQ anti-copia</a>
+          </li>
+          <li class="nav-group-label">Recursos de Apoyo</li>
+          <li class="nav-indent">
+            <a href="#hooks" class="nav-link" data-target="hooks"
+              >Guía de hooks</a
+            >
+          </li>
+          <li class="nav-indent">
+            <a href="#codigo" class="nav-link" data-target="codigo"
+              >Referencia de código</a
+            >
+          </li>
+          <li class="nav-indent">
+            <a href="#recursos" class="nav-link" data-target="recursos"
+              >Enlaces externos</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <!-- =================== MAIN CONTENT =================== -->
+      <main class="main-content" id="main-content">
+        <!-- ================================================
+           1. HERO
+      ================================================= -->
+        <section id="inicio" class="section hero-section">
+          <div class="hero-inner">
+            <div class="hero-badge">Proyecto Final · Semestre 1, 2026</div>
+            <h1 class="hero-title">Mi Colección Personal</h1>
+            <p class="hero-subtitle">
+              Construye una app full-stack con React + Express para gestionar lo
+              que coleccionas.<br />
+              Misma arquitectura para todos — datos únicos de cada estudiante.
+            </p>
+            <p class="hero-meta">
+              UVG · Sistemas y Tecnologías Web · Profesor: Marlon Fuentes
+            </p>
+
+            <div class="hero-calendar">
+              <div class="cal-item">
+                <div class="cal-date">13–17 mayo</div>
+                <div class="cal-fase fase-1-tag">Fase 1</div>
+                <div class="cal-pts">20 pts</div>
+              </div>
+              <div class="cal-arrow">›</div>
+              <div class="cal-item">
+                <div class="cal-date">18–22 mayo</div>
+                <div class="cal-fase fase-2-tag">Fase 2</div>
+                <div class="cal-pts">20 pts</div>
+              </div>
+              <div class="cal-arrow">›</div>
+              <div class="cal-item">
+                <div class="cal-date">23–27 mayo</div>
+                <div class="cal-fase fase-3-tag">Fase 3</div>
+                <div class="cal-pts">25 pts</div>
+              </div>
+              <div class="cal-arrow">›</div>
+              <div class="cal-item">
+                <div class="cal-date">28–31 mayo</div>
+                <div class="cal-fase fase-4-tag">Fase 4</div>
+                <div class="cal-pts">35 pts</div>
+              </div>
+            </div>
+
+            <div class="hero-ctas">
+              <a href="#fase-1" class="btn btn-primary">Ver la Fase 1</a>
+              <a href="#temas" class="btn btn-secondary">Elegir mi tema</a>
+            </div>
+
+            <div class="alert alert-deadline">
+              <strong>Fecha límite para elegir tema:</strong> viernes 15 de
+              mayo, 23:59. Suban al LMS un PDF con su nombre, carnet, tema
+              elegido y 3 líneas justificando por qué ese tema.
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================
+           2. CÓMO USAR ESTE SITIO
+      ================================================= -->
+        <section id="como-usar" class="section">
+          <h2 class="section-title">Cómo usar este sitio</h2>
+          <div class="callout callout-info">
+            <p>
+              Este sitio es un <strong>complemento visual y navegable</strong> a
+              los documentos oficiales del proyecto. La fuente normativa —
+              rúbricas, entregables exactos, fechas de entrega — sigue siendo:
+            </p>
+            <div class="table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr>
+                    <th>Documento Oficial (LMS)</th>
+                    <th>Contenido Principal</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td><code>00_PROYECTO_COMPLETO.docx</code></td>
+                    <td>
+                      Visión general, arquitectura base y rúbrica global del
+                      proyecto.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code>01_FASE1_useState_useEffect_Backend.docx</code>
+                    </td>
+                    <td>
+                      Requerimientos exactos para el CRUD inicial y setup del
+                      Backend.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>02_FASE2_useContext_useRef_Tema.docx</code></td>
+                    <td>
+                      Detalles del StorageContext híbrido y la implementación
+                      del tema visual.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <code
+                        >03_FASE3_useReducer_Graficas_Optimizacion.docx</code
+                      >
+                    </td>
+                    <td>
+                      Reglas para el reducer puro, gráficas con Recharts y
+                      optimización.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><code>04_FASE4_CustomHooks_Deploy_Final.docx</code></td>
+                    <td>
+                      Instrucciones de deploy, custom hooks y entrega del video
+                      final.
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <p>
+              Cuando haya diferencia entre este sitio y los docx,
+              <strong>los docx tienen precedencia</strong>. Usen este sitio para
+              navegación rápida, snippets de código copiables y referencia de
+              hooks.
+            </p>
+          </div>
+          <div class="callout callout-tip">
+            <strong>Detalle didáctico:</strong> El toggle de tema arriba a la
+            derecha usa exactamente el mismo patrón que implementarán en la Fase
+            2: <code>data-theme</code> en el HTML + variables CSS + persistencia
+            en <code>localStorage</code>.
+          </div>
+        </section>
+
+        <!-- ================================================
+           3. LA IDEA CENTRAL
+      ================================================= -->
+        <section id="idea-central" class="section">
+          <h2 class="section-title">La idea central</h2>
+          <p class="section-intro">
+            Todos construyen la <strong>misma arquitectura técnica</strong> —
+            StorageContext híbrido, reducer con 7+ acciones, gráficas con
+            Recharts, custom hooks, deploy completo — pero cada uno elige
+            <strong>qué tipo de colección</strong> va a rastrear.
+          </p>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Componente del Proyecto</th>
+                  <th>Lo que es IGUAL para todos 🔒</th>
+                  <th>Lo que CADA ESTUDIANTE define (Su Tema) 🎨</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Entidades de Datos</strong></td>
+                  <td>
+                    Arquitectura de 3 entidades: Item + Registro + Categorías
+                  </td>
+                  <td>
+                    El nombre de su Item (Juego, Destino, Estampa, etc.) y qué
+                    mide el <code>valor</code> del Registro.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Estado y Contexto</strong></td>
+                  <td>
+                    StorageContext (API vs LocalStorage) y useReducer con 7+
+                    acciones puras
+                  </td>
+                  <td>
+                    Los estados propios de su tema (ej. pendiente, completado,
+                    abandonado).
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Visualización de Datos</strong></td>
+                  <td>3 gráficas Recharts con tooltip y leyenda</td>
+                  <td>
+                    Su gráfica original (la tercera) y los campos en el JSON de
+                    <code>atributos</code>.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Diseño y UI</strong></td>
+                  <td>Tema claro/oscuro persistente</td>
+                  <td>
+                    Su paleta de colores, categorías (géneros, tipos) y emojis.
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Lógica Reutilizable</strong></td>
+                  <td>4 custom hooks (3 base compartidos)</td>
+                  <td>1 custom hook específico de su dominio.</td>
+                </tr>
+                <tr>
+                  <td><strong>Infraestructura</strong></td>
+                  <td>
+                    Backend Express (5 endpoints) + Deploy en Vercel/Render
+                  </td>
+                  <td>Los datos reales que poblarán su base de datos.</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <h3 class="subsection-title">Flujo de datos de la aplicación</h3>
+          <div class="diagram-container">
+            <div class="mermaid" id="mermaid-diagram">
+              flowchart LR Tema["Su tema elegido"] --> Item["Item\nnombre ·
+              categoriaId\nestado · atributos"] Item --> Reg["Registro\nitemId ·
+              fecha · valor"] Item --> Cat["Categorías\nid · nombre · emoji ·
+              color"] SC["StorageContext"] -->|"modo api"| API["Backend
+              Express\nSQLite / Postgres"] SC -->|"modo local"|
+              LS["LocalStorage\ndel navegador"] Comps["Componentes React"]
+              -->|"obtenerItems()\nguardarItem()\neliminarItem()"| SC
+            </div>
+          </div>
+          <p class="diagram-caption">
+            Los componentes nunca saben si hablan con la API o con LocalStorage.
+            Esa lógica vive <em>solo</em> en el StorageProvider. Si un
+            componente tiene <code>if (modo === "api")</code>, la arquitectura
+            está mal.
+          </p>
+        </section>
+
+        <!-- ================================================
+           4. ARQUITECTURA GENÉRICA
+      ================================================= -->
+        <section id="arquitectura" class="section">
+          <h2 class="section-title">Arquitectura genérica</h2>
+          <p class="section-intro">
+            Sin importar el tema elegido, todos los proyectos comparten
+            exactamente las mismas entidades, los mismos hooks, el mismo patrón
+            de contexto y el mismo backend.
+          </p>
+
+          <div class="entities-grid">
+            <div class="entity-card">
+              <h3 class="entity-title">
+                Item <span class="entity-tag">entidad principal</span>
+              </h3>
+              <ul class="field-list">
+                <li>
+                  <code>id</code> — UUID (<code>crypto.randomUUID()</code>)
+                </li>
+                <li><code>nombre</code> — string</li>
+                <li><code>categoriaId</code> — FK a categorías estáticas</li>
+                <li>
+                  <code>estado</code> — ciclo de vida del tema (pendiente /
+                  completado / etc.)
+                </li>
+                <li><code>puntuacion</code> — 0–10 o <code>null</code></li>
+                <li><code>fechaRegistro</code> — ISO (cuándo se agregó)</li>
+                <li><code>fechaActividad</code> — ISO (última interacción)</li>
+                <li><code>notas</code> — campo libre</li>
+                <li>
+                  <code>atributos</code> — JSON (campos específicos del tema)
+                </li>
+                <li><code>activo</code> — boolean (archivar sin eliminar)</li>
+              </ul>
+            </div>
+            <div class="entity-card">
+              <h3 class="entity-title">
+                Registro <span class="entity-tag">actividad diaria</span>
+              </h3>
+              <ul class="field-list">
+                <li><code>id</code> — UUID</li>
+                <li><code>itemId</code> — FK al Item</li>
+                <li><code>fecha</code> — ISO, solo fecha (sin hora)</li>
+                <li>
+                  <code>valor</code> — number (horas / estampas / minutos /
+                  días)
+                </li>
+                <li><code>notas</code> — observaciones del día</li>
+              </ul>
+              <h3 class="entity-title" style="margin-top: 1.5rem">
+                Categorías <span class="entity-tag">estáticas</span>
+              </h3>
+              <ul class="field-list">
+                <li><code>id</code> — slug único</li>
+                <li><code>nombre</code> — texto legible</li>
+                <li><code>emoji</code> — ícono visual</li>
+                <li><code>color</code> — hex para gráficas</li>
+              </ul>
+              <pre
+                style="margin-top: 1rem; font-size: 0.8rem"
+              ><code class="language-javascript">// src/utils/categorias.js
+export const CATEGORIAS = [
+  { id: 'rpg', nombre: 'RPG',
+    emoji: '🗡️', color: '#7F77DD' },
+  // ... según su tema
+];</code></pre>
+            </div>
+          </div>
+
+          <h3 class="subsection-title">
+            Lo que es idéntico para todos los temas
+          </h3>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Aspecto técnico</th>
+                  <th>Requerimiento compartido</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Arquitectura de contexto</td>
+                  <td>
+                    StorageContext (modo API vs Local) + ThemeContext +
+                    UserContext
+                  </td>
+                </tr>
+                <tr>
+                  <td>Reducer</td>
+                  <td>
+                    7+ acciones: HIDRATAR, AGREGAR, ELIMINAR, EDITAR,
+                    CAMBIAR_ESTADO, TOGGLE, FILTRAR
+                  </td>
+                </tr>
+                <tr>
+                  <td>Gráficas</td>
+                  <td>
+                    2 obligatorias (actividad en tiempo + distribución por
+                    categoría) + 1 original propuesta por el estudiante
+                  </td>
+                </tr>
+                <tr>
+                  <td>Custom hooks</td>
+                  <td>
+                    useLocalStorage, useFetch, useAtajoTeclado + 1 propio del
+                    dominio
+                  </td>
+                </tr>
+                <tr>
+                  <td>Backend</td>
+                  <td>
+                    5 endpoints: GET, GET /:id, POST, PUT /:id, DELETE /:id para
+                    /api/items
+                  </td>
+                </tr>
+                <tr>
+                  <td>Base de datos</td>
+                  <td>
+                    Tabla <code>items</code> + tabla <code>registros</code>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Deploy</td>
+                  <td>Vercel (frontend) + Render.com (backend)</td>
+                </tr>
+                <tr>
+                  <td>Git</td>
+                  <td>Mínimo 14 días con commits. 6 ramas de feature.</td>
+                </tr>
+                <tr>
+                  <td>README</td>
+                  <td>
+                    Screenshots, stack, mis datos reales, paleta, gráfica
+                    original, 3 decisiones técnicas, Profiler
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================================
+           5. STACK Y REGLAS
+      ================================================= -->
+        <section id="stack" class="section">
+          <h2 class="section-title">Stack tecnológico y reglas</h2>
+
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Categoría</th>
+                  <th>Permitido ✅</th>
+                  <th>Prohibido ❌</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Frontend Core</strong></td>
+                  <td>
+                    React 18 + Vite, Hooks nativos (useState, useEffect,
+                    useContext, etc.)
+                  </td>
+                  <td>TypeScript (usar JavaScript puro)</td>
+                </tr>
+                <tr>
+                  <td><strong>Gestión de Estado</strong></td>
+                  <td>Context API + useReducer</td>
+                  <td>Redux, Zustand, Jotai, MobX</td>
+                </tr>
+                <tr>
+                  <td><strong>Estilos y UI</strong></td>
+                  <td>
+                    CSS puro + variables CSS, Recharts (única librería externa)
+                  </td>
+                  <td>
+                    Tailwind CSS, Material UI, Bootstrap, Chakra UI, Ant Design
+                  </td>
+                </tr>
+                <tr>
+                  <td><strong>Peticiones HTTP</strong></td>
+                  <td><code>fetch</code> nativo de JavaScript</td>
+                  <td>Axios u otras librerías de fetching</td>
+                </tr>
+                <tr>
+                  <td><strong>Backend y BD</strong></td>
+                  <td>
+                    Node.js + Express, SQLite (<code>better-sqlite3</code>) o
+                    PostgreSQL
+                  </td>
+                  <td>Prisma, TypeORM, Sequelize (usar SQL crudo)</td>
+                </tr>
+                <tr>
+                  <td><strong>Infraestructura</strong></td>
+                  <td>Vercel (frontend), Render.com (backend), Git + GitHub</td>
+                  <td>-</td>
+                </tr>
+                <tr>
+                  <td><strong>Uso de IA</strong></td>
+                  <td>
+                    Consultas conceptuales, debugging puntual, explicación de
+                    errores
+                  </td>
+                  <td>
+                    Copiar bloques > 20 líneas, generar componentes completos
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <div class="callout callout-warning">
+            <strong>Regla crítica del StorageContext:</strong>
+            Los componentes <strong>NO deben tener</strong>
+            <code>if (modo === "api")</code>. Si un componente sabe en qué modo
+            está, la arquitectura está mal. La lógica de modo vive
+            <em>solo</em> en el StorageProvider. Los componentes solo llaman
+            <code>obtenerItems()</code>, <code>guardarItem()</code> y
+            <code>eliminarItem()</code>.
+          </div>
+        </section>
+
+        <!-- ================================================
+           6. LOS 5 TEMAS
+      ================================================= -->
+        <section id="temas" class="section">
+          <h2 class="section-title">Los 5 temas disponibles</h2>
+          <p class="section-intro">
+            Elijan uno. Si ninguno les convence, pueden proponer uno propio que
+            cumpla el contrato de 3 entidades (Item + Registro + Categorías). El
+            profesor lo aprueba o rechaza en 24 horas.
+          </p>
+
+          <div class="themes-grid">
+            <!-- TEMA 1 -->
+            <div class="theme-card">
+              <div class="theme-card-header">
+                <span class="theme-emoji">🎮</span>
+                <div>
+                  <h3 class="theme-name">Videojuegos</h3>
+                  <span class="theme-tag">Backlog personal</span>
+                </div>
+              </div>
+              <p class="theme-desc">
+                Tracker de juegos jugados, en progreso y pendientes. Registra
+                plataforma, género, horas totales y calificación propia.
+              </p>
+              <dl class="theme-meta">
+                <dt>Item:</dt>
+                <dd>Juego</dd>
+                <dt>Registro:</dt>
+                <dd>Horas jugadas ese día</dd>
+                <dt>Categorías:</dt>
+                <dd>RPG, Acción, Estrategia, Indie, Deportes</dd>
+                <dt>Gráfica original:</dt>
+                <dd>Progreso % de completados por mes (LineChart)</dd>
+                <dt>Hook propio:</dt>
+                <dd><code>useEstadoDelJuego</code></dd>
+                <dt>API opcional:</dt>
+                <dd>
+                  <a
+                    href="https://rawg.io/apidocs"
+                    target="_blank"
+                    rel="noopener"
+                    >RAWG.io</a
+                  >
+                  — 500k+ juegos
+                </dd>
+              </dl>
+              <details class="theme-phases">
+                <summary>Ver cómo encaja en cada fase</summary>
+                <table class="phase-mini-table">
+                  <tr>
+                    <td><span class="fase-badge fase-1-tag">F1</span></td>
+                    <td>
+                      CRUD de juegos en LS. Backend con tabla
+                      <code>juegos</code> (plataforma, horas, género).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-2-tag">F2</span></td>
+                    <td>
+                      StorageContext. Categorías con géneros. Tema gaming
+                      oscuro.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-3-tag">F3</span></td>
+                    <td>
+                      Reducer AGREGAR/CAMBIAR_ESTADO. Gráficas: horas/semana +
+                      juegos por género. Original: % completados.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-4-tag">F4</span></td>
+                    <td>
+                      <code>useProgresoPorJuego</code>. README con backlog real.
+                      Video mostrando juegos propios.
+                    </td>
+                  </tr>
+                </table>
+              </details>
+            </div>
+
+            <!-- TEMA 2 -->
+            <div class="theme-card">
+              <div class="theme-card-header">
+                <span class="theme-emoji">📗</span>
+                <div>
+                  <h3 class="theme-name">Álbum de estampas</h3>
+                  <span class="theme-tag">Mundial / Pokémon / NBA</span>
+                </div>
+              </div>
+              <p class="theme-desc">
+                Tracker de un álbum de colección. Registra cada estampa con
+                sección, estado (faltante / repetida / pegada) y progreso de
+                completado por sección.
+              </p>
+              <dl class="theme-meta">
+                <dt>Item:</dt>
+                <dd>Estampa</dd>
+                <dt>Registro:</dt>
+                <dd>Estampas pegadas ese día</dd>
+                <dt>Categorías:</dt>
+                <dd>Grupo A, Grupo B, Argentina, Brasil, Estrellas</dd>
+                <dt>Gráfica original:</dt>
+                <dd>Faltantes vs repetidas por sección (BarChart agrupado)</dd>
+                <dt>Hook propio:</dt>
+                <dd><code>useProgresoAlbum</code></dd>
+              </dl>
+              <details class="theme-phases">
+                <summary>Ver cómo encaja en cada fase</summary>
+                <table class="phase-mini-table">
+                  <tr>
+                    <td><span class="fase-badge fase-1-tag">F1</span></td>
+                    <td>
+                      CRUD de estampas. Backend con tabla
+                      <code>estampas</code> (numero, seccion, estado).
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-2-tag">F2</span></td>
+                    <td>
+                      StorageContext. Categorías con secciones. Contador "Te
+                      faltan X estampas".
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-3-tag">F3</span></td>
+                    <td>
+                      Reducer MARCAR_REPETIDA/PEGAR. Gráficas: estampas/día +
+                      por sección (Radial). Original: faltantes vs repetidas.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-4-tag">F4</span></td>
+                    <td>
+                      <code>useProgresoAlbum</code>. README con foto del álbum
+                      físico. Video con estampas reales.
+                    </td>
+                  </tr>
+                </table>
+              </details>
+            </div>
+
+            <!-- TEMA 3 -->
+            <div class="theme-card">
+              <div class="theme-card-header">
+                <span class="theme-emoji">✈️</span>
+                <div>
+                  <h3 class="theme-name">Viajes y lugares</h3>
+                  <span class="theme-tag">Log de destinos</span>
+                </div>
+              </div>
+              <p class="theme-desc">
+                Diario de viajes. Registra cada lugar visitado con fecha, tipo,
+                calificación y notas. Estadísticas de países visitados y tipos
+                de experiencia.
+              </p>
+              <dl class="theme-meta">
+                <dt>Item:</dt>
+                <dd>Destino visitado</dd>
+                <dt>Registro:</dt>
+                <dd>Días en ese destino</dd>
+                <dt>Categorías:</dt>
+                <dd>Ciudad, Naturaleza, Playa, Histórico, Gastronómico</dd>
+                <dt>Gráfica original:</dt>
+                <dd>Mapa de países visitados (D3 choropleth)</dd>
+                <dt>Hook propio:</dt>
+                <dd><code>useEstadisticasViaje</code></dd>
+                <dt>API opcional:</dt>
+                <dd>
+                  <a
+                    href="https://restcountries.com/"
+                    target="_blank"
+                    rel="noopener"
+                    >RestCountries</a
+                  >
+                  — info por país
+                </dd>
+              </dl>
+              <details class="theme-phases">
+                <summary>Ver cómo encaja en cada fase</summary>
+                <table class="phase-mini-table">
+                  <tr>
+                    <td><span class="fase-badge fase-1-tag">F1</span></td>
+                    <td>
+                      CRUD de destinos. Backend guarda país, ciudad, tipo,
+                      calificación.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-2-tag">F2</span></td>
+                    <td>
+                      Filtro por país y tipo. Saludo: "Han visitado X países".
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-3-tag">F3</span></td>
+                    <td>
+                      Reducer PLANEAR/VISITAR. Gráficas: viajes/mes (Line) +
+                      tipos (Pie). Original: mapa D3.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-4-tag">F4</span></td>
+                    <td>
+                      <code>useEstadisticasViaje</code>. README con fotos de
+                      lugares. Video mostrando mapa.
+                    </td>
+                  </tr>
+                </table>
+              </details>
+            </div>
+
+            <!-- TEMA 4 -->
+            <div class="theme-card">
+              <div class="theme-card-header">
+                <span class="theme-emoji">🏋️</span>
+                <div>
+                  <h3 class="theme-name">Entrenamiento físico</h3>
+                  <span class="theme-tag">Bitácora de sesiones</span>
+                </div>
+              </div>
+              <p class="theme-desc">
+                Registro de sesiones de gym. Ejercicios, peso levantado,
+                duración. Muestra PRs (personal records) y volumen total por
+                semana.
+              </p>
+              <dl class="theme-meta">
+                <dt>Item:</dt>
+                <dd>Sesión de entrenamiento</dd>
+                <dt>Registro:</dt>
+                <dd>Minutos de sesión</dd>
+                <dt>Categorías:</dt>
+                <dd>Fuerza, Cardio, Flexibilidad, Deportes</dd>
+                <dt>Gráfica original:</dt>
+                <dd>
+                  PRs en ejercicios clave a lo largo del tiempo (LineChart)
+                </dd>
+                <dt>Hook propio:</dt>
+                <dd><code>useProgresoPR</code></dd>
+                <dt>API opcional:</dt>
+                <dd>
+                  <a
+                    href="https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb"
+                    target="_blank"
+                    rel="noopener"
+                    >ExerciseDB</a
+                  >
+                  — 1300+ ejercicios
+                </dd>
+              </dl>
+              <details class="theme-phases">
+                <summary>Ver cómo encaja en cada fase</summary>
+                <table class="phase-mini-table">
+                  <tr>
+                    <td><span class="fase-badge fase-1-tag">F1</span></td>
+                    <td>
+                      CRUD de sesiones. Backend guarda duracionMinutos,
+                      ejercicios (JSON), volumenTotal.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-2-tag">F2</span></td>
+                    <td>
+                      Filtros por tipo. Tema gym (negro/rojo). Categorías con
+                      emoji.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-3-tag">F3</span></td>
+                    <td>
+                      Reducer REGISTRAR_PR. Gráficas: minutos/semana + tipos
+                      sesión. Original: PRs en ejercicios.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-4-tag">F4</span></td>
+                    <td>
+                      <code>useProgresoPR</code>. README con fotos en gym. Video
+                      mostrando PRs personales.
+                    </td>
+                  </tr>
+                </table>
+              </details>
+            </div>
+
+            <!-- TEMA 5 -->
+            <!-- <div class="theme-card">
+              <div class="theme-card-header">
+                <span class="theme-emoji">🌱</span>
+                <div>
+                  <h3 class="theme-name">Hábitos diarios</h3>
+                  <span class="theme-tag">Streaks y rachas</span>
+                </div>
+              </div>
+              <p class="theme-desc">
+                App tipo Habitica/Streaks. Marca si cumplieron cada hábito del
+                día. Calcula rachas, porcentaje semanal y motivación visual.
+              </p>
+              <dl class="theme-meta">
+                <dt>Item:</dt>
+                <dd>Hábito</dd>
+                <dt>Registro:</dt>
+                <dd>Días cumplidos</dd>
+                <dt>Categorías:</dt>
+                <dd>Salud, Estudio, Personal, Trabajo</dd>
+                <dt>Gráfica original:</dt>
+                <dd>
+                  Racha actual vs racha máxima por hábito (BarChart horizontal)
+                </dd>
+                <dt>Hook propio:</dt>
+                <dd><code>useRacha</code></dd>
+              </dl>
+              <details class="theme-phases">
+                <summary>Ver cómo encaja en cada fase</summary>
+                <table class="phase-mini-table">
+                  <tr>
+                    <td><span class="fase-badge fase-1-tag">F1</span></td>
+                    <td>
+                      CRUD de hábitos. Backend guarda diasCompletados como JSON
+                      string. Toggle día de hoy.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-2-tag">F2</span></td>
+                    <td>
+                      Modo híbrido. Categorías con emoji/color. Saludo:
+                      "Cumplieron X hábitos hoy".
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-3-tag">F3</span></td>
+                    <td>
+                      Reducer TOGGLE_HOY. Gráficas: cumplidos/día últimos 7 +
+                      por categoría (Pie). Original: racha actual vs máxima.
+                    </td>
+                  </tr>
+                  <tr>
+                    <td><span class="fase-badge fase-4-tag">F4</span></td>
+                    <td>
+                      <code>useRacha</code>. README con hábitos reales. Video
+                      mostrando rachas actuales.
+                    </td>
+                  </tr>
+                </table>
+              </details>
+            </div> -->
+          </div>
+        </section>
+
+        <!-- ================================================
+           7. COMPARATIVA POR TEMA Y FASE
+      ================================================= -->
+        <section id="comparativa" class="section">
+          <h2 class="section-title">Comparativa por tema y fase</h2>
+          <p class="section-intro">
+            Lo que construye cada tema en cada fase. Los hooks, el reducer, el
+            deploy y el historial de Git son idénticos para todos.
+          </p>
+          <div class="table-wrap">
+            <table class="data-table comparativa-table">
+              <thead>
+                <tr>
+                  <th>Fase</th>
+                  <th>Videojuegos 🎮</th>
+                  <th>Álbum 📗</th>
+                  <th>Viajes ✈️</th>
+                  <th>Entrenamiento 🏋️</th>
+                  <!-- <th>Hábitos 🌱</th> -->
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><span class="fase-badge fase-1-tag">F1</span></td>
+                  <td>
+                    CRUD de juegos en LS. Backend tabla
+                    <code>juegos</code> (plataforma, horas, género).
+                  </td>
+                  <td>
+                    CRUD de estampas. Backend tabla
+                    <code>estampas</code> (numero, seccion, estado).
+                  </td>
+                  <td>
+                    CRUD de destinos. Backend tabla
+                    <code>destinos</code> (ciudad, pais, tipo).
+                  </td>
+                  <td>
+                    CRUD de sesiones. Backend tabla
+                    <code>sesiones</code> (ejercicios JSON, duracion).
+                  </td>
+                  <!-- <td>
+                    CRUD de hábitos. Backend tabla
+                    <code>habitos</code> (diasCompletados JSON, meta).
+                  </td> -->
+                </tr>
+                <tr>
+                  <td><span class="fase-badge fase-2-tag">F2</span></td>
+                  <td>
+                    StorageContext. Categorías con géneros. Tema gaming oscuro.
+                  </td>
+                  <td>
+                    StorageContext. Categorías con secciones. Contador "Te
+                    faltan X".
+                  </td>
+                  <td>StorageContext. Tipos de lugar. Filtro por país.</td>
+                  <td>
+                    StorageContext. Tipos de ejercicio. Tema gym (negro/rojo).
+                  </td>
+                  <!-- <td>
+                    StorageContext. Áreas de vida. Saludo "Cumplieron X hoy".
+                  </td> -->
+                </tr>
+                <tr>
+                  <td><span class="fase-badge fase-3-tag">F3</span></td>
+                  <td>
+                    Reducer AGREGAR/CAMBIAR_ESTADO. Gráficas: horas/semana +
+                    géneros. Original: % completados.
+                  </td>
+                  <td>
+                    Reducer MARCAR_REPETIDA/PEGAR. Gráficas: estampas/día + por
+                    sección (Radial). Original: faltantes vs repetidas.
+                  </td>
+                  <td>
+                    Reducer PLANEAR/VISITAR. Gráficas: viajes/mes + tipos (Pie).
+                    Original: mapa D3 choropleth.
+                  </td>
+                  <td>
+                    Reducer REGISTRAR_PR. Gráficas: minutos/semana + tipos.
+                    Original: PRs en ejercicios (Line).
+                  </td>
+                  <!-- <td>
+                    Reducer TOGGLE_HOY. Gráficas: cumplidos/día últimos 7 + por
+                    categoría (Pie). Original: racha actual vs máxima.
+                  </td> -->
+                </tr>
+                <tr>
+                  <td><span class="fase-badge fase-4-tag">F4</span></td>
+                  <td>
+                    <code>useProgresoPorJuego</code>. README con backlog real.
+                    Video juegos propios.
+                  </td>
+                  <td>
+                    <code>useProgresoAlbum</code>. README con foto del álbum.
+                    Video estampas reales.
+                  </td>
+                  <td>
+                    <code>useEstadisticasViaje</code>. README con fotos de
+                    lugares. Video mostrando mapa.
+                  </td>
+                  <td>
+                    <code>useProgresoPR</code>. README con fotos gym. Video PRs
+                    personales.
+                  </td>
+                  <!-- <td>
+                    <code>useRacha</code>. README con hábitos reales. Video
+                    rachas actuales.
+                  </td> -->
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================================
+           8. LAS 4 FASES
+      ================================================= -->
+        <section id="fases" class="section">
+          <h2 class="section-title">Las 4 fases del proyecto</h2>
+          <p class="section-intro">
+            El proyecto se divide en 4 entregas incrementales. Cada fase
+            construye sobre la anterior, añadiendo nuevas funcionalidades y
+            hooks de React.
+          </p>
+          <div class="table-wrap" style="margin-bottom: 3rem">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Fase</th>
+                  <th>Enfoque Técnico</th>
+                  <th>Fechas</th>
+                  <th>Ponderación</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><strong>Fase 1</strong></td>
+                  <td>
+                    <code>useState</code>, <code>useEffect</code>, CRUD básico y
+                    Backend Express
+                  </td>
+                  <td>13–17 mayo</td>
+                  <td>20% (20 pts)</td>
+                </tr>
+                <tr>
+                  <td><strong>Fase 2</strong></td>
+                  <td>
+                    <code>useContext</code> híbrido, <code>useRef</code> y Tema
+                    Visual
+                  </td>
+                  <td>18–22 mayo</td>
+                  <td>20% (20 pts)</td>
+                </tr>
+                <tr>
+                  <td><strong>Fase 3</strong></td>
+                  <td>
+                    <code>useReducer</code>, Gráficas Recharts y Optimización
+                    (<code>useMemo</code>, <code>useCallback</code>)
+                  </td>
+                  <td>23–27 mayo</td>
+                  <td>25% (25 pts)</td>
+                </tr>
+                <tr>
+                  <td><strong>Fase 4</strong></td>
+                  <td>
+                    Custom Hooks, Deploy (Vercel/Render), README y Video Defensa
+                  </td>
+                  <td>28–31 mayo</td>
+                  <td>35% (35 pts)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- ---- FASE 1 ---- -->
+          <div id="fase-1" class="phase-card fase-1-card">
+            <div class="phase-header">
+              <div class="phase-num fase-1-num">1</div>
+              <div>
+                <h3 class="phase-title">
+                  useState · useEffect · Backend Express
+                </h3>
+                <div class="phase-meta-row">
+                  <span class="phase-dates"
+                    >13–17 mayo · Entrega: domingo 17 mayo, 23:59</span
+                  >
+                  <span class="phase-pts fase-1-pts"
+                    >20 pts · 20% del proyecto</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="phase-body">
+              <div class="phase-block">
+                <h4>¿Qué se entrega?</h4>
+                <p>
+                  Dos piezas funcionando de forma <em>independiente</em> (la
+                  conexión se hace en Fase 2):
+                </p>
+                <ul>
+                  <li>
+                    <strong>Frontend:</strong> CRUD de Items en LocalStorage con
+                    estructura completa.
+                  </li>
+                  <li>
+                    <strong>Backend:</strong> API Express con 5 endpoints
+                    respondiendo. BD SQLite o Postgres con tabla
+                    <code>items</code> y tabla <code>registros</code>.
+                  </li>
+                </ul>
+              </div>
+
+              <div class="phase-block">
+                <h4>Checklist de requerimientos</h4>
+                <ul class="checklist">
+                  <li>
+                    Setup Vite:
+                    <code
+                      >npm create vite@latest frontend -- --template react</code
+                    >
+                  </li>
+                  <li>
+                    Carpetas: <code>src/components</code>,
+                    <code>src/services</code>, <code>src/utils</code>
+                  </li>
+                  <li>
+                    Componentes: <code>FormularioItem.jsx</code>,
+                    <code>ListaItems.jsx</code>, <code>ItemCard.jsx</code>
+                  </li>
+                  <li>
+                    useState con lazy initializer para leer LocalStorage al
+                    montar
+                  </li>
+                  <li>
+                    useEffect para sincronizar la lista con LocalStorage en cada
+                    cambio
+                  </li>
+                  <li>
+                    Item con todos los campos obligatorios: id, nombre,
+                    categoriaId, estado, atributos JSON, activo
+                  </li>
+                  <li>
+                    Backend Express con CORS configurado (<code
+                      >FRONTEND_URL</code
+                    >
+                    desde .env)
+                  </li>
+                  <li>Tabla <code>items</code> en BD con todos los campos</li>
+                  <li>
+                    Tabla <code>registros</code> en BD (id, itemId, fecha,
+                    valor, notas)
+                  </li>
+                  <li>
+                    GET <code>/api/items</code> — devuelve todos los activos
+                  </li>
+                  <li>POST <code>/api/items</code> — crea con body JSON</li>
+                  <li>PUT <code>/api/items/:id</code> — actualiza</li>
+                  <li>
+                    DELETE <code>/api/items/:id</code> — archiva (<code
+                      >activo = 0</code
+                    >)
+                  </li>
+                  <li>
+                    POST <code>/api/items/:id/registro</code> — crea registro de
+                    actividad
+                  </li>
+                  <li><code>.gitignore</code>: node_modules, .env, *.sqlite</li>
+                  <li>Mínimo 8 commits en 4+ días distintos</li>
+                  <li>
+                    README con captura mostrando 3 Items reales propios (no
+                    placeholders)
+                  </li>
+                </ul>
+              </div>
+
+              <div class="phase-block">
+                <h4>Rúbrica (100 pts = 20% del proyecto)</h4>
+                <table class="rubric-table">
+                  <tr>
+                    <td>Setup Vite + Express funcionando</td>
+                    <td class="pts-cell">10</td>
+                  </tr>
+                  <tr>
+                    <td>CRUD completo en el frontend</td>
+                    <td class="pts-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>LocalStorage persiste entre recargas</td>
+                    <td class="pts-cell">15</td>
+                  </tr>
+                  <tr>
+                    <td>Backend — 5 endpoints responden correctamente</td>
+                    <td class="pts-cell">25</td>
+                  </tr>
+                  <tr>
+                    <td>BD — tablas correctas y datos persisten</td>
+                    <td class="pts-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>Git con commits reales + README con captura real</td>
+                    <td class="pts-cell">10</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="phase-block">
+                <h4>Patrón clave — lazy initializer con useState</h4>
+                <div class="code-wrap">
+                  <span class="code-lang-badge">javascript</span>
+                  <button class="copy-btn">Copiar</button>
+                  <pre><code class="language-javascript">// ✅ CORRECTO — la función solo se ejecuta una vez al montar
+const [items, setItems] = useState(() => {
+  try {
+    const guardado = localStorage.getItem('items');
+    return guardado ? JSON.parse(guardado) : [];
+  } catch {
+    return [];
+  }
+});
+
+// Sincronizar cada vez que cambia la lista
+useEffect(() => {
+  localStorage.setItem('items', JSON.stringify(items));
+}, [items]);
+
+// ❌ INCORRECTO — se ejecuta en cada render
+const [items, setItems] = useState(
+  JSON.parse(localStorage.getItem('items')) || []
+);</code></pre>
+                </div>
+              </div>
+
+              <div class="phase-block anticopia">
+                <h4>Anti-copia de esta fase</h4>
+                <p>
+                  <strong>Qué se verifica:</strong> Captura de pantalla con al
+                  menos 3 Items REALES del tema elegido. "Juego 1", "Test",
+                  "Item de prueba" no cuentan.
+                </p>
+                <p>
+                  <strong>Cómo se verifica:</strong> El profesor mira la
+                  captura. Si ve placeholders, pregunta en vivo qué significan
+                  esos Items para el estudiante.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---- FASE 2 ---- -->
+          <div id="fase-2" class="phase-card fase-2-card">
+            <div class="phase-header">
+              <div class="phase-num fase-2-num">2</div>
+              <div>
+                <h3 class="phase-title">
+                  useContext híbrido · useRef · Tema visual
+                </h3>
+                <div class="phase-meta-row">
+                  <span class="phase-dates"
+                    >18–22 mayo · Entrega: viernes 22 mayo, 23:59</span
+                  >
+                  <span class="phase-pts fase-2-pts"
+                    >20 pts · 20% del proyecto</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="phase-body">
+              <div class="phase-block">
+                <h4>¿Qué se entrega?</h4>
+                <p>
+                  StorageContext que abstrae modo API vs Local. Los componentes
+                  usan
+                  <code>useContext</code> y <strong>no saben</strong> de dónde
+                  vienen los datos. ThemeContext para claro/oscuro. Mínimo 2
+                  usos de useRef.
+                </p>
+              </div>
+
+              <div class="phase-block">
+                <h4>Checklist de requerimientos</h4>
+                <ul class="checklist">
+                  <li>
+                    <code>src/context/StorageProvider.jsx</code> con lógica de
+                    modo
+                  </li>
+                  <li>
+                    Contexto expone: <code>modo</code>, <code>setModo</code>,
+                    <code>obtenerItems</code>, <code>guardarItem</code>,
+                    <code>eliminarItem</code>
+                  </li>
+                  <li>
+                    Ningún componente tiene <code>if (modo === "api")</code>
+                  </li>
+                  <li>
+                    ThemeContext: claro/oscuro con
+                    <code>document.body.setAttribute("data-theme", tema)</code>
+                  </li>
+                  <li>
+                    Variables CSS en <code>body[data-theme="claro"]</code> y
+                    <code>body[data-theme="oscuro"]</code>
+                  </li>
+                  <li>Tema persiste en localStorage entre sesiones</li>
+                  <li>useRef — uso 1: enfocar input después de agregar Item</li>
+                  <li>
+                    useRef — uso 2: guardar ID de setInterval sin trigger de
+                    re-render
+                  </li>
+                  <li>
+                    <code>src/utils/categorias.js</code> con array CATEGORIAS
+                    (id, nombre, emoji, color)
+                  </li>
+                  <li>
+                    Atajo 1: <code>Ctrl+N</code> — enfocar el input de agregar
+                  </li>
+                  <li>Atajo 2: <code>T</code> — cambiar tema</li>
+                  <li>
+                    Atajos con cleanup: <code>removeEventListener</code> en el
+                    return del useEffect
+                  </li>
+                  <li>
+                    README — sección "Mi paleta de colores": 6 hex claro + 6 hex
+                    oscuro + justificación de 2 líneas
+                  </li>
+                </ul>
+              </div>
+
+              <div class="phase-block">
+                <h4>Rúbrica (100 pts = 20% del proyecto)</h4>
+                <table class="rubric-table">
+                  <tr>
+                    <td>
+                      StorageContext correcto (modo abstrae fetch vs
+                      localStorage)
+                    </td>
+                    <td class="pts-cell">30</td>
+                  </tr>
+                  <tr>
+                    <td>Modo híbrido funciona en la UI (toggle API ↔ Local)</td>
+                    <td class="pts-cell">15</td>
+                  </tr>
+                  <tr>
+                    <td>ThemeContext persiste y aplica variables CSS</td>
+                    <td class="pts-cell">15</td>
+                  </tr>
+                  <tr>
+                    <td>useRef — mínimo 2 usos documentados</td>
+                    <td class="pts-cell">15</td>
+                  </tr>
+                  <tr>
+                    <td>Categorías con emoji y color en la UI</td>
+                    <td class="pts-cell">10</td>
+                  </tr>
+                  <tr>
+                    <td>Git + README con paleta justificada</td>
+                    <td class="pts-cell">15</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="phase-block">
+                <h4>Patrón clave — StorageProvider (estructura)</h4>
+                <div class="code-wrap">
+                  <span class="code-lang-badge">javascript</span>
+                  <button class="copy-btn">Copiar</button>
+                  <pre><code class="language-javascript">// src/context/StorageProvider.jsx
+export function StorageProvider({ children }) {
+  const [modo, setModoState] = useState(() =>
+    localStorage.getItem('modo') || 'local'
+  );
+  const [cargando, setCargando] = useState(false);
+  const [error, setError] = useState(null);
+  const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+  const setModo = (nuevoModo) => {
+    setModoState(nuevoModo);
+    localStorage.setItem('modo', nuevoModo);
+  };
+
+  const obtenerItems = useCallback(async () => {
+    setCargando(true); setError(null);
+    try {
+      if (modo === 'api') {
+        const res = await fetch(`${API_URL}/api/items`);
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        return await res.json();
+      } else {
+        const data = localStorage.getItem('items');
+        return data ? JSON.parse(data) : [];
+      }
+    } catch (err) {
+      setError(err.message); return [];
+    } finally { setCargando(false); }
+  }, [modo]);
+
+  // guardarItem y eliminarItem siguen el mismo patrón if(modo === 'api')
+
+  return (
+    &lt;StorageContext.Provider value={{
+      modo, setModo, cargando, error,
+      obtenerItems, guardarItem, eliminarItem,
+    }}&gt;
+      {children}
+    &lt;/StorageContext.Provider&gt;
+  );
+}</code></pre>
+                </div>
+              </div>
+
+              <div class="phase-block">
+                <h4>Variables CSS — patrón de tema</h4>
+                <div class="code-wrap">
+                  <span class="code-lang-badge">css</span>
+                  <button class="copy-btn">Copiar</button>
+                  <pre><code class="language-css">/* src/index.css */
+body[data-theme="claro"] {
+  --color-fondo:      #f7f7f8;
+  --color-superficie: #ffffff;
+  --color-texto:      #1a1a1a;
+  --color-acento:     #4f46e5;
+  --color-borde:      #e5e7eb;
+}
+body[data-theme="oscuro"] {
+  --color-fondo:      #0f172a;
+  --color-superficie: #1e293b;
+  --color-texto:      #f1f5f9;
+  --color-acento:     #818cf8;
+  --color-borde:      #334155;
+}
+body {
+  background: var(--color-fondo);
+  color: var(--color-texto);
+  transition: background 0.2s, color 0.2s;
+}</code></pre>
+                </div>
+              </div>
+
+              <div class="phase-block anticopia">
+                <h4>Anti-copia de esta fase</h4>
+                <p>
+                  <strong>Qué se verifica:</strong> Su paleta de colores — 6 hex
+                  para tema claro + 6 para tema oscuro, con 2 líneas de
+                  justificación por color.
+                </p>
+                <p>
+                  <strong>Cómo se verifica:</strong> El profesor lee la
+                  justificación. Si es genérica ("elegí azul porque es
+                  profesional"), pregunta: "¿Por qué ese hex específico y no
+                  otro azul?"
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---- FASE 3 ---- -->
+          <div id="fase-3" class="phase-card fase-3-card">
+            <div class="phase-header">
+              <div class="phase-num fase-3-num">3</div>
+              <div>
+                <h3 class="phase-title">
+                  useReducer · Recharts · useMemo · useCallback
+                </h3>
+                <div class="phase-meta-row">
+                  <span class="phase-dates"
+                    >23–27 mayo · Entrega: miércoles 27 mayo, 23:59</span
+                  >
+                  <span class="phase-pts fase-3-pts"
+                    >25 pts · 25% del proyecto</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="phase-body">
+              <div class="phase-block">
+                <h4>¿Qué se entrega?</h4>
+                <p>
+                  Reducer con 7+ acciones puras (sin fetch, sin Date.now, sin
+                  mutaciones). Mínimo 3 gráficas Recharts con tooltip y leyenda.
+                  Optimización con useMemo/useCallback medida con React DevTools
+                  Profiler.
+                </p>
+              </div>
+
+              <div class="phase-block">
+                <h4>Checklist de requerimientos</h4>
+                <ul class="checklist">
+                  <li>
+                    <code>src/reducers/itemsReducer.js</code> — función pura
+                  </li>
+                  <li>
+                    Estado del reducer:
+                    <code
+                      >&#123; lista, filtroCategoria, filtroEstado, busqueda
+                      &#125;</code
+                    >
+                  </li>
+                  <li>
+                    Acciones mínimas: HIDRATAR, AGREGAR, ELIMINAR,
+                    CAMBIAR_ESTADO, FILTRAR, LIMPIAR_FILTROS,
+                    REGISTRAR_ACTIVIDAD
+                  </li>
+                  <li>
+                    Gráfica 1: actividad de los últimos 7 días (BarChart o
+                    LineChart)
+                  </li>
+                  <li>Gráfica 2: distribución por categoría (PieChart)</li>
+                  <li>
+                    Gráfica 3: ORIGINAL propuesta por el estudiante — con
+                    tooltip y leyenda
+                  </li>
+                  <li>Todas las gráficas reaccionan a los filtros activos</li>
+                  <li>
+                    useMemo para lista filtrada, estadísticas y datos de
+                    gráficas
+                  </li>
+                  <li>
+                    useCallback para handlers que se pasan a componentes hijos
+                  </li>
+                  <li>React.memo en ItemCard</li>
+                  <li>
+                    Evidencia de Profiler: captura ANTES y DESPUÉS de la
+                    optimización, con análisis
+                  </li>
+                  <li>
+                    Filtros combinados: categoría + estado + búsqueda por nombre
+                  </li>
+                  <li>Botón "Limpiar filtros"</li>
+                  <li>
+                    README — sección "Mi gráfica original": qué muestra y por
+                    qué la eligieron
+                  </li>
+                  <li>
+                    README — sección "Mis 3 decisiones técnicas": estructura del
+                    reducer, acción más difícil, gráfica más compleja
+                  </li>
+                </ul>
+              </div>
+
+              <div class="phase-block">
+                <h4>Rúbrica (100 pts = 25% del proyecto)</h4>
+                <table class="rubric-table">
+                  <tr>
+                    <td>useReducer con 7+ acciones puras correctas</td>
+                    <td class="pts-cell">25</td>
+                  </tr>
+                  <tr>
+                    <td>3 gráficas con tooltip, leyenda y responsivas</td>
+                    <td class="pts-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>useMemo + useCallback implementados correctamente</td>
+                    <td class="pts-cell">15</td>
+                  </tr>
+                  <tr>
+                    <td>Capturas de Profiler con análisis antes/después</td>
+                    <td class="pts-cell">10</td>
+                  </tr>
+                  <tr>
+                    <td>Filtros combinados funcionando en tiempo real</td>
+                    <td class="pts-cell">10</td>
+                  </tr>
+                  <tr>
+                    <td>Git + README (gráfica original + 3 decisiones)</td>
+                    <td class="pts-cell">20</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="phase-block">
+                <h4>Patrón clave — Reducer + useMemo para filtrado</h4>
+                <div class="code-wrap">
+                  <span class="code-lang-badge">javascript</span>
+                  <button class="copy-btn">Copiar</button>
+                  <pre><code class="language-javascript">// src/reducers/itemsReducer.js
+export const estadoInicial = {
+  lista: [], filtroCategoria: 'todas',
+  filtroEstado: 'todos', busqueda: '',
+};
+
+export function itemsReducer(estado, accion) {
+  switch (accion.type) {
+    case 'HIDRATAR':
+      return { ...estado, lista: accion.payload };
+    case 'AGREGAR':
+      return { ...estado, lista: [...estado.lista, accion.payload] };
+    case 'ELIMINAR':
+      return {
+        ...estado,
+        lista: estado.lista.map(i =>
+          i.id === accion.payload ? { ...i, activo: false } : i
+        ),
+      };
+    case 'CAMBIAR_ESTADO':
+      return {
+        ...estado,
+        lista: estado.lista.map(i =>
+          i.id === accion.payload.id
+            ? { ...i, estado: accion.payload.estado }
+            : i
+        ),
+      };
+    case 'FILTRAR':
+      return { ...estado, [accion.payload.campo]: accion.payload.valor };
+    case 'LIMPIAR_FILTROS':
+      return { ...estado, filtroCategoria: 'todas',
+               filtroEstado: 'todos', busqueda: '' };
+    default:
+      throw new Error(`Acción desconocida: ${accion.type}`);
+  }
+}
+
+// En el componente — lista filtrada con useMemo:
+const itemsVisibles = useMemo(() => {
+  let res = estado.lista.filter(i => i.activo);
+  if (estado.busqueda)
+    res = res.filter(i =>
+      i.nombre.toLowerCase().includes(estado.busqueda.toLowerCase()));
+  if (estado.filtroCategoria !== 'todas')
+    res = res.filter(i => i.categoriaId === estado.filtroCategoria);
+  if (estado.filtroEstado !== 'todos')
+    res = res.filter(i => i.estado === estado.filtroEstado);
+  return res;
+}, [estado.lista, estado.busqueda, estado.filtroCategoria, estado.filtroEstado]);</code></pre>
+                </div>
+              </div>
+
+              <div class="phase-block anticopia">
+                <h4>Anti-copia de esta fase</h4>
+                <p>
+                  <strong>Qué se verifica:</strong> Su gráfica original (qué
+                  muestra, por qué la eligieron) + 3 decisiones técnicas sobre
+                  <em>su</em> código específico.
+                </p>
+                <p>
+                  <strong>Cómo se verifica:</strong> En el video, el profesor
+                  puede pausar y preguntar: "¿Por qué estructuraron el reducer
+                  así y no con un solo objeto plano?" Si no pueden responder, la
+                  nota baja.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- ---- FASE 4 ---- -->
+          <div id="fase-4" class="phase-card fase-4-card">
+            <div class="phase-header">
+              <div class="phase-num fase-4-num">4</div>
+              <div>
+                <h3 class="phase-title">
+                  Custom Hooks · Deploy completo · README · Video
+                </h3>
+                <div class="phase-meta-row">
+                  <span class="phase-dates"
+                    >28–31 mayo · Entrega: domingo 31 mayo, 23:59</span
+                  >
+                  <span class="phase-pts fase-4-pts"
+                    >35 pts · 35% del proyecto</span
+                  >
+                </div>
+              </div>
+            </div>
+
+            <div class="phase-body">
+              <div class="phase-block">
+                <h4>¿Qué se entrega?</h4>
+                <p>
+                  4+ custom hooks publicados. App en Vercel + Backend en Render.
+                  README profesional completo. Video de 5–7 minutos con demo,
+                  código y defensa.
+                </p>
+              </div>
+
+              <div class="phase-block">
+                <h4>Checklist de requerimientos</h4>
+                <ul class="checklist">
+                  <li>
+                    <code>src/hooks/useLocalStorage.js</code> — useState +
+                    useEffect + localStorage
+                  </li>
+                  <li>
+                    <code>src/hooks/useFetch.js</code> — fetch con
+                    data/cargando/error + AbortController
+                  </li>
+                  <li>
+                    <code>src/hooks/useAtajoTeclado.js</code> — keydown listener
+                    con cleanup
+                  </li>
+                  <li>
+                    Cuarto hook del dominio: <code>useRacha</code>,
+                    <code>useProgresoPR</code>, <code>useProgresoAlbum</code>,
+                    etc.
+                  </li>
+                  <li>
+                    Todos los hooks en <code>src/hooks/</code>, un archivo por
+                    hook
+                  </li>
+                  <li>
+                    Frontend en Vercel — conectar repo GitHub, root:
+                    <code>frontend/</code>, build: <code>npm run build</code>
+                  </li>
+                  <li>
+                    Variable de entorno en Vercel: <code>VITE_API_URL</code> con
+                    URL de Render
+                  </li>
+                  <li>
+                    Backend en Render — Web Service desde GitHub, root:
+                    <code>backend/</code>, start: <code>node src/index.js</code>
+                  </li>
+                  <li>
+                    CORS actualizado en el backend para el dominio de Vercel
+                  </li>
+                  <li>
+                    README completo: URLs, screenshots (claro + oscuro +
+                    gráficas), stack, cómo correr localmente
+                  </li>
+                  <li>
+                    README — secciones personales: Items reales, paleta, gráfica
+                    original, decisiones, Profiler, hooks, sobre el autor
+                  </li>
+                  <li>
+                    Video 5–7 min: intro (30s) + demo app (2min) + código (2min)
+                    + defensa (1.5min) + cierre (30s)
+                  </li>
+                  <li>Mínimo 14 días con commits en Git</li>
+                </ul>
+              </div>
+
+              <div class="phase-block">
+                <h4>Rúbrica (100 pts = 35% del proyecto)</h4>
+                <table class="rubric-table">
+                  <tr>
+                    <td>4+ custom hooks correctamente implementados</td>
+                    <td class="pts-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>Deploy frontend en Vercel (URL funcional)</td>
+                    <td class="pts-cell">15</td>
+                  </tr>
+                  <tr>
+                    <td>Deploy backend en Render (URL funcional)</td>
+                    <td class="pts-cell">15</td>
+                  </tr>
+                  <tr>
+                    <td>
+                      README — todas las secciones completas y con datos reales
+                    </td>
+                    <td class="pts-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>Video — demo + código + defensa técnica</td>
+                    <td class="pts-cell">20</td>
+                  </tr>
+                  <tr>
+                    <td>Git — 14+ días con commits (historial real)</td>
+                    <td class="pts-cell">10</td>
+                  </tr>
+                </table>
+              </div>
+
+              <div class="phase-block">
+                <h4>Los 3 custom hooks obligatorios</h4>
+                <div class="code-wrap">
+                  <span class="code-lang-badge">javascript</span>
+                  <button class="copy-btn">Copiar</button>
+                  <pre><code class="language-javascript">// src/hooks/useLocalStorage.js
+export function useLocalStorage(clave, valorInicial) {
+  const [valor, setValor] = useState(() => {
+    try {
+      const guardado = localStorage.getItem(clave);
+      return guardado !== null ? JSON.parse(guardado) : valorInicial;
+    } catch { return valorInicial; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem(clave, JSON.stringify(valor)); }
+    catch (e) { console.warn(`useLocalStorage: no guardado "${clave}"`, e); }
+  }, [clave, valor]);
+  return [valor, setValor];
+}
+
+// src/hooks/useFetch.js
+export function useFetch(url) {
+  const [data, setData] = useState(null);
+  const [cargando, setCargando] = useState(true);
+  const [error, setError] = useState(null);
+  useEffect(() => {
+    if (!url) { setCargando(false); return; }
+    const controller = new AbortController();
+    (async () => {
+      try {
+        setCargando(true); setError(null);
+        const res = await fetch(url, { signal: controller.signal });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        setData(await res.json());
+      } catch (err) {
+        if (err.name !== 'AbortError') setError(err.message);
+      } finally { setCargando(false); }
+    })();
+    return () => controller.abort();
+  }, [url]);
+  return { data, cargando, error };
+}
+
+// src/hooks/useAtajoTeclado.js
+export function useAtajoTeclado(tecla, onPress, { ctrl = false } = {}) {
+  useEffect(() => {
+    const handler = (e) => {
+      const enInput = ['INPUT', 'TEXTAREA'].includes(e.target.tagName);
+      if (enInput) return;
+      if (ctrl &amp;&amp; !e.ctrlKey) return;
+      if (e.key.toLowerCase() !== tecla.toLowerCase()) return;
+      e.preventDefault();
+      onPress(e);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [tecla, onPress, ctrl]);
+}</code></pre>
+                </div>
+              </div>
+
+              <div class="phase-block">
+                <h4>Variables de entorno para deploy</h4>
+                <div class="code-wrap">
+                  <span class="code-lang-badge">bash</span>
+                  <button class="copy-btn">Copiar</button>
+                  <pre><code class="language-bash"># frontend/.env.local  (NO subir a Git)
+VITE_API_URL=http://localhost:3001
+
+# En producción — variable en Vercel Dashboard:
+VITE_API_URL=https://su-proyecto.onrender.com
+
+# backend/.env  (NO subir a Git)
+PORT=3001
+FRONTEND_URL=http://localhost:5173
+
+# En producción — variable en Render Dashboard:
+FRONTEND_URL=https://su-proyecto.vercel.app</code></pre>
+                </div>
+              </div>
+
+              <div class="phase-block anticopia">
+                <h4>Anti-copia de esta fase — Defensa en vivo</h4>
+                <p>
+                  <strong>Qué se verifica:</strong> Durante el video, el
+                  profesor puede pausar en cualquier línea y preguntar: "¿Qué
+                  hace esto y por qué está aquí?"
+                </p>
+                <p>
+                  <strong>Ejemplo de pregunta:</strong> "Línea 47 de su reducer:
+                  ¿por qué usaron <code>...estado</code> y no mutaron
+                  directamente?"
+                </p>
+                <p>
+                  <strong
+                    >Quien escribió el código puede explicarlo. Quien copió,
+                    no.</strong
+                  >
+                </p>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================
+           9. FAQ ANTI-COPIA
+      ================================================= -->
+        <section id="faq" class="section">
+          <h2 class="section-title">FAQ — Política de integridad académica</h2>
+          <p class="section-intro">
+            Código copiado o generado por IA no genera aprendizaje real. El
+            estudiante que copia no puede defender decisiones técnicas ni
+            explicar su código línea por línea.
+          </p>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary>¿Por qué estos mecanismos anti-copia?</summary>
+              <div class="faq-body">
+                <p>
+                  El proyecto no es para tener una app bonita al final. Es para
+                  que <strong>entiendan</strong> cómo funcionan los hooks, cómo
+                  se estructura una app React moderna y cómo se conecta con un
+                  backend. Copiar les da la app, pero no el entendimiento. Sin
+                  entendimiento, no pasan ninguna entrevista técnica real.
+                </p>
+                <p>
+                  Cada mecanismo de verificación está diseñado para que solo
+                  quien escribió el código pueda responderlo.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>
+                ¿Puedo usar ChatGPT / Claude / Copilot para ayudarse?
+              </summary>
+              <div class="faq-body">
+                <p><strong>Sí, pero con límites claros.</strong></p>
+                <p>Permitido:</p>
+                <ul>
+                  <li>Preguntar conceptos: "¿Qué es useReducer?"</li>
+                  <li>
+                    Debugging puntual: "Este fetch me da CORS error, ¿por qué?"
+                  </li>
+                  <li>
+                    Explicación de código ajeno: "¿Qué hace este código que
+                    encontré en React docs?"
+                  </li>
+                </ul>
+                <p>Prohibido:</p>
+                <ul>
+                  <li>Pedir que genere componentes completos</li>
+                  <li>Copiar bloques de código de más de 20 líneas</li>
+                  <li>
+                    Pedir que escriba el reducer, el contexto o las gráficas
+                  </li>
+                  <li>
+                    Usar IA para escribir las secciones personales del README
+                  </li>
+                </ul>
+                <p>
+                  <strong>Test simple:</strong> ¿Pueden explicar cada línea del
+                  código que pegaron? Si sí → está bien. Si no → están copiando
+                  sin entender.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>¿Qué pasa si se detecta copia o uso de IA?</summary>
+              <div class="faq-body">
+                <p>
+                  <strong
+                    >Nota del proyecto: 0 automático. Sin apelación.</strong
+                  >
+                </p>
+                <p>
+                  El proyecto vale un porcentaje significativo de la nota final
+                  del curso. Copiar no solo anula el proyecto — puede reprobar
+                  el curso completo.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>¿Los tutoriales de YouTube cuentan como copia?</summary>
+              <div class="faq-body">
+                <p>Depende del uso:</p>
+                <ul>
+                  <li>
+                    Ver un tutorial de useReducer y luego escribir
+                    <strong>su</strong> reducer para <strong>su</strong> tema →
+                    <strong>OK</strong>
+                  </li>
+                  <li>
+                    Seguir un tutorial "Complete habit tracker with React" paso
+                    a paso → <strong>NO</strong>
+                  </li>
+                </ul>
+                <p>
+                  La diferencia: aprender la técnica vs copiar la solución
+                  completa.
+                </p>
+              </div>
+            </details>
+
+            <details class="faq-item">
+              <summary>¿Cómo evito la tentación de copiar?</summary>
+              <div class="faq-body">
+                <ul>
+                  <li>
+                    <strong>Avancen en fases pequeñas:</strong> 2–3 horas diarias
+                    durante 5 días es más sostenible que todo en un día.
+                  </li>
+                  <li>
+                    <strong>Pregunten al profesor:</strong> Si algo no les sale,
+                    pregunta en clase o en el foro. Es 100% permitido.
+                  </li>
+                  <li>
+                    <strong>Lean la referencia de código de este sitio:</strong>
+                    Está para guiarles, no para copy-paste.
+                  </li>
+                  <li>
+                    <strong>Commits frecuentes:</strong> Si hacen commits
+                    pequeños y frecuentes, no tendrán la tentación de "hacer
+                    todo de golpe con IA".
+                  </li>
+                </ul>
+              </div>
+            </details>
+          </div>
+
+          <h3 class="subsection-title">Señales de código generado por IA</h3>
+          <div class="table-wrap">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Señal de alerta</th>
+                  <th>Por qué es sospechosa</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Commits de 400+ líneas de una sola vez</td>
+                  <td>
+                    Un estudiante no escribe 400 líneas en una sesión de trabajo
+                  </td>
+                </tr>
+                <tr>
+                  <td>Comentarios en inglés dentro de código en español</td>
+                  <td>
+                    Mezcla inconsistente de idiomas señala una fuente externa
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Variables ultra-genéricas: <code>handleData</code>,
+                    <code>processItem</code>, <code>renderList</code>
+                  </td>
+                  <td>
+                    La IA usa nombres abstractos; un principiante nombra por lo
+                    que conoce
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Ausencia total de bugs, warnings o console.logs de debug
+                  </td>
+                  <td>Todo principiante deja rastros de depuración</td>
+                </tr>
+                <tr>
+                  <td>Estructura perfecta desde el primer commit</td>
+                  <td>
+                    El código organizado llega después de refactors, no al
+                    inicio
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    Secciones "personales" del README vacías o con placeholders
+                  </td>
+                  <td>
+                    No puede haber "Mi paleta" con colores de placeholder
+                    genérico
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </section>
+
+        <!-- ================================================
+           10. GUÍA DE HOOKS
+      ================================================= -->
+        <section id="hooks" class="section">
+          <h2 class="section-title">Guía de hooks por fase</h2>
+
+          <div class="hooks-grid">
+            <div class="hook-card fase-1-border">
+              <h3>Fase 1</h3>
+              <ul class="hook-list">
+                <li>
+                  <div class="hook-name">useState</div>
+                  <div class="hook-use">
+                    Inputs controlados, lista de Items, estados loading/error
+                  </div>
+                  <div class="hook-links">
+                    <a
+                      href="https://es.react.dev/reference/react/useState"
+                      target="_blank"
+                      rel="noopener"
+                      >Docs oficiales</a
+                    >
+                    <a
+                      href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useState.html"
+                      target="_blank"
+                      rel="noopener"
+                      >Guía UVG</a
+                    >
+                  </div>
+                </li>
+                <li>
+                  <div class="hook-name">useEffect</div>
+                  <div class="hook-use">
+                    Fetch inicial, sincronización con LocalStorage, cleanup de
+                    listeners
+                  </div>
+                  <div class="hook-links">
+                    <a
+                      href="https://es.react.dev/reference/react/useEffect"
+                      target="_blank"
+                      rel="noopener"
+                      >Docs oficiales</a
+                    >
+                    <a
+                      href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useEffect.html"
+                      target="_blank"
+                      rel="noopener"
+                      >Guía UVG</a
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="hook-card fase-2-border">
+              <h3>Fase 2</h3>
+              <ul class="hook-list">
+                <li>
+                  <div class="hook-name">useContext</div>
+                  <div class="hook-use">
+                    StorageContext, ThemeContext, UserContext
+                  </div>
+                  <div class="hook-links">
+                    <a
+                      href="https://es.react.dev/reference/react/useContext"
+                      target="_blank"
+                      rel="noopener"
+                      >Docs oficiales</a
+                    >
+                    <a
+                      href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useContext.html"
+                      target="_blank"
+                      rel="noopener"
+                      >Guía UVG</a
+                    >
+                  </div>
+                </li>
+                <li>
+                  <div class="hook-name">useRef</div>
+                  <div class="hook-use">
+                    Focus en input, IDs de timers, contadores sin re-render
+                  </div>
+                  <div class="hook-links">
+                    <a
+                      href="https://es.react.dev/reference/react/useRef"
+                      target="_blank"
+                      rel="noopener"
+                      >Docs oficiales</a
+                    >
+                    <a
+                      href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useRef.html"
+                      target="_blank"
+                      rel="noopener"
+                      >Guía UVG</a
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="hook-card fase-3-border">
+              <h3>Fase 3</h3>
+              <ul class="hook-list">
+                <li>
+                  <div class="hook-name">useReducer</div>
+                  <div class="hook-use">Gestión de Items con 7+ acciones</div>
+                  <div class="hook-links">
+                    <a
+                      href="https://es.react.dev/reference/react/useReducer"
+                      target="_blank"
+                      rel="noopener"
+                      >Docs oficiales</a
+                    >
+                    <a
+                      href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useReducer.html"
+                      target="_blank"
+                      rel="noopener"
+                      >Guía UVG</a
+                    >
+                  </div>
+                </li>
+                <li>
+                  <div class="hook-name">useMemo</div>
+                  <div class="hook-use">
+                    Lista filtrada, estadísticas, datos para gráficas
+                  </div>
+                  <div class="hook-links">
+                    <a
+                      href="https://es.react.dev/reference/react/useMemo"
+                      target="_blank"
+                      rel="noopener"
+                      >Docs oficiales</a
+                    >
+                  </div>
+                </li>
+                <li>
+                  <div class="hook-name">useCallback</div>
+                  <div class="hook-use">
+                    Handlers estables para componentes memoizados
+                  </div>
+                  <div class="hook-links">
+                    <a
+                      href="https://es.react.dev/reference/react/useCallback"
+                      target="_blank"
+                      rel="noopener"
+                      >Docs oficiales</a
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+
+            <div class="hook-card fase-4-border">
+              <h3>Fase 4</h3>
+              <ul class="hook-list">
+                <li>
+                  <div class="hook-name">Custom hooks</div>
+                  <div class="hook-use">
+                    useLocalStorage, useFetch, useAtajoTeclado + 1 propio del
+                    dominio. Un hook personalizado es simplemente una función
+                    que empieza con <code>use</code>
+                    y puede llamar otros hooks.
+                  </div>
+                  <div class="hook-links">
+                    <a
+                      href="https://es.react.dev/learn/reusing-logic-with-custom-hooks"
+                      target="_blank"
+                      rel="noopener"
+                      >Docs oficiales</a
+                    >
+                    <a
+                      href="https://usehooks.com/"
+                      target="_blank"
+                      rel="noopener"
+                      >usehooks.com (referencia, no copiar)</a
+                    >
+                  </div>
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ================================================
+           11. REFERENCIA DE CÓDIGO
+      ================================================= -->
+        <section id="codigo" class="section">
+          <h2 class="section-title">Referencia de código</h2>
+          <p class="section-intro">
+            Usen estos bloques como <strong>guía y referencia</strong>, no como
+            copy-paste. Adapten cada uno a su tema, sus nombres de variables y su
+            estructura de datos.
+          </p>
+
+          <h3 class="subsection-title">Backend — base de datos (SQLite)</h3>
+          <div class="code-wrap">
+            <span class="code-lang-badge">javascript</span>
+            <button class="copy-btn">Copiar</button>
+            <pre><code class="language-javascript">// backend/src/db/database.js
+const Database = require('better-sqlite3');
+const path = require('path');
+
+const db = new Database(path.join(__dirname, '../../database.sqlite'));
+
+db.exec(`
+  CREATE TABLE IF NOT EXISTS items (
+    id             TEXT PRIMARY KEY,
+    nombre         TEXT NOT NULL,
+    categoriaId    TEXT NOT NULL,
+    estado         TEXT DEFAULT 'pendiente',
+    puntuacion     REAL,
+    fechaRegistro  TEXT NOT NULL,
+    fechaActividad TEXT,
+    notas          TEXT DEFAULT '',
+    atributos      TEXT DEFAULT '{}',
+    activo         INTEGER DEFAULT 1
+  );
+  CREATE TABLE IF NOT EXISTS registros (
+    id     TEXT PRIMARY KEY,
+    itemId TEXT NOT NULL,
+    fecha  TEXT NOT NULL,
+    valor  REAL NOT NULL,
+    notas  TEXT DEFAULT '',
+    FOREIGN KEY (itemId) REFERENCES items(id)
+  );
+`);
+
+module.exports = db;</code></pre>
+          </div>
+
+          <h3 class="subsection-title">Backend — servidor Express</h3>
+          <div class="code-wrap">
+            <span class="code-lang-badge">javascript</span>
+            <button class="copy-btn">Copiar</button>
+            <pre><code class="language-javascript">// backend/src/index.js
+require('dotenv').config();
+const express = require('express');
+const cors = require('cors');
+const itemsRouter = require('./routes/items');
+
+const app = express();
+const PORT = process.env.PORT || 3001;
+
+app.use(cors({
+  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+}));
+app.use(express.json());
+app.use('/api/items', itemsRouter);
+
+app.get('/health', (req, res) => res.json({ status: 'ok' }));
+
+app.listen(PORT, () =>
+  console.log(`Backend corriendo en puerto ${PORT}`)
+);</code></pre>
+          </div>
+
+          <h3 class="subsection-title">Backend — rutas CRUD</h3>
+          <div class="code-wrap">
+            <span class="code-lang-badge">javascript</span>
+            <button class="copy-btn">Copiar</button>
+            <pre><code class="language-javascript">// backend/src/routes/items.js
+const express = require('express');
+const router = express.Router();
+const db = require('../db/database');
+
+router.get('/', (req, res) => {
+  try {
+    const rows = db.prepare(
+      'SELECT * FROM items WHERE activo = 1 ORDER BY fechaRegistro ASC'
+    ).all();
+    res.json(rows.map(r => ({
+      ...r, activo: Boolean(r.activo),
+      atributos: JSON.parse(r.atributos || '{}'),
+    })));
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.post('/', (req, res) => {
+  const { nombre, categoriaId, estado = 'pendiente', atributos = {} } = req.body;
+  if (!nombre || nombre.trim().length &lt; 3)
+    return res.status(400).json({ error: 'Nombre demasiado corto' });
+  try {
+    const nuevo = {
+      id: crypto.randomUUID(), nombre: nombre.trim(), categoriaId,
+      estado, puntuacion: null,
+      fechaRegistro: new Date().toISOString(),
+      fechaActividad: new Date().toISOString(),
+      notas: req.body.notas || '',
+      atributos: JSON.stringify(atributos), activo: 1,
+    };
+    db.prepare(`
+      INSERT INTO items (id,nombre,categoriaId,estado,puntuacion,
+        fechaRegistro,fechaActividad,notas,atributos,activo)
+      VALUES (@id,@nombre,@categoriaId,@estado,@puntuacion,
+        @fechaRegistro,@fechaActividad,@notas,@atributos,@activo)
+    `).run(nuevo);
+    res.status(201).json({ ...nuevo, activo: true, atributos });
+  } catch (err) { res.status(500).json({ error: err.message }); }
+});
+
+router.delete('/:id', (req, res) => {
+  const info = db.prepare(
+    'UPDATE items SET activo = 0 WHERE id = ?'
+  ).run(req.params.id);
+  if (info.changes === 0)
+    return res.status(404).json({ error: 'No encontrado' });
+  res.json({ mensaje: 'Archivado correctamente' });
+});
+
+module.exports = router;</code></pre>
+          </div>
+
+          <h3 class="subsection-title">Gráficas Recharts — ejemplos mínimos</h3>
+          <div class="code-wrap">
+            <span class="code-lang-badge">jsx</span>
+            <button class="copy-btn">Copiar</button>
+            <pre><code class="language-javascript">// Gráfica 1: actividad de los últimos 7 días (BarChart)
+import {
+  BarChart, Bar, XAxis, YAxis, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
+
+function GraficaActividad({ items }) {
+  const datos = Array.from({ length: 7 }, (_, i) => {
+    const d = new Date();
+    d.setDate(d.getDate() - (6 - i));
+    const dia = d.toISOString().split('T')[0];
+    return {
+      fecha: d.toLocaleDateString('es', { weekday: 'short', day: 'numeric' }),
+      cantidad: items.filter(item =>
+        item.fechaActividad?.startsWith(dia)).length,
+    };
+  });
+  return (
+    &lt;ResponsiveContainer width="100%" height={220}&gt;
+      &lt;BarChart data={datos}&gt;
+        &lt;XAxis dataKey="fecha" tick={{ fontSize: 12 }} /&gt;
+        &lt;YAxis allowDecimals={false} /&gt;
+        &lt;Tooltip /&gt;
+        &lt;Legend /&gt;
+        &lt;Bar dataKey="cantidad" name="Items activos"
+             fill="var(--color-acento)" radius={[4,4,0,0]} /&gt;
+      &lt;/BarChart&gt;
+    &lt;/ResponsiveContainer&gt;
+  );
+}
+
+// Gráfica 2: distribución por categoría (PieChart)
+import {
+  PieChart, Pie, Cell, Tooltip, Legend, ResponsiveContainer
+} from 'recharts';
+import { CATEGORIAS } from '../utils/categorias';
+
+function GraficaCategorias({ items }) {
+  const datos = CATEGORIAS.map(cat => ({
+    name: cat.nombre,
+    value: items.filter(i => i.categoriaId === cat.id &amp;&amp; i.activo).length,
+    color: cat.color,
+  })).filter(d => d.value &gt; 0);
+  return (
+    &lt;ResponsiveContainer width="100%" height={220}&gt;
+      &lt;PieChart&gt;
+        &lt;Pie data={datos} dataKey="value"
+             cx="50%" cy="50%" outerRadius={80} label&gt;
+          {datos.map((d, i) => &lt;Cell key={i} fill={d.color} /&gt;)}
+        &lt;/Pie&gt;
+        &lt;Tooltip /&gt;
+        &lt;Legend /&gt;
+      &lt;/PieChart&gt;
+    &lt;/ResponsiveContainer&gt;
+  );
+}</code></pre>
+          </div>
+
+          <h3 class="subsection-title">
+            React.memo + useCallback — patrón de optimización
+          </h3>
+          <div class="code-wrap">
+            <span class="code-lang-badge">javascript</span>
+            <button class="copy-btn">Copiar</button>
+            <pre><code class="language-javascript">// En App.jsx
+import { useReducer, useMemo, useCallback, memo } from 'react';
+
+function App() {
+  const [estado, dispatch] = useReducer(itemsReducer, estadoInicial);
+
+  // Solo recalcula cuando cambian lista o filtros
+  const itemsVisibles = useMemo(() => {
+    return estado.lista
+      .filter(i => i.activo)
+      .filter(i => estado.filtroCategoria === 'todas'
+        || i.categoriaId === estado.filtroCategoria);
+  }, [estado.lista, estado.filtroCategoria]);
+
+  // Handlers estables — no recrean la función en cada render
+  const handleEliminar = useCallback((id) =>
+    dispatch({ type: 'ELIMINAR', payload: id }), []);
+
+  const handleCambiarEstado = useCallback((id, nuevoEstado) =>
+    dispatch({ type: 'CAMBIAR_ESTADO', payload: { id, estado: nuevoEstado } }), []);
+
+  return &lt;ItemCard onEliminar={handleEliminar}
+                   onCambiarEstado={handleCambiarEstado} /&gt;;
+}
+
+// ItemCard memoizado — solo re-renderiza si sus props cambian
+const ItemCard = memo(function ItemCard({ item, onEliminar, onCambiarEstado }) {
+  return (
+    &lt;div&gt;
+      &lt;h3&gt;{item.nombre}&lt;/h3&gt;
+      &lt;button onClick={() => onEliminar(item.id)}&gt;Eliminar&lt;/button&gt;
+    &lt;/div&gt;
+  );
+});</code></pre>
+          </div>
+        </section>
+
+        <!-- ================================================
+           12. RECURSOS
+      ================================================= -->
+        <section id="recursos" class="section">
+          <h2 class="section-title">Recursos</h2>
+
+          <div class="resources-grid">
+            <div class="resource-group">
+              <h3>Documentación oficial</h3>
+              <ul class="resource-list">
+                <li>
+                  <a href="https://es.react.dev/" target="_blank" rel="noopener"
+                    >React Docs (español)</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://es.react.dev/learn/reusing-logic-with-custom-hooks"
+                    target="_blank"
+                    rel="noopener"
+                    >Custom Hooks — React Docs</a
+                  >
+                </li>
+                <li>
+                  <a href="https://recharts.org/" target="_blank" rel="noopener"
+                    >Recharts — documentación y ejemplos</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://expressjs.com/"
+                    target="_blank"
+                    rel="noopener"
+                    >Express.js</a
+                  >
+                </li>
+                <li>
+                  <a href="https://vitejs.dev/" target="_blank" rel="noopener"
+                    >Vite — setup y configuración</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="resource-group">
+              <h3>Guía UVG — Ejemplos de hooks</h3>
+              <ul class="resource-list">
+                <li>
+                  <a
+                    href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useState.html"
+                    target="_blank"
+                    rel="noopener"
+                    >Ejemplos de useState</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useEffect.html"
+                    target="_blank"
+                    rel="noopener"
+                    >Ejemplos de useEffect</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useContext.html"
+                    target="_blank"
+                    rel="noopener"
+                    >Ejemplos de useContext</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useRef.html"
+                    target="_blank"
+                    rel="noopener"
+                    >Ejemplos de useRef</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://locano-uvg.github.io/stw-26/temas/react_hooks/examples/useReducer.html"
+                    target="_blank"
+                    rel="noopener"
+                    >Ejemplos de useReducer</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="resource-group">
+              <h3>Deploy</h3>
+              <ul class="resource-list">
+                <li>
+                  <a
+                    href="https://vercel.com/docs"
+                    target="_blank"
+                    rel="noopener"
+                    >Vercel Docs — Frontend</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://render.com/docs"
+                    target="_blank"
+                    rel="noopener"
+                    >Render Docs — Backend</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://github.com/WiseLibs/better-sqlite3"
+                    target="_blank"
+                    rel="noopener"
+                    >better-sqlite3 — SQLite para Node</a
+                  >
+                </li>
+              </ul>
+            </div>
+
+            <div class="resource-group">
+              <h3>APIs opcionales por tema</h3>
+              <ul class="resource-list">
+                <li>
+                  <a
+                    href="https://rawg.io/apidocs"
+                    target="_blank"
+                    rel="noopener"
+                    >RAWG.io — Videojuegos (500k+ juegos con carátulas)</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://restcountries.com/"
+                    target="_blank"
+                    rel="noopener"
+                    >RestCountries — Viajes (datos de todos los países)</a
+                  >
+                </li>
+                <li>
+                  <a
+                    href="https://rapidapi.com/justin-WFnsXH_t6/api/exercisedb"
+                    target="_blank"
+                    rel="noopener"
+                    >ExerciseDB — Entrenamiento (1300+ ejercicios)</a
+                  >
+                </li>
+              </ul>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+
+    <!-- ================================================
+       FOOTER
+  ================================================= -->
+    <footer class="site-footer">
+      <div class="footer-inner">
+        <p class="footer-main">
+          UVG · Sistemas y Tecnologías Web · Semestre 1, 2026 · Profesor: Marlon
+          Fuentes
+        </p>
+        <p class="footer-note">
+          Este sitio es un complemento del proyecto. La rúbrica oficial está en
+          los documentos del LMS. Cuando haya diferencia entre este sitio y los
+          docx, los docx tienen precedencia.
+        </p>
+      </div>
+    </footer>
+
+    <!-- ===================================================
+       SCRIPTS
+  ==================================================== -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-jsx.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-bash.min.js"></script>
+    <script type="module">
+      import mermaid from "https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs";
+      const isDark =
+        document.documentElement.getAttribute("data-theme") === "oscuro";
+      mermaid.initialize({
+        startOnLoad: true,
+        theme: isDark ? "dark" : "neutral",
+        flowchart: { curve: "basis" },
+      });
+    </script>
+    <script src="script.js"></script>
+  </body>
+</html>
