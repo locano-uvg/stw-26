@@ -236,12 +236,6 @@
               <a href="#fase-1" class="btn btn-primary">Ver la Fase 1</a>
               <a href="#temas" class="btn btn-secondary">Elegir mi tema</a>
             </div>
-
-            <div class="alert alert-deadline">
-              <strong>Fecha límite para elegir tema:</strong> viernes 15 de
-              mayo, 23:59. Suban al LMS un PDF con su nombre, carnet, tema
-              elegido y 3 líneas justificando por qué ese tema.
-            </div>
           </div>
         </section>
 
@@ -398,24 +392,24 @@
             </table>
           </div>
 
-          <h3 class="subsection-title">Flujo de datos de la aplicación</h3>
-          <div class="diagram-container">
-            <div class="mermaid" id="mermaid-diagram">
-              flowchart LR Tema["Su tema elegido"] --> Item["Item\nnombre ·
-              categoriaId\nestado · atributos"] Item --> Reg["Registro\nitemId ·
-              fecha · valor"] Item --> Cat["Categorías\nid · nombre · emoji ·
-              color"] SC["StorageContext"] -->|"modo api"| API["Backend
-              Express\nSQLite / Postgres"] SC -->|"modo local"|
-              LS["LocalStorage\ndel navegador"] Comps["Componentes React"]
-              -->|"obtenerItems()\nguardarItem()\neliminarItem()"| SC
-            </div>
-          </div>
           <p class="diagram-caption">
             Los componentes nunca saben si hablan con la API o con LocalStorage.
             Esa lógica vive <em>solo</em> en el StorageProvider. Si un
             componente tiene <code>if (modo === "api")</code>, la arquitectura
             está mal.
           </p>
+
+          <figure class="doc-figure">
+            <img
+              src="images/Projectos.png"
+              alt="Vista general de la aplicación Mi Colección Personal mostrando el listado de proyectos."
+              loading="lazy"
+            />
+            <figcaption>
+              Vista general de la aplicación: misma arquitectura para todos los
+              estudiantes, datos únicos por tema elegido.
+            </figcaption>
+          </figure>
         </section>
 
         <!-- ================================================
@@ -1115,6 +1109,19 @@ export const CATEGORIAS = [
             construye sobre la anterior, añadiendo nuevas funcionalidades y
             hooks de React.
           </p>
+
+          <figure class="doc-figure">
+            <img
+              src="images/Calendario.png"
+              alt="Calendario visual con las fechas de las 4 fases del proyecto entre el 13 y el 31 de mayo."
+              loading="lazy"
+            />
+            <figcaption>
+              Calendario completo del proyecto: 4 entregas semanales del 13 al
+              31 de mayo (20 + 20 + 25 + 35 puntos).
+            </figcaption>
+          </figure>
+
           <div class="table-wrap" style="margin-bottom: 3rem">
             <table class="data-table">
               <thead>
@@ -1377,6 +1384,33 @@ const [items, setItems] = useState(
   JSON.parse(localStorage.getItem('items')) || []
 );</code></pre>
                 </div>
+                <figure class="doc-figure">
+                  <img
+                    src="images/useState.png"
+                    alt="Ejemplo visual del uso de useState para manejar la lista de Items en LocalStorage."
+                    loading="lazy"
+                  />
+                  <figcaption>
+                    <code>useState</code> con lazy initializer leyendo desde
+                    LocalStorage al montar el componente.
+                  </figcaption>
+                </figure>
+              </div>
+
+              <div class="phase-block">
+                <h4>Resultado esperado — listado de Items</h4>
+                <figure class="doc-figure">
+                  <img
+                    src="images/General_items.png"
+                    alt="Pantalla del CRUD de Items mostrando tarjetas con datos reales del tema elegido."
+                    loading="lazy"
+                  />
+                  <figcaption>
+                    CRUD funcional en el frontend: formulario para agregar,
+                    listado de tarjetas y persistencia en LocalStorage entre
+                    recargas.
+                  </figcaption>
+                </figure>
               </div>
 
               <div class="phase-block anticopia">
@@ -1554,6 +1588,31 @@ export function StorageProvider({ children }) {
   );
 }</code></pre>
                 </div>
+                <figure class="doc-figure">
+                  <img
+                    src="images/StoreContext.png"
+                    alt="Diagrama del StorageContext híbrido alternando entre la API y LocalStorage."
+                    loading="lazy"
+                  />
+                  <figcaption>
+                    <code>StorageProvider</code> abstrae el modo (API vs
+                    LocalStorage). Los componentes solo consumen
+                    <code>obtenerItems()</code>, <code>guardarItem()</code> y
+                    <code>eliminarItem()</code>.
+                  </figcaption>
+                </figure>
+                <figure class="doc-figure">
+                  <img
+                    src="images/Context.png"
+                    alt="Ejemplo de uso de useContext para compartir estado global en la aplicación."
+                    loading="lazy"
+                  />
+                  <figcaption>
+                    Cualquier componente accede al contexto con
+                    <code>useContext(StorageContext)</code> sin importar de
+                    dónde provienen los datos.
+                  </figcaption>
+                </figure>
               </div>
 
               <div class="phase-block">
@@ -1772,6 +1831,18 @@ const itemsVisibles = useMemo(() => {
   return res;
 }, [estado.lista, estado.busqueda, estado.filtroCategoria, estado.filtroEstado]);</code></pre>
                 </div>
+                <figure class="doc-figure">
+                  <img
+                    src="images/Grafica.png"
+                    alt="Ejemplo de gráfica Recharts con tooltip y leyenda mostrando la actividad por categoría."
+                    loading="lazy"
+                  />
+                  <figcaption>
+                    Ejemplo de gráfica con Recharts: tooltip, leyenda y
+                    responsive. Las gráficas reaccionan automáticamente a los
+                    filtros activos del reducer.
+                  </figcaption>
+                </figure>
               </div>
 
               <div class="phase-block anticopia">
@@ -1966,6 +2037,17 @@ export function useAtajoTeclado(tecla, onPress, { ctrl = false } = {}) {
   }, [tecla, onPress, ctrl]);
 }</code></pre>
                 </div>
+                <figure class="doc-figure">
+                  <img
+                    src="images/CustomHook.png"
+                    alt="Ejemplo de un custom hook reutilizable encapsulando lógica de fetch y estado."
+                    loading="lazy"
+                  />
+                  <figcaption>
+                    Los custom hooks encapsulan lógica reutilizable y la
+                    componen desde varios componentes sin duplicar código.
+                  </figcaption>
+                </figure>
               </div>
 
               <div class="phase-block">
