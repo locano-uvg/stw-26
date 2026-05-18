@@ -140,6 +140,13 @@ export const presentations = [
     active: true,
   },
   {
+    title: "React Hooks Examples App",
+    description: "Código de como usar los hooks de React",
+    path: "https://github.com/locano-uvg/stw-26/tree/docs/docs/temas/react_hooks/example/vite-app",
+    image: "temas/react_hooks/images/hooks2.png",
+    active: true,
+  },
+  {
     title: "React Scripts vs Vite",
     description: "Comparación de React Scripts y Vite",
     path: "temas/react_vite/index.html",
